@@ -10,3 +10,7 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'gliding';
 }
+export default class Util {
+  static sanitizePartially = (value: string) => value && value.replace(/<(?!(b|\/b|div|\/div|span|\/span|strong|\/strong|em|\/em|p|\/p|h6|\/h6|ul|\/ul|li|\/li|u|\/u|ol|\/ol))/gi, '&lt;');
+
+}
