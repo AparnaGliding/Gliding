@@ -1,10 +1,3 @@
-/*
- * Copyright (c) 2023 Terzo Technologies Inc - All Rights Reserved
- *
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- *
- * Proprietary and confidential.
- */
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable, throwError, TimeoutError} from 'rxjs';

@@ -1,4 +1,21 @@
-import { Routes } from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 
-export const routes: Routes = [];
+import {DomainGuard} from './auth/domain.guard';
+import {NgModule} from '@angular/core';
+
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
+  },
+];
+@NgModule({
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
+  exports: [RouterModule]
+})
 export class AppRoutingModule { }

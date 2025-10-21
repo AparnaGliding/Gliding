@@ -9,10 +9,14 @@ import {CurrencyPipe, DatePipe} from '@angular/common';
 import {provideAnimations} from '@angular/platform-browser/animations';
 import {GlobalErrorHandler} from './app/shared/global-error-handler';
 import {AuthInterceptor} from './app/auth/auth.interceptor';
+import { appConfig } from './app/app.config';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
+
     importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule, ToastrModule.forRoot({
+      ...appConfig.providers,
         timeOut: 2500,
         extendedTimeOut: 2500,
         closeButton: true,
