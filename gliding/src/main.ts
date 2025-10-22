@@ -14,9 +14,8 @@ import { appConfig } from './app/app.config';
 
 bootstrapApplication(AppComponent, {
   providers: [
-
+    ...appConfig.providers,
     importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule, ToastrModule.forRoot({
-      ...appConfig.providers,
         timeOut: 2500,
         extendedTimeOut: 2500,
         closeButton: true,

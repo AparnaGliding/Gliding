@@ -4,33 +4,13 @@
       <div class="title mb-3">
         Gliding
       </div>
-      <div class="login-container p-5">
-        <div class="form-group mb-4">
+      <div class="login-container">
           <label for="username" class="form-label mb-2">Email Address</label>
-          <input
-            type="text"
-            pInputText
-            id="username"
-            name="username"
-            class="w-100"
-            placeholder="Enter your Username"
-            [(ngModel)]="username" />
-        </div>
-
-        <div class="form-group mb-4">
+          <input  type="text" pInputText id="username" name="username" class="w-100 py-3 pe-12 ps-10" placeholder="Enter your Username" [(ngModel)]="username" />
           <label for="password" class="form-label mb-2">Password</label>
-          <input
-            type="password"
-            pInputText
-            id="password"
-            name="password"
-            class="w-100"
-            placeholder="Enter your Password"
-            [(ngModel)]="password" />
+          <input type="password" pInputText id="password" name="password" class="w-100 py-3 pe-12 ps-10"  placeholder="Enter your Password" [(ngModel)]="password" />
         </div>
-
-        <p-button label="Submit" severity="primary" styleClass="w-100"></p-button>
+      <p-button label="Submit" severity="primary" styleClass="w-100"></p-button>
       </div>
     </div>
   </div>
-</div>

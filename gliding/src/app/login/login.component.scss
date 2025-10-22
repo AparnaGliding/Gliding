@@ -12,9 +12,10 @@
 
 .login-container {
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
+  border-radius: 16px;
   background-color: #FFFFFF;
   color: #545e69;
+  padding: 32px;
 }
 
 .form-group {
@@ -27,6 +28,8 @@
   font-weight: 500;
   color: #374151;
   margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 input {
