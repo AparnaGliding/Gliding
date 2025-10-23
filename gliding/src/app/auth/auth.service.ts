@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map, catchError, of } from 'rxjs';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {map, catchError, of, throwError} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private ssoPasswordLoginEnabled = false;
+  private loggedIn = false;
+
 
   constructor(private http: HttpClient) {}
 
@@ -27,4 +29,14 @@ export class AuthService {
       })
     );
   }
+
+
+  login(credentials: any)  {
+    return this.http.post<any>(`/auth/login`, credentials)
+      .pipe(map((authRes: HttpResponse<any>) => {
+          this.loggedIn = !!authRes.body;
+          return this.loggedIn;
+        }));
+  }
+
 }
