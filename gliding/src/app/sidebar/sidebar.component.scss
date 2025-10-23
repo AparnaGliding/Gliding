@@ -1,12 +1,12 @@
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 0; /* Start from top since header is alongside */
   left: 0;
   bottom: 0;
-  width: 18%; /* collapsed */
+  width: 16rem; /* 256px - matches w-64 in dashboard */
   overflow-x: hidden;
   padding-top: 20px;
-  z-index: 1000;
+  z-index: 30; /* Lower than header z-index */
 }
 
 // Ensure navigation is vertical
@@ -14,35 +14,4 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 0.75rem; // space-y-3 equivalent
-}
-
-.sidebar-link {
-  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 transition-all duration-200 font-medium;
-  display: flex !important;
-  flex-direction: row !important;
-  width: 100%;
-
-  // Default hover state - gray rounded background
-  &:hover {
-    @apply bg-gray-100 text-gray-800 rounded-lg;
-  }
-
-  i {
-    font-size: 1.2rem;
-    flex-shrink: 0;
-  }
-
-  span {
-    flex: 1;
-  }
-}
-
-// Active/Selected state - blue background and text with rounded corners
-.sidebar-link.active {
-  @apply bg-blue-500 text-white font-semibold rounded-lg;
-
-  // Override hover when active
-  &:hover {
-    @apply bg-blue-600 text-white;
-  }
 }
