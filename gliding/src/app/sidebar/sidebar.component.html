@@ -1,0 +1,25 @@
+<div class="p-4 sidebar  bg-white border-r border-gray-200 shadow-sm p-4 fixed left-0 top-0 overflow-y-auto">
+  <nav class="flex flex-col space-y-3">
+    <a
+      routerLink="/apps"
+      routerLinkActive="active"
+      (click)="setActiveItem('apps')"
+      [ngClass]="{ active: isActive('apps') }"
+      class="sidebar-link"
+    >
+      <i class="pi pi-th-large"></i>
+      <span>My Applications</span>
+    </a>
+
+    <a
+      routerLink="/login"
+      routerLinkActive="active"
+      (click)="setActiveItem('admin')"
+      [ngClass]="{ active: isActive('admin') }"
+      class="sidebar-link"
+    >
+      <i class="pi pi-cog"></i>
+      <span>Admin</span>
+    </a>
+  </nav>
+</div>
