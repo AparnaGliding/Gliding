@@ -10,6 +10,10 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'apps',
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
   },
