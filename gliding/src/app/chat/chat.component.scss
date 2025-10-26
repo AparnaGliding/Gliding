@@ -1,0 +1,34 @@
+.main-container {
+  background-color: #EFF6FF;
+  height: calc(100vh - 70px);
+}
+
+.left-container {
+  width: 16rem;
+  border-right: 1px solid #e5e7eb;
+  height: 100%;
+  padding: 1rem;
+}
+
+.middle-container {
+  flex: 1;
+
+}
+
+.right-container {
+  width: 20rem;
+  border-left: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.send-button {
+  border-radius: 5px}
+
+.heading-text{
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+  width: 243px;
+  height: 24px;
+
+
+
+}

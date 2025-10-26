@@ -33,8 +33,9 @@ export class AuthService {
 
   login(credentials: any)  {
     return this.http.post<any>(`/auth/login`, credentials)
-      .pipe(map((authRes: HttpResponse<any>) => {
-          this.loggedIn = !!authRes.body;
+      .pipe(map((authRes: any) => {
+          const responseData = authRes.body !== undefined ? authRes.body : authRes;
+          this.loggedIn = !!responseData;
           return this.loggedIn;
         }));
   }

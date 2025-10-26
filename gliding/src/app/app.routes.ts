@@ -11,7 +11,13 @@ export const routes: Routes = [
   },
   {
     path: 'apps',
-    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+    children : [
+      {
+        path: ':id/chat/:moduleId',
+        loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+      }
+    ]
   },
   {
     path: 'login',

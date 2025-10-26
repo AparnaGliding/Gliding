@@ -1,17 +1,13 @@
 <div class="min-h-screen bg-gray-50">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white border-r border-gray-200 shadow-sm fixed left-0 top-0 h-full overflow-y-auto z-30" style="width: 256px;">
+  <aside class="w-64 border-r border-gray-200 shadow-sm fixed left-0 top-0 h-full overflow-y-auto z-30" style="width: 256px;">
     <app-sidebar></app-sidebar>
   </aside>
 
-  <!-- Header positioned after sidebar -->
   <div style="padding-left: 16%">
   <app-header></app-header>
   </div>
 
-  <!-- Main Content -->
-  <main class="flex-1 ml-64 p-6 pt-12">
-    <!-- Your main content goes here -->
+  <main class="flex-1 ml-64 p-6 pt-12 content">
     <router-outlet></router-outlet>
   </main>
 </div>

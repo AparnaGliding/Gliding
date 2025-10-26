@@ -1,17 +1,17 @@
 .sidebar {
   position: fixed;
-  top: 0; /* Start from top since header is alongside */
+  top: 0;
   left: 0;
   bottom: 0;
-  width: 16rem; /* 256px - matches w-64 in dashboard */
-  overflow-x: hidden;
+  width: 16rem;
   padding-top: 20px;
-  z-index: 30; /* Lower than header z-index */
+  z-index: 30;
+  display: inline-block;
+
 }
 
-// Ensure navigation is vertical
 nav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem; // space-y-3 equivalent
+  gap: 0.75rem;
 }
