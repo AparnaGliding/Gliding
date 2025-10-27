@@ -1,0 +1,136 @@
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <h1 class="main-title">Your Applications</h1>
+    <p class="subtitle">Manage and explore documentation for all your products</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-content">
+        <div class="stat-info">
+          <h3 class="stat-title">Total Applications</h3>
+          <div class="stat-number">
+            <span *ngIf="!isLoading">{{ totalApplications }}</span>
+            <span *ngIf="isLoading" class="loading-text">...</span>
+          </div>
+        </div>
+        <div class="stat-icon applications-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-content">
+        <div class="stat-info">
+          <h3 class="stat-title">Total Modules</h3>
+          <div class="stat-number">
+            <span *ngIf="!isLoading">{{ totalModules }}</span>
+            <span *ngIf="isLoading" class="loading-text">...</span>
+          </div>
+        </div>
+        <div class="stat-icon modules-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-content">
+        <div class="stat-info">
+          <h3 class="stat-title">Total Articles</h3>
+          <div class="stat-number">
+            <span *ngIf="!isLoading">{{ totalArticles }}</span>
+            <span *ngIf="isLoading" class="loading-text">...</span>
+          </div>
+        </div>
+        <div class="stat-icon articles-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor"/>
+            <path d="M14 2v6h6" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Applications Section -->
+  <div class="applications-section">
+    <div class="applications-header">
+      <h2 class="section-title">Applications</h2>
+      <button class="create-btn">
+        <span class="plus-icon">+</span>
+        Create New Application
+      </button>
+    </div>
+
+    <!-- Application Cards -->
+    <div class="applications-grid">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">Loading applications...</h3>
+        </div>
+        <p class="app-description">Please wait while we fetch your applications</p>
+      </div>
+
+      <!-- Dynamic Application Cards -->
+      <div *ngFor="let app of applicationsWithModules" class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">{{ app.name }}</h3>
+          <span class="status-badge active">Active</span>
+        </div>
+        <p class="app-description">{{ getModuleSummaries(app) }}</p>
+
+        <div class="app-stats">
+          <div class="app-stat">
+            <span class="stat-label">Modules</span>
+            <span class="stat-value">{{ app.moduleCount || 0 }}</span>
+          </div>
+          <div class="app-stat">
+            <span class="stat-label">Articles</span>
+            <span class="stat-value">{{ app.articlesCount || 0 }}</span>
+          </div>
+        </div>
+
+        <div class="app-footer">
+          <div class="time-info">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>Recently updated</span>
+          </div>
+          <button class="open-btn" (click)="openApplication(app)">Open →</button>
+        </div>
+      </div>
+
+      <!-- No Applications State -->
+      <div *ngIf="!isLoading && applicationsWithModules.length === 0" class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">No Applications Found</h3>
+        </div>
+        <p class="app-description">No applications are currently available. Create your first application to get started.</p>
+      </div>
+
+      <!-- Create New Application Card -->
+      <div class="app-card create-app-card">
+        <div class="create-app-content">
+          <div class="create-app-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="create-app-title">Create New Application</h3>
+          <p class="create-app-description">Start crawling documentation for a new product or service</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

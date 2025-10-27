@@ -1,4 +1,4 @@
-.dashboard-container {
+.admin-container {
   display: flex;
   min-height: 100vh;
   background-color: #f9fafb;
@@ -12,11 +12,6 @@
   
   /* Default margin for expanded sidebar */
   margin-left: 16rem; /* 256px */
-}
-
-/* Global styles to handle sidebar state changes */
-:host-context(.sidebar-collapsed) .main-content {
-  margin-left: 4rem; /* 64px - collapsed sidebar width */
 }
 
 /* Responsive adjustments */

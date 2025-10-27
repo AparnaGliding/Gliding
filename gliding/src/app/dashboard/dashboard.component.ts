@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SidebarComponent} from '../sidebar/sidebar.component';
 import {RouterOutlet} from '@angular/router';
-import {HeaderComponent} from '../header/header.component';
+import {AppDashboardComponent} from '../app-dashboard/app-dashboard.component';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     SidebarComponent,
     RouterOutlet,
-    HeaderComponent
+    AppDashboardComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

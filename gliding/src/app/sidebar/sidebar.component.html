@@ -1,21 +1,52 @@
-<div class="p-4 sidebar shadow-sm">
-  <nav class="flex flex-col space-y-3">
+<div class="sidebar" [class.collapsed]="!isExpanded">
+  <!-- Logo and Toggle Button -->
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">A</div>
+      <span class="logo-text" *ngIf="isExpanded">AssistQ</span>
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i class="pi" [class.pi-angle-left]="isExpanded" [class.pi-angle-right]="!isExpanded"></i>
+    </button>
+  </div>
+
+  <nav>
+    <!-- My Applications -->
     <a
       routerLink="/apps"
-      routerLinkActive="active"
-      class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 transition-all duration-200 font-medium"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="sidebar-link"
+      [title]="!isExpanded ? 'My Applications' : ''"
     >
       <i class="pi pi-th-large"></i>
-      <span>My Applications</span>
+      <span *ngIf="isExpanded">My Applications</span>
     </a>
 
+    <!-- Admin -->
     <a
-      routerLink="/login"
-      routerLinkActive="active"
-      class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 transition-all duration-200 font-medium"
+      routerLink="/admin"
+      routerLinkActive="active-link"
+      class="sidebar-link"
+      [title]="!isExpanded ? 'Admin' : ''"
     >
       <i class="pi pi-cog"></i>
-      <span>Admin</span>
+      <span *ngIf="isExpanded">Admin</span>
     </a>
   </nav>
+
+  <!-- Bottom Section -->
+  <div class="sidebar-footer">
+    <!-- Help -->
+    <a href="#" class="sidebar-link" [title]="!isExpanded ? 'Help' : ''">
+      <i class="pi pi-question-circle"></i>
+      <span *ngIf="isExpanded">Help</span>
+    </a>
+
+    <!-- Login -->
+    <a href="#" class="sidebar-link" [title]="!isExpanded ? 'Login' : ''">
+      <i class="pi pi-user"></i>
+      <span *ngIf="isExpanded">Login</span>
+    </a>
+  </div>
 </div>

@@ -14,8 +14,16 @@ export const routes: Routes = [
     loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent)
   },
   {
+    path: 'admin',
+    loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'apps/:name/dashboard',
+    loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent)
   },
 ];
 @NgModule({

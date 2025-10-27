@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // @ts-ignore
     const data = JSON.parse(localStorage.getItem('sd'));
     let reqCopy: HttpRequest<any>;
-    let host = `${window.location.protocol}//${window.location.host}${environment.backend_path}`;
+    let host = `${window.location.protocol}//${window.location.hostname}${environment.backend_path}`;
     const actuatorUrl = req.url === '/actuator/health';
     const oauthCallBackUrl = (req.url === '/api/auth/oauth2/authorize/callback' || req.url === '/api/auth/oauth2/authorize/deny');
     if (!actuatorUrl && !oauthCallBackUrl) {

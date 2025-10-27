@@ -1,20 +1,30 @@
 <header class="bg-white border-b shadow-sm border-gray-200 fixed top-0 right-0 z-50" style="left: 256px;">
-  <div class="px-4 py-2" style="padding-right: 50%">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-6">
-        <a class="flex items-center gap-2" href="/apps">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot w-8 h-8 text-blue-600">
-            <path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg><span class="text-xl font-bold text-gray-900">AI Docs Crawler</span>
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between w-full">
+      <!-- Left side: AI Docs Crawler -->
+        <a class="flex items-center gap-2 no-underline hover:no-underline focus:no-underline active:no-underline" style="text-decoration: none !important;" href="/apps">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot w-8 h-8 text-blue-600">
+            <path d="M12 8V4H8"></path><rect width="16" height="12" x="4" y="8" rx="2"></rect><path d="M2 14h2"></path><path d="M20 14h2"></path><path d="M15 13v2"></path><path d="M9 13v2"></path></svg>
+          <span class="text-xl font-bold text-black no-underline" style="text-decoration: none !important; font-weight: 700; font-size: 1.25rem;
+    line-height: 1.75rem; padding-left: 8px">AI Docs Crawler</span>
         </a>
-      </div>
-      <nav class="hidden md:flex items-center gap-1"></nav>
-      <div class="flex items-center gap-4">
-        <button class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-help w-5 h-5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg><span class="hidden sm:inline">Help</span>
+
+      <!-- Right side: Help and User Icon -->
+      <button class="flex items-center gap-6 text-gray-600 hover:text-gray-900 transition border-none outline-none focus:outline-none" style="margin-left: 72%; border: none !important; outline: none !important;">          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-help w-5 h-5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+          <span class="hidden sm:inline" style="padding-left: 8px">Help</span>
         </button>
-        <a class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition" href="/login"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user w-5 h-5"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+
+
+        <a class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-200 transition" href="/login" style="padding-left: 20px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user w-5 h-5">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
         </a>
-      </div>
     </div>
   </div>
 </header>
