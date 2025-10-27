@@ -79,43 +79,43 @@ export class ChatComponent implements OnInit {
         return years === 1 ? '1 year ago' : `${years} years ago`;
       }
     }
-  }
+  }}
 
-  selectChat(chat: ChatModel  ) {
-    this.selectedChatId = chat.chatId;
-    this.isNewChatActive = false;
-    this.loadChatMessages(chat.chatId);
-  }
+  // selectChat(chat: ChatModel  ) {
+  //   this.selectedChatId = chat.chatId;
+  //   this.isNewChatActive = false;
+  //   this.loadChatMessages(chat.chatId);
+  // }
 
-  loadChatMessages(chatId: number) {
-    this.chatService.getChatMessages(chatId).subscribe({
-      next:  (messages) => {
-      this.currentChatMessages = [];
-        messages.forEach((msg, index) => {
-          const botMessage: ChatMessage = {
-            text: '',
-            isUser: false,
-            timestamp: new Date(msg.createdAt),
-            textChunks: [],
-            pendingImages: new Set(),
-            isThoughtProcess: false,
-            isVerificationStep: false,
-            supportingImages: [],
-            id: msg.id.toString(),
-            userQuestion: ''
-          };
-          if (msg.userType === 'USER') {
-            const userMessage: ChatMessage = {
-              text: msg.message,
-              isUser: true,
-              timestamp: new Date(msg.createdAt),
-              id: msg.id.toString()
-            };
-        }
-    }
-    })
-
-  }
-
-}
+  // loadChatMessages(chatId: number) {
+  //   this.chatService.getChatMessages(chatId).subscribe({
+  //     next:  (messages) => {
+  //     this.currentChatMessages = [];
+  //       messages.forEach((msg, index) => {
+  //         const botMessage: ChatMessage = {
+  //           text: '',
+  //           isUser: false,
+  //           timestamp: new Date(msg.createdAt),
+  //           textChunks: [],
+  //           pendingImages: new Set(),
+  //           isThoughtProcess: false,
+  //           isVerificationStep: false,
+  //           supportingImages: [],
+  //           id: msg.id.toString(),
+  //           userQuestion: ''
+  //         };
+  //         if (msg.userType === 'USER') {
+  //           const userMessage: ChatMessage = {
+  //             text: msg.message,
+  //             isUser: true,
+  //             timestamp: new Date(msg.createdAt),
+  //             id: msg.id.toString()
+  //           };
+  //       }
+  //   }
+//     });
+//   //
+//   }
+//
+// }
 

@@ -18,5 +18,8 @@ export class HeaderComponent implements OnInit {
   openChat(appId: number, moduleId: number) {
     this.router.navigate(['/apps', appId, 'chat', moduleId]);
   }
+  openKnowledge(appId: number, moduleId: number) {
+    this.router.navigate(['/apps', appId, 'knowledge-hub']);
+  }
 
 }

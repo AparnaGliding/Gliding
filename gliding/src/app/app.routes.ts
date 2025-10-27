@@ -16,6 +16,10 @@ export const routes: Routes = [
       {
         path: ':id/chat/:moduleId',
         loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+      },
+      {
+        path: ':id/knowledge-hub',
+        loadComponent: () => import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
       }
     ]
   },
