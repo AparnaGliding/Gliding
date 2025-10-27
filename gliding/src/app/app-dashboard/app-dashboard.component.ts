@@ -8,15 +8,15 @@ import {AppDashboardService} from './app-dashboard.service';
   selector: 'app-app-dashboard',
   imports: [CommonModule],
   templateUrl: './app-dashboard.component.html',
-  styleUrl: './app-dashboard.component.scss'
+  styleUrls: ['./app-dashboard.component.scss']
 })
 export class AppDashboardComponent implements OnInit, OnDestroy {
   totalApplications: number = 0;
+  totalModules: number = 0;
+  totalArticles: number = 0;
   applications: ApplicationListingModel[] = [];
   applicationsWithModules: (ApplicationListingModel & { modules?: ApplicationModuleModel[], moduleCount?: number, articlesCount?: number })[] = [];
   isLoading: boolean = true;
-  totalModules: number = 0;
-  totalArticles: number = 0;
   private pollingInterval: any;
 
   constructor(private appDashboardService: AppDashboardService, private router: Router) {}
@@ -33,13 +33,13 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   }
 
   private startPolling(): void {
-    // Poll every 1 minute (60000 ms) to refresh module summaries
+    // Poll every 10 seconds to refresh module summaries
     this.pollingInterval = setInterval(() => {
+      console.log('Polling for updated module summaries every 10 seconds...');
       if (this.applications.length > 0) {
-        console.log('Polling: Refreshing modules for applications...');
         this.loadModulesForApplications(this.applications);
       }
-    }, 60000);
+    }, 10000); // 10 seconds
   }
 
   private loadApplications(): void {

@@ -11,7 +11,6 @@ import {ApplicationModuleModel, ApplicationListingModel, EnhancedApplicationData
   selector: 'app-app-detail',
     imports: [
         CommonModule,
-        HeaderComponent,
         RouterOutlet,
         SidebarComponent
     ],
@@ -22,20 +21,22 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   applicationName: string = '';
   applicationId: string = '';
   applicationData: EnhancedApplicationData | null = null;
-  
+
   // Crawl Results data
   modulesFound: number = 0;
   articlesGenerated: number = 0;
   lastCrawled: string = '';
-  
+
   // Modules data
   modules: ApplicationModuleModel[] = [];
   private pollingInterval: any;
-  
+  isModulesLoading: boolean = false;
+  modulesLoadingMessage: string = 'Scanning for modules...';
+
   // Dropdown data
   allApplications: ApplicationListingModel[] = [];
   isDropdownOpen: boolean = false;
-  
+
   // Navigation data
   activeTab: string = 'Dashboard';
   navigationTabs = [
@@ -48,7 +49,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private router: Router,
     private appDashboardService: AppDashboardService
   ) {}
@@ -66,25 +67,25 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     // Get application data from router state if available
     const navigation = this.router.getCurrentNavigation();
     const routerState = window.history.state;
-    
+
     console.log('=== DEBUG: Checking router state ===');
     console.log('getCurrentNavigation():', navigation);
     console.log('window.history.state:', routerState);
-    
+
     // Try to get data from navigation first, then from history state
     let applicationData = navigation?.extras?.state?.['applicationData'] || routerState?.applicationData;
-    
+
     if (applicationData) {
       this.applicationData = applicationData;
       this.applicationId = this.applicationData.id.toString();
-      
+
       // Debug logging
       console.log('=== DEBUG: Application data received ===');
       console.log('Full applicationData:', this.applicationData);
       console.log('Modules array:', this.applicationData.modules);
       console.log('Modules length:', this.applicationData.modules?.length);
       console.log('First module:', this.applicationData.modules?.[0]);
-      
+
       this.populateData();
       this.startPolling();
     } else {
@@ -151,10 +152,10 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     this.isDropdownOpen = false;
     // Find the full application data from the current applications list if available
     const fullAppData = this.allApplications.find(a => a.id === app.id);
-    
+
     // Navigate to the selected application's detail page
     this.router.navigate(['/apps', app.name, 'dashboard'], {
-      state: { 
+      state: {
         applicationData: {
           ...fullAppData || app,
           // Preserve any additional data if switching from current app
@@ -198,13 +199,6 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   private loadApplicationData(appName: string): void {
     // TODO: Implement logic to load specific application data
     // This could involve calling a service to get application details by name
-    console.log('Loading data for application:', appName);
-    
-    // For now, populate with mock data when no router state data is available
-    this.modulesFound = 24;
-    this.articlesGenerated = 156;
-    this.lastCrawled = '2 hours ago';
-    this.modules = this.getMockModules();
   }
 
   private populateData(): void {
@@ -212,22 +206,24 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       this.modulesFound = this.applicationData.moduleCount || 0;
       this.articlesGenerated = this.applicationData.articlesCount || 0;
       this.lastCrawled = this.calculateLastCrawled();
-      
+
       console.log('=== DEBUG: populateData ===');
       console.log('moduleCount:', this.applicationData.moduleCount);
       console.log('articlesCount:', this.applicationData.articlesCount);
       console.log('modules array exists:', !!this.applicationData.modules);
       console.log('modules array length:', this.applicationData.modules?.length);
-      
+
       // Use passed modules data if available, otherwise load from API
       if (this.applicationData.modules && this.applicationData.modules.length > 0) {
         console.log('=== DEBUG: Using passed modules data ===');
         this.modules = this.applicationData.modules;
+        this.isModulesLoading = false;
         console.log('Final modules array:', this.modules);
         console.log('Sample module data:', this.modules[0]);
       } else {
         console.log('=== DEBUG: No modules in passed data, loading from API ===');
-        // Fallback to loading modules from API
+        // Start loading state and load from API
+        this.isModulesLoading = true;
         this.loadModulesData();
       }
     }
@@ -238,7 +234,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       const lastUpdate = new Date(this.applicationData.lastUpdated);
       const now = new Date();
       const diffInMinutes = Math.floor((now.getTime() - lastUpdate.getTime()) / (1000 * 60));
-      
+
       if (diffInMinutes < 60) {
         return `${diffInMinutes} minutes ago`;
       } else if (diffInMinutes < 1440) {
@@ -255,23 +251,9 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   private loadModulesData(): void {
     if (this.applicationId) {
       const appId = parseInt(this.applicationId);
-      this.appDashboardService.getApplicationModules(appId).subscribe({
-        next: (modules: ApplicationModuleModel[]) => {
-          this.modules = modules.map(module => ({
-            ...module,
-            name: module.moduleName,
-            description: module.moduleSummary || 'Module description not available',
-            dependencies: Math.floor(Math.random() * 3), // Mock dependencies count
-            crawlDepth: 3 // Default crawl depth
-          }));
-          this.modulesFound = modules.length;
-          console.log('Modules loaded for application:', this.modules);
-        },
-        error: (error) => {
-          console.error('Error loading modules:', error);
-          this.modules = this.getMockModules();
-        }
-      });
+
+      // Start progressive loading simulation
+      this.startProgressiveModuleLoading(appId);
 
       // Load articles count
       this.appDashboardService.getArticle(appId, 1, 0, 1000).subscribe({
@@ -285,27 +267,54 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getMockModules(): any[] {
-    // Mock data for demonstration - replace with actual data
-    return [
-      {
-        name: 'Authentication',
-        description: 'User authentication and authorization',
-        dependencies: 0,
-        crawlDepth: 3
-      },
-      {
-        name: 'Dashboard', 
-        description: 'Main dashboard interface',
-        dependencies: 1,
-        crawlDepth: 3
-      },
-      {
-        name: 'Analytics',
-        description: 'Data analytics and reporting',
-        dependencies: 2,
-        crawlDepth: 3
-      }
-    ];
+  private startProgressiveModuleLoading(appId: number): void {
+    // Initial call to get modules
+    this.pollModulesData(appId);
+
+    // Set up polling every 30 seconds for progressive loading
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+    }
+
+    this.pollingInterval = setInterval(() => {
+      this.pollModulesData(appId);
+    }, 30000); // 30 seconds
   }
+
+  private pollModulesData(appId: number): void {
+    console.log('Polling modules data for progressive loading...');
+
+    this.appDashboardService.getApplicationModules(appId).subscribe({
+      next: (modules: ApplicationModuleModel[]) => {
+        const previousCount = this.modules.length;
+        this.modules = modules;
+        this.modulesFound = modules.length;
+
+        console.log(`Modules loaded: ${modules.length} (was ${previousCount})`);
+
+        // Update loading message based on progress
+        if (modules.length === 0) {
+          this.isModulesLoading = true;
+          this.modulesLoadingMessage = 'Scanning for modules...';
+        } else if (modules.length < 6) { // Assuming max 6 modules after 5 minutes
+          this.isModulesLoading = true;
+          this.modulesLoadingMessage = `Found ${modules.length} module${modules.length > 1 ? 's' : ''}, scanning for more...`;
+        } else {
+          this.isModulesLoading = false;
+          this.modulesLoadingMessage = '';
+          // Stop polling after all modules are loaded (after ~5 minutes)
+          if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+          }
+        }
+
+        console.log('Updated modules:', this.modules);
+      },
+      error: (error) => {
+        console.error('Error loading modules:', error);
+        this.isModulesLoading = false;
+      }
+    });
+  }
+
 }

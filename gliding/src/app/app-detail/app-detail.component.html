@@ -131,7 +131,32 @@
           </button>
         </div>
 
+        <!-- Loading State for Modules -->
+        <div *ngIf="isModulesLoading && modules.length === 0" class="modules-loading">
+          <div class="loading-content">
+            <div class="loading-spinner">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.364-6.364l-2.828 2.828M9.464 14.536l-2.828 2.828m12.728 0l-2.828-2.828M9.464 9.464L6.636 6.636" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="loading-message">{{ modulesLoadingMessage }}</p>
+          </div>
+        </div>
+
+        <!-- Modules Grid -->
         <div class="modules-grid">
+          <!-- Loading message when some modules are found but still loading -->
+          <div *ngIf="isModulesLoading && modules.length > 0" class="modules-loading-partial">
+            <div class="loading-content-small">
+              <div class="loading-spinner-small">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2v4m0 12v4m10-10h-4M6 12H2m15.364-6.364l-2.828 2.828M9.464 14.536l-2.828 2.828m12.728 0l-2.828-2.828M9.464 9.464L6.636 6.636" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="loading-message-small">{{ modulesLoadingMessage }}</span>
+            </div>
+          </div>
+
           <div *ngFor="let module of modules" class="module-card">
             <div class="module-header">
               <div class="module-icon">
