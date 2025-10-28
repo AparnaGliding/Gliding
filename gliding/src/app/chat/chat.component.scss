@@ -85,3 +85,66 @@
 .thought-process br {
   line-height: 1.8;
 }
+
+.context-panel {
+  h4 {
+    font-size: 1.25rem;
+    color: #1f2937;
+  }
+
+  h5 {
+    font-size: 1rem;
+    color: #374151;
+  }
+
+  .form-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .form-select {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #1f2937;
+    background-color: #ffffff;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #3b82f6;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+
+  small {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+
+  .articles-list {
+    .article-item {
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background-color: #f9fafb;
+      transition: background-color 0.2s;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f3f4f6;
+      }
+
+      i {
+        font-size: 1rem;
+        margin-top: 0.125rem;
+      }
+
+      .article-text {
+        font-size: 0.875rem;
+        color: #374151;
+        line-height: 1.5;
+      }
+    }
+  }
+}

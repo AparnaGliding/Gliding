@@ -1,9 +1,9 @@
 import {Button} from 'primeng/button';
 import {ActivatedRoute} from '@angular/router';
 import {ChatService} from './chat.service';
-import {ChatMessage, ChatModel, ChatRequest} from './chat.model';
+import {ChatMessage, ChatModel, ChatRequest, ApplicationModuleModel, ArticleListResponseModel} from './chat.model';
 import {InputText} from 'primeng/inputtext';
-import {NgClass, NgIf} from '@angular/common';
+import {NgClass, NgIf, NgFor, CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
 import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
@@ -17,6 +17,8 @@ import {Subscription} from 'rxjs';
     Button,
     NgClass,
     NgIf,
+    NgFor,
+    CommonModule,
     FormsModule,
     Textarea
   ],
@@ -37,6 +39,9 @@ export class ChatComponent implements OnInit {
 
 
   chatHistory: ChatModel[];
+  modules: ApplicationModuleModel[] = [];
+  articles: ArticleListResponseModel[] = [];
+  selectedModule: string = '';
   private hasUnsavedChatChanges = false;
   private isTyping = false;
   private currentStreamSub?: Subscription;
@@ -53,8 +58,10 @@ export class ChatComponent implements OnInit {
     this.app = {
       id : 1 ,
       name : 'Terzo',
-      domain : 'terzo'
+      domain : 'Terzo_Cloud_Contracts_final'
     };
+    this.loadModules();
+    this.loadArticles();
   }
 
   loadChatHistory() {
@@ -170,9 +177,9 @@ export class ChatComponent implements OnInit {
                     }
                   } else if (chunk.isVerificationStep === true) {
                     let str = chunk.supportingImages;
-                    str = str.replace(/^\[|\]$/g, '').trim();
-                    const arr = str ? [str] : [];
-                   botMessage.supportingImages = arr;
+                    // str = str.replace(/^\[|\]$/g, '').trim();
+                    // const arr = str ? [str] : [];
+                   botMessage.supportingImages = str;
                     botMessage.isVerificationStep = true;
                     botMessage.messageId = chunk.messageId;
                   }
@@ -350,5 +357,32 @@ export class ChatComponent implements OnInit {
           this.chatMessages.nativeElement.scrollHeight;
       }
     }, 100);
+  }
+
+  loadModules() {
+    this.chatService.getModulesForApplication(1).subscribe({
+      next: (modules) => {
+        this.modules = modules.filter(m => m.moduleName !== 'Product Overview');
+        this.selectedModule = `${this.app.name} (All Modules)`;
+      },
+      error: (err) => {
+        console.error('Error loading modules:', err);
+      }
+    });
+  }
+
+  loadArticles() {
+    this.chatService.getArticles(1, this.userId, 0, 3).subscribe({
+      next: (articles) => {
+        this.articles = articles;
+      },
+      error: (err) => {
+        console.error('Error loading articles:', err);
+      }
+    });
+  }
+
+  onModuleChange(event: any) {
+    this.selectedModule = event.target.value;
   }
 }

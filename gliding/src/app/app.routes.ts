@@ -14,10 +14,6 @@ export const routes: Routes = [
     loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
     children : [
       {
-        path: ':id/chat/:moduleId',
-        loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
-      },
-      {
         path: ':id/knowledge-hub',
         loadComponent: () => import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
       }
@@ -33,7 +29,13 @@ export const routes: Routes = [
   },
   {
     path: 'apps/:name/dashboard',
-    loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent)
+    loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent),
+    children: [
+      {
+        path: ':id/chat/:moduleId',
+        loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+      }
+    ]
   },
   {
     path: 'apps/:name/settings',

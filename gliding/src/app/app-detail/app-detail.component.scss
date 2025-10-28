@@ -17,14 +17,14 @@
 /* Page Header (inside app detail) */
 .page-header {
   margin-bottom: 2rem;
-  
+
   .app-title-section {
     margin-bottom: 1.5rem;
-    
+
     .app-dropdown-container {
       position: relative;
       display: inline-block;
-      
+
       .app-dropdown-trigger {
         display: flex;
         align-items: center;
@@ -35,27 +35,27 @@
         padding: 0.5rem;
         border-radius: 6px;
         transition: background-color 0.2s ease;
-        
+
         &:hover {
           background-color: #f3f4f6;
         }
-        
+
         .app-name {
           font-size: 1.5rem;
           font-weight: 600;
           color: #1f2937;
         }
-        
+
         svg {
           color: #6b7280;
           transition: transform 0.2s ease;
         }
-        
+
         &:hover svg {
           color: #374151;
         }
       }
-      
+
       .app-dropdown-menu {
         position: absolute;
         top: 100%;
@@ -70,17 +70,17 @@
         visibility: hidden;
         transform: translateY(-10px);
         transition: all 0.2s ease;
-        
+
         &.open {
           opacity: 1;
           visibility: visible;
           transform: translateY(0);
         }
-        
+
         .dropdown-header {
           padding: 0.75rem 1rem;
           border-bottom: 1px solid #f3f4f6;
-          
+
           .dropdown-title {
             font-size: 0.75rem;
             font-weight: 600;
@@ -88,11 +88,11 @@
             letter-spacing: 0.05em;
           }
         }
-        
+
         .dropdown-apps {
           max-height: 200px;
           overflow-y: auto;
-          
+
           .dropdown-app-item {
             width: 100%;
             display: flex;
@@ -104,20 +104,20 @@
             text-align: left;
             cursor: pointer;
             transition: background-color 0.2s ease;
-            
+
             &:hover {
               background-color: #f9fafb;
             }
-            
+
             &.active {
               background-color: #eef2ff;
               color: #6366f1;
-              
+
               .app-icon {
                 color: #6366f1;
               }
             }
-            
+
             .app-icon {
               width: 20px;
               height: 20px;
@@ -126,20 +126,20 @@
               align-items: center;
               justify-content: center;
             }
-            
+
             .app-name {
               font-weight: 500;
               color: #374151;
             }
           }
         }
-        
+
         .dropdown-divider {
           height: 1px;
           background-color: #f3f4f6;
           margin: 0.5rem 0;
         }
-        
+
         .dropdown-create-btn {
           width: 100%;
           display: flex;
@@ -154,11 +154,11 @@
           font-weight: 500;
           transition: background-color 0.2s ease;
           border-radius: 0 0 8px 8px;
-          
+
           &:hover {
             background-color: #eef2ff;
           }
-          
+
           .create-icon {
             width: 20px;
             height: 20px;
@@ -170,12 +170,12 @@
       }
     }
   }
-  
+
   .navigation-tabs {
     display: flex;
     gap: 0.5rem;
     border-bottom: 1px solid #e5e7eb;
-    
+
     .nav-tab {
       padding: 0.75rem 1rem;
       background: none;
@@ -185,12 +185,12 @@
       cursor: pointer;
       border-bottom: 2px solid transparent;
       transition: all 0.2s ease;
-      
+
       &:hover {
         color: #374151;
         background-color: #f9fafb;
       }
-      
+
       &.active {
         color: #6366f1;
         border-bottom-color: #6366f1;
@@ -213,12 +213,12 @@
 /* Crawl Results Section */
 .crawl-results-section {
   margin-bottom: 3rem;
-  
+
   .crawl-stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    
+
     .crawl-stat-card {
       background: white;
       border-radius: 12px;
@@ -229,12 +229,12 @@
       align-items: center;
       gap: 1rem;
       transition: all 0.2s ease;
-      
+
       &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
       }
-      
+
       .stat-icon {
         width: 48px;
         height: 48px;
@@ -242,23 +242,23 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        
+
         &.modules-icon {
           background-color: #ddd6fe;
           color: #7c3aed;
         }
-        
+
         &.articles-icon {
           background-color: #dcfce7;
           color: #16a34a;
         }
-        
+
         &.time-icon {
           background-color: #dbeafe;
           color: #2563eb;
         }
       }
-      
+
       .stat-info {
         .stat-number {
           font-size: 1.5rem;
@@ -266,7 +266,7 @@
           color: #1f2937;
           margin-bottom: 0.25rem;
         }
-        
+
         .stat-label {
           font-size: 0.875rem;
           color: #6b7280;
@@ -287,19 +287,19 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   margin-bottom: 2rem;
-  
+
   .loading-content {
     text-align: center;
-    
+
     .loading-spinner {
       margin-bottom: 1rem;
-      
+
       svg {
         color: #6366f1;
         animation: spin 1s linear infinite;
       }
     }
-    
+
     .loading-message {
       color: #6b7280;
       font-size: 1rem;
@@ -318,19 +318,19 @@
   border-radius: 8px;
   border: 1px solid #e5e7eb;
   margin-bottom: 1rem;
-  
+
   .loading-content-small {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    
+
     .loading-spinner-small {
       svg {
         color: #6366f1;
         animation: spin 1s linear infinite;
       }
     }
-    
+
     .loading-message-small {
       color: #6b7280;
       font-size: 0.875rem;
@@ -354,7 +354,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
-    
+
     .rerun-crawl-btn {
       display: flex;
       align-items: center;
@@ -367,23 +367,23 @@
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.2s ease;
-      
+
       &:hover {
         background-color: #5b21b6;
       }
-      
+
       svg {
         width: 16px;
         height: 16px;
       }
     }
   }
-  
+
   .modules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1.5rem;
-    
+
     .module-card {
       background: white;
       border-radius: 12px;
@@ -391,18 +391,18 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       border: 1px solid #e5e7eb;
       transition: all 0.2s ease;
-      
+
       &:hover {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
       }
-      
+
       .module-header {
         display: flex;
         align-items: flex-start;
         gap: 1rem;
         margin-bottom: 1rem;
-        
+
         .module-icon {
           width: 40px;
           height: 40px;
@@ -414,17 +414,17 @@
           justify-content: center;
           flex-shrink: 0;
         }
-        
+
         .module-info {
           flex: 1;
-          
+
           .module-name {
             font-size: 1.125rem;
             font-weight: 600;
             color: #1f2937;
             margin: 0 0 0.5rem 0;
           }
-          
+
           .module-description {
             font-size: 0.875rem;
             color: #6b7280;
@@ -433,43 +433,43 @@
           }
         }
       }
-      
+
       .module-stats {
         margin-bottom: 1rem;
-        
+
         .module-stat {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          
+
           .stat-value {
             font-weight: 600;
             color: #1f2937;
           }
-          
+
           .stat-label {
             font-size: 0.875rem;
             color: #6b7280;
           }
         }
       }
-      
+
       .module-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+
         .crawl-depth {
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          
+
           label {
             font-size: 0.875rem;
             color: #374151;
             font-weight: 500;
           }
-          
+
           .depth-select {
             padding: 0.5rem;
             border: 1px solid #d1d5db;
@@ -477,7 +477,7 @@
             font-size: 0.875rem;
             background: white;
             cursor: pointer;
-            
+
             &:focus {
               outline: none;
               border-color: #6366f1;
@@ -485,7 +485,7 @@
             }
           }
         }
-        
+
         .module-rerun-btn {
           display: flex;
           align-items: center;
@@ -499,25 +499,25 @@
           font-weight: 500;
           cursor: pointer;
           transition: background-color 0.2s ease;
-          
+
           &:hover {
             background-color: #5b21b6;
           }
-          
+
           svg {
             width: 14px;
             height: 14px;
           }
         }
       }
-      
+
       .module-navigation {
         display: flex;
         gap: 0.5rem;
         margin-top: 1rem;
         padding-top: 1rem;
         border-top: 1px solid #f3f4f6;
-        
+
         .module-nav-btn {
           flex: 1;
           padding: 0.75rem 1rem;
@@ -527,21 +527,21 @@
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s ease;
-          
+
           &.ama-btn {
             background-color: #f3f4f6;
             color: #374151;
-            
+
             &:hover {
               background-color: #e5e7eb;
               color: #1f2937;
             }
           }
-          
+
           &.details-btn {
             background-color: #6366f1;
             color: white;
-            
+
             &:hover {
               background-color: #5b21b6;
             }
@@ -557,7 +557,7 @@
   padding: 2rem;
   text-align: center;
   color: #6b7280;
-  
+
   h2 {
     color: #1f2937;
     margin-bottom: 1rem;
@@ -570,15 +570,15 @@
     margin-left: 0;
     padding: 16px;
   }
-  
+
   .crawl-stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .modules-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .modules-header {
     flex-direction: column;
     gap: 1rem;

@@ -119,8 +119,37 @@
     </div>
 
   <div class="right-container default-border bg-white">
-    <h4>Chat Info</h4>
+    <div class="context-panel">
+      <h4 class="fw-bold mb-4">Context</h4>
 
+      <!-- Selected Scope Section -->
+      <div class="mb-4">
+        <label class="form-label text-secondary fw-medium mb-2">Selected Scope</label>
+        <select
+          class="form-select form-select-lg"
+          [(ngModel)]="selectedModule"
+          (change)="onModuleChange($event)">
+          <option [value]="app.name + ' (All Modules)'">{{app.name}} (All Modules)</option>
+          @for (module of modules; track module.id) {
+            <option [value]="module.moduleName">{{module.moduleName}}</option>
+          }
+        </select>
+        <small class="text-secondary mt-2 d-block">Questions will search across all documentation</small>
+      </div>
+
+      <!-- Generated Articles Section -->
+      <div>
+        <h5 class="fw-medium mb-3">Generated Articles</h5>
+        <div class="articles-list">
+          @for (article of articles; track article.id) {
+            <div class="article-item d-flex align-items-start gap-2 mb-3">
+              <i class="pi pi-file text-secondary"></i>
+              <span class="article-text">{{article.question}}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

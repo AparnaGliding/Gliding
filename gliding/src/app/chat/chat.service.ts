@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {map, Observable, throwError} from 'rxjs';
-import {ChatMessageModel, ChatModel, ChatRequest} from './chat.model';
+import {ChatMessageModel, ChatModel, ChatRequest, ApplicationModuleModel, ArticleListResponseModel} from './chat.model';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 @Injectable({
@@ -107,5 +107,35 @@ export class ChatService {
       };
       return () => es.close();
     });
+  }
+
+  getModulesForApplication(applicationId: number): Observable<ApplicationModuleModel[]> {
+    return this.http.get<ApplicationModuleModel[]>(`/application/${applicationId}/modules`).pipe(
+      map((res: any) => {
+        return res || [];
+      }),
+      catchError(error => {
+        console.error('Error fetching modules:', error);
+        throw error;
+      })
+    );
+  }
+
+  getArticles(applicationId: number, userId: number, offset: number, limit: number): Observable<ArticleListResponseModel[]> {
+    const params = new HttpParams()
+      .set('applicationId', applicationId.toString())
+      .set('userId', userId.toString())
+      .set('offset', offset.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<ArticleListResponseModel[]>('/article', { params }).pipe(
+      map((res: any) => {
+        return res || [];
+      }),
+      catchError(error => {
+        console.error('Error fetching articles:', error);
+        throw error;
+      })
+    );
   }
 }

@@ -121,9 +121,9 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
   onModuleAMA(module: ApplicationModuleModel): void {
     console.log('Opening AMA for module:', module.moduleName);
-    // Navigate to AMA tab with module context
     this.onTabClick('AMA');
-    // TODO: Pass module context to AMA component
+    const moduleId = 1;
+    this.router.navigate(['/apps', 1, 'chat', 1]);
   }
 
   onModuleViewDetails(module: ApplicationModuleModel): void {

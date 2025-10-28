@@ -45,3 +45,21 @@ export interface ChatRequest {
   userId: string;
   chatId: string;
 }
+
+export interface ApplicationModuleModel {
+  id: number;
+  moduleName: string;
+  moduleUrl: string;
+  moduleSummary: string;
+  applicationId: number;
+  crawlStatus: string;
+  createdAt: Date;
+  modifiedAt: Date;
+  version: number;
+}
+
+export interface ArticleListResponseModel {
+  id: number;
+  question: string;
+  createdAt: Date;
+}
