@@ -29,10 +29,10 @@
               "src/robots.txt"
             ],
             "styles": [
-              "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css",
-              "node_modules/primeicons/primeicons.css"
+              "node_modules/primeicons/primeicons.css",
+              "src/sass/main.scss"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
@@ -111,7 +111,6 @@
               }
             ],
             "styles": [
-              "src/styles.css"
             ],
             "scripts": []
           }

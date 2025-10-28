@@ -1,0 +1,29 @@
+@use "../utilities/variables";
+
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+body{
+  font-family: variables.$base-font-family;
+  font-size: variables.$base-font-size;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-weight-normal {
+  font-weight: 400;
+}
+
+.p-button.blue {
+  background-color: #3B82F6;
+  border-color: #3B82F6;
+  color: #ffffff;
+}
+
+.p-button.blue:not(:disabled):hover {
+  background-color: #2563eb; // A slightly darker blue for hover
+  border-color: #2563eb;
+}
+

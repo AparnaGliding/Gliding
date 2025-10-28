@@ -1,16 +1,46 @@
 <div class="background">
-  <div class="row align-items-center justify-content-center h-100 w-100">
-    <div class="col-xxl-5 rounded">
-      <div class="title mb-3">
-        Gliding
-      </div>
-      <div class="login-container">
-          <label for="username" class="form-label mb-2">Email Address</label>
-          <input  type="text" pInputText id="username" name="username" class="w-100 py-3 pe-12 ps-10" placeholder="Enter your Username" [(ngModel)]="username" />
-          <label for="password" class="form-label mb-2">Password</label>
-          <input type="password" pInputText id="password" name="password" class="w-100 py-3 pe-12 ps-10"  placeholder="Enter your Password" [(ngModel)]="password" />
+  <div class="row flex-column align-items-center justify-content-center h-100 w-100">
+    <div class="text-center upper-container mb-4">
+<!--      <div class="d-flex align-items-center justify-content-center mb-3">-->
+<!--        <img class="logo me-2" alt="" src="../../assets/images/logo.svg"/>-->
+<!--        <div class="fw-bold fs-3">ASSISTQ</div>-->
+<!--      </div>-->
+      <div class="fw-bolder fs-3 mb-2">Welcome Back</div>
+      <div class="fw-light text-muted fs-6">Sign in to access your documentation workspace</div>
+    </div>
+    <div class="login-container mb-5 rounded-4 ">
+      <div class = "d-flex flex-column gap-3">
+        <div>
+      <label for="username" class="label-text mb-2">Email Address</label>
+      <input type="text" pInputText id="username" name="username" class="w-100 py-3 pe-12 ps-10"
+             placeholder="Enter your Username" [(ngModel)]="email"/>
         </div>
-      <p-button label="Submit" severity="primary" styleClass="w-100"></p-button>
+        <div>
+      <label for="password" class="label-text mb-2">Password</label>
+      <input type="password" pInputText id="password" name="password" class="w-100 py-3 pe-12 ps-10 mb-2"
+             placeholder="Enter your Password" [(ngModel)]="password"/>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <div>
+      <p-check-box class = "me-2"[(ngModel)]="remember" [binary]="true"></p-check-box>
+      <label class = "me-lg-1">Remember me</label>
+          </div>
+      <div class="text-center pointer gray">
+        Forgot password?
       </div>
+          </div>
+
+      <p-button label="Sign In" styleClass="w-100 blue mb-3" (click)="logInByPassword()"></p-button>
+      <div class = "text-center">
+        Don't have an account? Sign up
+      </div>
+      </div>
+
+    </div>
+    <div class = "text-center">
+      By signing in, you agree to our Terms of Service and Privacy Policy
     </div>
   </div>
+</div>
+
