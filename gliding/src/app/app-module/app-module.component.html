@@ -1,0 +1,91 @@
+
+<app-header
+        [showAppDropdown]="true"
+        [currentAppName]="applicationName"
+        [applications]="allApplications"
+        [tabs]="navigationTabs"
+        (appSelected)="selectApplication($event)"
+        (createNewApplication)="createNewApplication()"
+        (tabSelected)="onTabClick($event)"></app-header>
+<div class="modules-page py-5">
+  <div class="page-header">
+    <h2 class="title">Modules</h2>
+    <div class="view-switch">
+      <button class="switch-btn" [class.active]="viewMode==='list'" (click)="setView('list')">List</button>
+      <button class="switch-btn" [class.active]="viewMode==='table'" (click)="setView('table')">Table</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="state loading">Loading modules…</div>
+  <div *ngIf="!isLoading && error" class="state error">{{ error }}</div>
+  <div *ngIf="!isLoading && !error && modules.length === 0" class="state empty">No modules found.</div>
+
+  <!-- LIST VIEW -->
+  <div *ngIf="!isLoading && !error && modules.length > 0 && viewMode==='list'" class="list">
+    <div class="module-card" *ngFor="let m of modules" (click)="onOpenModule(m)">
+      <div class="card-left">
+        <div class="icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div class="info">
+          <div class="name">{{ m.moduleName }}</div>
+          <div class="summary">{{ m.moduleSummary || 'Module description not available' }}</div>
+          <div class="meta">
+            <span class="meta-item">Created: {{ m.createdAt | date:'MMM d, y' }}</span>
+            <span class="dot">•</span>
+            <span class="meta-item">Last Sync: {{ m.modifiedAt | date:'MMM d, y' }}</span>
+            <span class="dot">•</span>
+            <span class="meta-item">0 dependencies</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-right">
+        <span class="status" [class.active]="m.crawlStatus==='ACTIVE'" [class.syncing]="m.crawlStatus==='SYNCING'" [class.idle]="m.crawlStatus!=='ACTIVE' && m.crawlStatus!=='SYNCING'">
+          {{ m.crawlStatus || 'Idle' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE VIEW -->
+  <div *ngIf="!isLoading && !error && modules.length > 0 && viewMode==='table'" class="table-wrap">
+    <div class="table">
+      <div class="thead">
+        <div class="th col-module">Module</div>
+        <div class="th col-status">Status</div>
+        <div class="th col-created">Created</div>
+        <div class="th col-sync">Last Sync</div>
+        <div class="th col-deps">Dependencies</div>
+      </div>
+      <div class="tbody">
+        <div class="tr" *ngFor="let m of modules" (click)="onOpenModule(m)">
+          <div class="td col-module">
+            <div class="row-module">
+              <div class="icon small">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+              </div>
+              <div class="module-meta">
+                <div class="name">{{ m.moduleName }}</div>
+                <div class="summary">{{ m.moduleSummary || 'Module description not available' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="td col-status">
+            <span class="status" [class.active]="m.crawlStatus==='ACTIVE'" [class.syncing]="m.crawlStatus==='SYNCING'" [class.idle]="m.crawlStatus!=='ACTIVE' && m.crawlStatus!=='SYNCING'">
+              {{ m.crawlStatus || 'Idle' }}
+            </span>
+          </div>
+          <div class="td col-created">{{ m.createdAt | date:'MMM d, y' }}</div>
+          <div class="td col-sync">{{ m.modifiedAt | date:'MMM d, y' }}</div>
+          <div class="td col-deps">0 dependencies</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

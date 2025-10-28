@@ -1,0 +1,195 @@
+ .modules-page {
+  /* Full width layout with safe padding */
+   background-color: #f8fafc;
+  /* Leave space for the fixed header (logo row + tabs) */
+   padding: 112px 9% 48px;
+   min-height: 100vh;
+  /* Allow scrolling when content exceeds viewport */
+  overflow-y: auto;
+  overflow-x: hidden;
+ }
+
+ .navigation-tabs {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+
+  .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #ffffff;
+    border: 1px solid transparent;
+    color: #6b7280;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+
+    &:hover {
+      background: #f9fafb;
+      color: #111827;
+    }
+
+    &.active {
+      color: #2563eb;
+      background: #eef2ff;
+      border-color: #dbeafe;
+      box-shadow: inset 0 -2px 0 #2563eb;
+    }
+  }
+ }
+
+ .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  .title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .view-switch {
+    display: flex;
+    gap: .5rem;
+  }
+
+  .switch-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .5rem .75rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    cursor: default;
+
+    &.active {
+      background: #eef2ff;
+      color: #2563eb;
+      border-color: #dbeafe;
+    }
+  }
+ }
+
+ .state {
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  &.loading { background: #f9fafb; color: #6b7280; }
+  &.error { background: #fef2f2; color: #b91c1c; }
+  &.empty { background: #f9fafb; color: #6b7280; }
+ }
+
+ .list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+ }
+
+ .module-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .05s ease;
+
+  &:hover {
+    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.08);
+  }
+ }
+
+ .card-left {
+  display: flex;
+  gap: 1rem;
+ }
+
+ .icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #2563eb;
+ }
+
+ .info {
+  .name { font-weight: 700; color: #111827; margin-bottom: .25rem; }
+  .summary { color: #6b7280; margin-bottom: .5rem; }
+  .meta { display: flex; align-items: center; gap: .5rem; color: #6b7280; font-size: .875rem; }
+  .dot { color: #d1d5db; }
+ }
+
+ .card-right {
+  display: flex;
+  align-items: start;
+}
+
+ .status {
+  font-size: .8125rem;
+  padding: .25rem .5rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #6b7280;
+
+  &.active { background: #e8faef; color: #16a34a; }
+  &.syncing { background: #eef2ff; color: #2563eb; }
+  &.idle { background: #f3f4f6; color: #6b7280; }
+ }
+
+ /* Table View */
+ .table-wrap { margin-top: .5rem; overflow: auto; }
+ .table {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Ensure wide tables can scroll horizontally */
+  min-width: 960px;
+ }
+
+ .thead, .tr {
+  display: grid;
+  grid-template-columns: 1.5fr 0.8fr 0.8fr 0.8fr 0.8fr;
+  align-items: center;
+ }
+
+ .thead {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: .8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  border-bottom: 1px solid #e5e7eb;
+ }
+
+ .th, .td { padding: .875rem 1rem; }
+
+ .tbody .tr {
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background-color .15s ease;
+ }
+
+ .tbody .tr:hover { background: #f9fafb; }
+ .tbody .tr:last-child { border-bottom: none; }
+
+ .row-module { display: flex; align-items: center; gap: .75rem; }
+ .icon.small { width: 36px; height: 36px; border-radius: 8px; background: #eef2ff; color: #2563eb; display: grid; place-items: center; }
+ .module-meta .name { font-weight: 600; color: #111827; }
+ .module-meta .summary { color: #6b7280; font-size: .875rem; }
+
+

@@ -1,65 +1,16 @@
 <div class="app-detail-container">
   <!-- Header -->
-  <app-header [showAppDropdown]="true"></app-header>
+  <app-header
+    [showAppDropdown]="true"
+    [currentAppName]="applicationName"
+    [applications]="allApplications"
+    [tabs]="navigationTabs"
+    (appSelected)="selectApplication($event)"
+    (createNewApplication)="createNewApplication()"
+    (tabSelected)="onTabClick($event)"></app-header>
   <!-- Main Content -->
-  <div style="padding-left: 9%">
-    <!-- Application Header -->
-    <div class="page-header">
-      <div class="app-title-section">
-        <div class="app-dropdown-container">
-          <button class="app-dropdown-trigger" (click)="toggleDropdown()">
-            <span class="app-name">{{ applicationName }}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-
-          <div class="app-dropdown-menu" [class.open]="isDropdownOpen">
-            <div class="dropdown-header">
-              <span class="dropdown-title">SWITCH APPLICATION</span>
-            </div>
-
-            <div class="dropdown-apps">
-              <button
-                *ngFor="let app of allApplications"
-                class="dropdown-app-item"
-                [class.active]="app.name === applicationName"
-                (click)="selectApplication(app)">
-                <div class="app-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor"/>
-                    <path d="M14 2v6h6" fill="currentColor"/>
-                  </svg>
-                </div>
-                <span class="app-name">{{ app.name }}</span>
-              </button>
-            </div>
-
-            <div class="dropdown-divider"></div>
-
-            <button class="dropdown-create-btn" (click)="createNewApplication()">
-              <div class="create-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-              </div>
-              <span>Create New Application</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="navigation-tabs">
-        <button
-          *ngFor="let tab of navigationTabs"
-          class="nav-tab"
-          [class.active]="tab.active"
-          (click)="onTabClick(tab.name)">
-          {{ tab.name }}
-        </button>
-      </div>
-    </div>
+  <div class="main-content py-5">
+    <!-- Header now renders app dropdown and tabs -->
 
     <!-- Dashboard Content -->
     <div *ngIf="activeTab === 'Dashboard'" class="dashboard-content">
@@ -70,9 +21,7 @@
         <div class="crawl-stats-grid">
           <div class="crawl-stat-card">
             <div class="stat-icon modules-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-puzzle w-8 h-8"><path d="M15.39 4.39a1 1 0 0 0 1.68-.474 2.5 2.5 0 1 1 3.014 3.015 1 1 0 0 0-.474 1.68l1.683 1.682a2.414 2.414 0 0 1 0 3.414L19.61 15.39a1 1 0 0 1-1.68-.474 2.5 2.5 0 1 0-3.014 3.015 1 1 0 0 1 .474 1.68l-1.683 1.682a2.414 2.414 0 0 1-3.414 0L8.61 19.61a1 1 0 0 0-1.68.474 2.5 2.5 0 1 1-3.014-3.015 1 1 0 0 0 .474-1.68l-1.683-1.682a2.414 2.414 0 0 1 0-3.414L4.39 8.61a1 1 0 0 1 1.68.474 2.5 2.5 0 1 0 3.014-3.015 1 1 0 0 1-.474-1.68l1.683-1.682a2.414 2.414 0 0 1 3.414 0z"></path></svg>
             </div>
             <div class="stat-info">
               <div class="stat-number">{{ modules.length }}</div>
@@ -121,13 +70,10 @@
       <div class="modules-section">
         <div class="modules-header">
           <h2 class="section-title">Modules</h2>
-          <button class="rerun-crawl-btn" (click)="onRerunCrawl()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 4v6h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Re-run Crawl
-          </button>
+          <div class="modules-header-actions">
+            <button class="rerun-crawl-btn" (click)="onViewAll()">
+              View All            </button>
+          </div>
         </div>
 
         <!-- Loading State for Modules -->

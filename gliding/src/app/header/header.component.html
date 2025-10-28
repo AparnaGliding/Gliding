@@ -1,17 +1,44 @@
-<header class="app-header bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+<header class="app-header fixed top-0 left-0 right-0 z-50">
   <div class="header-inner">
-    <!-- Left: Logo -->
-    <a routerLink="/apps" class="brand">
-      <div class="brand-icon">A</div>
-      <span class="brand-text">AssistQ</span>
-    </a>
+    <!-- Left group: Logo + Application switcher -->
+    <div class="left-group">
+      <a routerLink="/apps" class="brand">
+        <div class="brand-icon">A</div>
+        <span class="brand-text">AssistQ</span>
+      </a>
 
-    <!-- Middle: Optional App Dropdown (only for app-detail) -->
-    <div class="app-switcher" *ngIf="showAppDropdown">
-      <button class="app-switcher-btn">
-        <span class="current-app">SaaS Platform Docs</span>
-        <i class="pi pi-angle-down"></i>
-      </button>
+      <div class="app-dropdown-container" *ngIf="showAppDropdown">
+        <button class="app-switcher-btn" (click)="toggleDropdown()">
+          <span class="current-app">{{ currentAppName || 'Select Application' }}</span>
+          <i class="pi pi-angle-down"></i>
+        </button>
+
+        <div class="app-dropdown-menu" [class.open]="isDropdownOpen">
+          <div class="dropdown-header">
+            <span class="dropdown-title">SWITCH APPLICATION</span>
+          </div>
+
+          <div class="dropdown-apps">
+            <button
+              *ngFor="let app of applications"
+              class="dropdown-app-item"
+              [class.active]="app.name === currentAppName"
+              (click)="onSelectApp(app)">
+              <div class="app-icon">
+                <i class="pi pi-briefcase"></i>
+              </div>
+              <span class="app-name">{{ app.name }}</span>
+            </button>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <button class="dropdown-create-btn" (click)="onCreateNew()">
+            <i class="pi pi-plus"></i>
+            <span>Create New Application</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Right: Nav -->
@@ -20,18 +47,29 @@
         <i class="pi pi-th-large"></i>
         <span>My Applications</span>
       </a>
-      <a routerLink="/admin" routerLinkActive="active" class="nav-link">
-        <i class="pi pi-cog"></i>
-        <span>Admin</span>
-      </a>
       <a href="#" class="nav-link">
         <i class="pi pi-question-circle"></i>
         <span>Help</span>
+      </a>
+      <a routerLink="/admin" routerLinkActive="active" class="nav-link">
+        <i class="pi pi-cog"></i>
+        <span>Admin</span>
       </a>
       <a href="/login" class="nav-link">
         <i class="pi pi-user"></i>
         <span>Login</span>
       </a>
+    </nav>
+  </div>
+
+  <!-- Secondary navbar for tabs -->
+  <div class="tabs-bar px-4 py-2 justify-content-center" *ngIf="tabs?.length">
+    <nav class="tabs-nav">
+      <button
+        *ngFor="let tab of tabs"
+        class="tab-link"
+        [class.active]="tab.active"
+        (click)="onTabClick(tab.name)">{{ tab.name }}</button>
     </nav>
   </div>
 </header>

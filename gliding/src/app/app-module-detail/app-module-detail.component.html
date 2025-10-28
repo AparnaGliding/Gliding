@@ -1,0 +1,99 @@
+<app-header [showAppDropdown]="true"></app-header>
+
+<div class="module-detail-page">
+  <!-- Top Navigation Tabs (same as app-detail) -->
+  <div class="navigation-tabs">
+    <button
+      *ngFor="let tab of navigationTabs"
+      class="nav-tab"
+      [class.active]="tab.active"
+      (click)="onTopTabClick(tab.name)">
+      {{ tab.name }}
+    </button>
+  </div>
+
+  <div class="content-wrap">
+    <div class="back-link" (click)="backToModules()">
+      ← Back to Modules
+    </div>
+
+    <div class="layout">
+      <!-- Left Summary Panel -->
+      <aside class="summary">
+        <div class="summary-header">
+          <div class="icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" fill="none"/>
+              <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          </div>
+          <div class="title-row">
+            <h2 class="title">Authentication</h2>
+            <span class="status active">Active</span>
+          </div>
+        </div>
+
+        <div class="summary-block">
+          <div class="label">Summary</div>
+          <div class="value">User authentication and authorization</div>
+        </div>
+
+        <div class="summary-block">
+          <div class="label">Last Crawled</div>
+          <div class="value">Oct 20, 2025</div>
+        </div>
+
+        <div class="summary-block">
+          <div class="label">Features</div>
+          <div class="value">6 features crawled</div>
+        </div>
+
+        <div class="summary-block">
+          <div class="label">Articles</div>
+          <div class="value">4 articles</div>
+        </div>
+      </aside>
+
+      <!-- Right Main Panel -->
+      <main class="main">
+        <!-- Inner Tabs -->
+        <div class="inner-tabs">
+          <button
+            *ngFor="let t of innerTabs"
+            class="inner-tab"
+            [class.active]="t.active"
+            (click)="onInnerTabClick(t.name)">
+            {{ t.name }}
+          </button>
+        </div>
+
+        <!-- Features content placeholder -->
+        <section *ngIf="innerActiveTab==='Features'" class="features">
+          <h3>Features</h3>
+          <div class="feature-card">
+            <div class="index">1</div>
+            <div class="body">
+              <div class="name">User Login</div>
+              <div class="desc">Standard username/password authentication</div>
+              <div class="endpoint">/api/auth/login</div>
+              <div class="related">
+                <span>Related Articles:</span>
+                <a>Authentication Setup</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AMA placeholder -->
+        <section *ngIf="innerActiveTab==='AMA'" class="ama">
+          <p>AMA content will be shown here.</p>
+        </section>
+
+        <!-- Articles placeholder -->
+        <section *ngIf="innerActiveTab==='Articles'" class="articles">
+          <p>Articles content will be shown here.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
