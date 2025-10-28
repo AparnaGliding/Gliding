@@ -2,7 +2,7 @@
   <!-- Header -->
   <app-header [showAppDropdown]="true"></app-header>
   <!-- Main Content -->
-  <div style="padding-left: 9%">
+  <div style="padding-left: 9%; padding-right:5%">
     <!-- Application Header -->
     <div class="page-header">
       <div class="app-title-section">
@@ -121,13 +121,10 @@
       <div class="modules-section">
         <div class="modules-header">
           <h2 class="section-title">Modules</h2>
-          <button class="rerun-crawl-btn" (click)="onRerunCrawl()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 4v6h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Re-run Crawl
-          </button>
+          <div class="modules-header-actions">
+            <button class="rerun-crawl-btn" (click)="onViewAll()">
+              View All            </button>
+          </div>
         </div>
 
         <!-- Loading State for Modules -->

@@ -39,6 +39,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   activeTab: string = 'Dashboard';
   navigationTabs = [
     { name: 'Dashboard', active: true },
+    { name: 'Modules', active: false },
     { name: 'AMA', active: false },
     { name: 'Knowledge Hub', active: false },
     { name: 'Analytics', active: false },
@@ -128,9 +129,13 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
   onModuleViewDetails(module: ApplicationModuleModel): void {
     console.log('Viewing details for module:', module.moduleName);
-    // Navigate to Knowledge Hub tab with module context
-    this.onTabClick('Knowledge Hub');
-    // TODO: Pass module context to Knowledge Hub component
+    // Navigate to app modules list route
+    this.router.navigate(['/apps', this.applicationName, 'modules', module.id]);
+  }
+
+  onViewAll(): void {
+    // Navigate to app modules list route
+    this.router.navigate(['/apps', this.applicationName, 'modules']);
   }
 
   onTabClick(tabName: string): void {

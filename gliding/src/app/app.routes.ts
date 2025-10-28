@@ -39,6 +39,14 @@ export const routes: Routes = [
     path: 'apps/:name/settings',
     loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
   },
+  {
+    path: 'apps/:name/modules',
+    loadComponent: () => import('./app-module/app-module.component').then(m => m.AppModuleComponent)
+  },
+  {
+    path: 'apps/:name/modules/:id',
+    loadComponent: () => import('./app-module-detail/app-module-detail.component').then(m => m.AppModuleDetailComponent)
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
