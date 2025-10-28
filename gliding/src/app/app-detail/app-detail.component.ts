@@ -1,19 +1,17 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import {HeaderComponent} from '../header/header.component';
-import {RouterOutlet} from '@angular/router';
-import {SidebarComponent} from '../sidebar/sidebar.component';
-import {AppDashboardService} from '../app-dashboard/app-dashboard.service';
-import {ApplicationModuleModel, ApplicationListingModel, EnhancedApplicationData} from '../app-dashboard/app-dashboard.model';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../header/header.component';
+import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
+import { ApplicationModuleModel, ApplicationListingModel, EnhancedApplicationData } from '../app-dashboard/app-dashboard.model';
 
 @Component({
   selector: 'app-app-detail',
-    imports: [
-        CommonModule,
-        RouterOutlet,
-        SidebarComponent
-    ],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    HeaderComponent
+  ],
   templateUrl: './app-detail.component.html',
   styleUrls: ['./app-detail.component.scss']
 })
@@ -141,7 +139,12 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       tab.active = tab.name === tabName;
     });
     console.log('Switched to tab:', tabName);
-    // TODO: Implement tab content switching or routing
+
+    // Navigate to Settings route if Settings tab is clicked
+    if (tabName === 'Settings') {
+      this.router.navigate(['/apps', this.applicationName, 'settings']);
+    }
+    // TODO: Implement tab content switching or routing for other tabs
   }
 
   toggleDropdown(): void {

@@ -1,5 +1,6 @@
 .app-detail-container {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background-color: #f9fafb;
 }
@@ -9,11 +10,12 @@
   padding: 24px;
   transition: all 0.3s ease;
   overflow-x: auto;
-  margin-left: 16rem; /* 256px - expanded sidebar width */
+  /* space for fixed header */
+  padding-top: 88px;
 }
 
-/* App Header */
-.app-header {
+/* Page Header (inside app detail) */
+.page-header {
   margin-bottom: 2rem;
   
   .app-title-section {

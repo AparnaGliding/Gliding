@@ -1,28 +1,15 @@
 .dashboard-container {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background-color: #f9fafb;
 }
 
-.main-content {
-  flex: 1;
-  padding: 24px;
-  transition: all 0.3s ease;
-  overflow-x: auto;
-  
-  /* Default margin for expanded sidebar */
-  margin-left: 16rem; /* 256px */
-}
-
-/* Global styles to handle sidebar state changes */
-:host-context(.sidebar-collapsed) .main-content {
-  margin-left: 4rem; /* 64px - collapsed sidebar width */
-}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
-    margin-left: 0;
     padding: 16px;
+    padding-top: 80px;
   }
 }

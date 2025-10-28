@@ -1,11 +1,10 @@
 <div class="app-detail-container">
-  <!-- Sidebar -->
-  <app-sidebar></app-sidebar>
-
+  <!-- Header -->
+  <app-header [showAppDropdown]="true"></app-header>
   <!-- Main Content -->
-  <main class="main-content">
+  <div style="padding-left: 9%">
     <!-- Application Header -->
-    <div class="app-header">
+    <div class="page-header">
       <div class="app-title-section">
         <div class="app-dropdown-container">
           <button class="app-dropdown-trigger" (click)="toggleDropdown()">
@@ -195,7 +194,7 @@
                 Re-run Crawl
               </button>
             </div>
-            
+
             <!-- Module Navigation Buttons -->
             <div class="module-navigation">
               <button class="module-nav-btn ama-btn" (click)="onModuleAMA(module)">
@@ -215,7 +214,6 @@
       <h2>{{ activeTab }} Content</h2>
       <p>{{ activeTab }} content will be implemented here.</p>
     </div>
-
+</div>
     <router-outlet></router-outlet>
-  </main>
 </div>

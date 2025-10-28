@@ -25,6 +25,10 @@ export const routes: Routes = [
     path: 'apps/:name/dashboard',
     loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent)
   },
+  {
+    path: 'apps/:name/settings',
+    loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],

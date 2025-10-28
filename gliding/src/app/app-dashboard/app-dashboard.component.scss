@@ -3,6 +3,7 @@
   width: 100%;
   background-color: #f8fafc;
   max-width: 100%;
+  padding-left: 9%;
 }
 
 // Header Section
@@ -148,12 +149,12 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
-  
+
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-2px);
   }
-  
+
   &.create-app-card {
     border: 2px dashed #cbd5e1;
     background: #f8fafc;
@@ -162,7 +163,7 @@
     align-items: center;
     justify-content: center;
     min-height: 280px;
-    
+
     &:hover {
       border-color: #3b82f6;
       background: #f1f5f9;

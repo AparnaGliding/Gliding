@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {SidebarComponent} from '../sidebar/sidebar.component';
 import {RouterOutlet} from '@angular/router';
 import {AppDashboardComponent} from '../app-dashboard/app-dashboard.component';
+import {HeaderComponent} from '../header/header.component';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
-    SidebarComponent,
+    HeaderComponent,
     RouterOutlet,
     AppDashboardComponent
   ],
