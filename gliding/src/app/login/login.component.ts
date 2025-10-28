@@ -42,15 +42,19 @@ export class LoginComponent implements OnInit{
     }
     const credentials = {
       email: this.email,
-      password: this.password
+      password: this.password,
+      rememberMe: true
     };
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if (response) {
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/apps']);
+        } else {
+          console.log('Login failed');
         }
       },
       error: (error) => {
+        console.error('Login error', error);
       }
     });
   }

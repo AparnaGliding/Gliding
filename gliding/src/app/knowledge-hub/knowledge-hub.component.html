@@ -1,0 +1,56 @@
+<div class="container-fluid p-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2 class="mb-4 fw-bold">Knowledge Hub</h2>
+      
+      <div class="row align-items-center mb-4">
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input 
+              type="text" 
+              class="form-control border-start-0 ps-0" 
+              placeholder="Find articles or modules..."
+              [(ngModel)]="searchTerm"
+              (input)="onSearch()">
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="d-flex gap-2 justify-content-end">
+            <button 
+              type="button" 
+              class="btn btn-primary px-3"
+              [class.active]="activeFilter === 'All'"
+              (click)="setFilter('All')">
+              All
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-outline-primary px-3"
+              [class.active]="activeFilter === 'Article'"
+              (click)="setFilter('Article')">
+              Article
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-outline-primary px-3"
+              [class.active]="activeFilter === 'FAQ'"
+              (click)="setFilter('FAQ')">
+              FAQ
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary px-3 ms-2">
+              Category
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-knowledge-table [knowledgeItems]="filteredItems"></app-knowledge-table>
+</div>

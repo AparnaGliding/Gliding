@@ -1,0 +1,58 @@
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th scope="col" class="border-0 text-muted fw-normal ps-3">Title</th>
+        <th scope="col" class="border-0 text-muted fw-normal">Type</th>
+        <th scope="col" class="border-0 text-muted fw-normal">Module</th>
+        <th scope="col" class="border-0 text-muted fw-normal">Date</th>
+        <th scope="col" class="border-0 text-muted fw-normal">Status</th>
+        <th scope="col" class="border-0 text-muted fw-normal">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of knowledgeItems" class="border-bottom">
+        <td class="ps-3">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-file-text text-muted me-2"></i>
+            <span class="fw-medium">{{ item.title }}</span>
+          </div>
+        </td>
+        <td>
+          <span class="badge rounded-pill text-primary bg-light border border-primary">
+            <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i>
+            {{ item.type }}
+          </span>
+        </td>
+        <td class="text-muted">{{ item.module }}</td>
+        <td>
+          <div class="d-flex align-items-center text-muted">
+            <i class="bi bi-calendar3 me-2"></i>
+            <span>{{ item.date }}</span>
+          </div>
+        </td>
+        <td>
+          <span 
+            class="badge rounded-pill"
+            [ngClass]="{
+              'bg-warning text-dark': item.status === 'Draft',
+              'bg-success': item.status === 'Published',
+              'bg-info': item.status === 'Review'
+            }">
+            {{ item.status }}
+          </span>
+        </td>
+        <td>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary border-0">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary border-0">
+              <i class="bi bi-download"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

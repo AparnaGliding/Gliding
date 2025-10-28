@@ -1,0 +1,87 @@
+.main-container {
+  background-color: #EFF6FF;
+  height: calc(100vh - 70px);
+}
+
+.left-container {
+  width: 16rem;
+  border-right: 1px solid #e5e7eb;
+  height: 100%;
+  padding: 1rem;
+}
+
+.middle-container {
+  flex: 1;
+
+}
+
+.right-container {
+  width: 20rem;
+  border-left: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.send-button {
+  border-radius: 5px}
+
+.heading-text{
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
+  width: 243px;
+  height: 24px;
+}
+
+
+.user-message {
+  background-color: #FFFFFF;
+  color: black;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 70%;
+  justify-content: flex-end;
+}
+
+.bot-message {
+  background-color: #f8f9fa;
+  color: #333;
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  max-width: 70%;
+  border: 1px solid #e9ecef;
+  justify-content: flex-start;
+}
+
+.step-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.thought-process {
+  font-style: italic;
+  color: #666;
+  background-color: #f8f9fa;
+  border-left: 3px solid #764ba2;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 4px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.thought-process strong,
+.thought-process b {
+  font-weight: bold;
+  color: #333;
+  font-style: normal;
+}
+
+.thought-process p {
+  margin: 8px 0;
+}
+
+.thought-process br {
+  line-height: 1.8;
+}

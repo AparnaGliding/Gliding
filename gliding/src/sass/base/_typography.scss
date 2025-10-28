@@ -10,6 +10,7 @@ body{
   font-family: variables.$base-font-family;
   font-size: variables.$base-font-size;
   -webkit-font-smoothing: antialiased;
+  background-color: variables.$default-background-colour;
 }
 
 .font-weight-normal {
@@ -17,13 +18,22 @@ body{
 }
 
 .p-button.blue {
-  background-color: #3B82F6;
-  border-color: #3B82F6;
+  background-color: #1a67e5;
+  border-color: #2c77f1;
   color: #ffffff;
 }
 
 .p-button.blue:not(:disabled):hover {
-  background-color: #2563eb; // A slightly darker blue for hover
+  background-color: #0b51ea;
   border-color: #2563eb;
 }
+
+.subdued {
+  color: variables.$color-subdued;
+}
+
+.default-border {
+  border: 1px solid #e5e7eb;
+}
+
 
