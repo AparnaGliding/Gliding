@@ -1,18 +1,13 @@
 
-<app-header [showAppDropdown]="true"></app-header>
-
-<div class="modules-page">
-  <!-- Navigation Tabs -->
-  <div class="navigation-tabs">
-    <button
-      *ngFor="let tab of navigationTabs"
-      class="nav-tab"
-      [class.active]="tab.active"
-      (click)="onTabClick(tab.name)">
-      {{ tab.name }}
-    </button>
-  </div>
-
+<app-header
+        [showAppDropdown]="true"
+        [currentAppName]="applicationName"
+        [applications]="allApplications"
+        [tabs]="navigationTabs"
+        (appSelected)="selectApplication($event)"
+        (createNewApplication)="createNewApplication()"
+        (tabSelected)="onTabClick($event)"></app-header>
+<div class="modules-page py-5">
   <div class="page-header">
     <h2 class="title">Modules</h2>
     <div class="view-switch">

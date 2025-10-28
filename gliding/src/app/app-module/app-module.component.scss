@@ -1,5 +1,12 @@
  .modules-page {
-  padding: 2rem 9% 3rem 9%;
+  /* Full width layout with safe padding */
+   background-color: #f8fafc;
+  /* Leave space for the fixed header (logo row + tabs) */
+   padding: 112px 9% 48px;
+   min-height: 100vh;
+  /* Allow scrolling when content exceeds viewport */
+  overflow-y: auto;
+  overflow-x: hidden;
  }
 
  .navigation-tabs {
@@ -143,12 +150,14 @@
  }
 
  /* Table View */
- .table-wrap { margin-top: .5rem; }
+ .table-wrap { margin-top: .5rem; overflow: auto; }
  .table {
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
+  /* Ensure wide tables can scroll horizontally */
+  min-width: 960px;
  }
 
  .thead, .tr {
