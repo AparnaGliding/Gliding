@@ -1,14 +1,22 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
-import {ChatMessageModel, ChatModel} from './chat.model';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
+import {map, Observable, throwError} from 'rxjs';
+import {ChatMessageModel, ChatModel, ChatRequest} from './chat.model';
 import {catchError} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 
 export class ChatService {
+  private chatIdCounter = 0;
+  private baseUrl = `http://${environment.hostname}${environment.backend_path}/api/aq/chat`;
   constructor(private http: HttpClient) {
+  }
+
+  getNextChatId(): string {
+    this.chatIdCounter++;
+    return this.chatIdCounter.toString();
   }
 
   getHistory(accountId: string, userId: number, offset: number = 0, limit: number = 50): Observable<ChatModel[]> {
@@ -44,5 +52,60 @@ export class ChatService {
         throw error;
       })
     );
+  }
+
+  checkAndGetScreenshotImage(filename: string): Observable<string> {
+    return this.http.get(`/screenshots/${filename}`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(
+      map((response: HttpResponse<Blob>) => {
+        if (response.status === 200 && response.body) {
+          return URL.createObjectURL(response.body);
+        }
+    }),
+      catchError(() => {
+        return throwError(() => new Error(`Screenshot not found: ${filename}`));
+      })
+    );
+  }
+
+
+  streamChat(req: ChatRequest, token?: string): Observable<string> {
+    return new Observable<string>((observer) => {
+      console.log('Chat id', req.chatId);
+      const params = new URLSearchParams({
+        question: req.question,
+        domain: req.domain,
+        accountId: req.accountId,
+        userId: req.userId,
+        chatId: req.chatId,
+      }).toString();
+      const url = `${this.baseUrl}?${params}`;
+      const es = new EventSource(url, { withCredentials: false });
+      es.onmessage = (e: MessageEvent) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (data.isLast === true) {
+            observer.complete();
+            es.close();
+            return;
+          }
+          observer.next(e.data);
+        } catch (e) {
+          if (e.data === '[DONE]') {
+            observer.complete();
+            es.close();
+            return;
+          }
+          observer.next(e.data);
+        }
+      };
+      es.onerror = (err) => {
+        observer.error(err);
+        es.close();
+      };
+      return () => es.close();
+    });
   }
 }

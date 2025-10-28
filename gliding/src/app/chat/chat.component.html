@@ -8,7 +8,7 @@
         Your Conversations
       </div>
         @for (history of chatHistory; track history.chatId) {
-          <div >
+          <div (click)="selectChat(history)">
            <div class = "fw-medium heading-text fs-6" >
          {{history.title}}
              </div>
@@ -22,14 +22,97 @@
   </div>
   <div class="middle-container d-flex flex-column overflow-y-auto">
     <div class =  "flex-fill p-4">
-    <h3>Chat Messages</h3>
+    @if (selectedChatId) {
+      <div class="d-flex  flex-column gap-2 overflow-y-auto">
+        @for (message of currentChatMessages;  track message.id) {
+          <div class="d-flex  align-content-end gap-2 p-4 message-wrapper fs-6"
+               [ngClass]="{'justify-content-end': message.isUser, 'justify-content-start': !message.isUser}">
+          <div [class.user-message]="message.isUser"
+               [class.bot-message]="!message.isUser">
+           @if(message.isUser) {
+            <div>
+              {{message.text}}
+            </div>} @else {
+             <div
+               *ngIf="message.isThoughtProcess && message.text"
+               class="thought-process"
+             >
+               <div class="thinking-indicator">
+                 <i class="pi pi-spin pi-spinner"></i>
+                 <span>Thinking...</span>
+               </div>
+               <div
+                 class="thought-content"
+                 [innerHTML]="message.text"
+               ></div>
+             </div>
+
+             <div>
+               @if(message.isVerificationStep &&
+               message.textChunks?.length) {
+                 <div>
+                   @for(chunk of message.textChunks; track $index){
+                     <div>
+                       <div
+                         class="step-text"
+                         [innerHTML]="chunk.text"
+                       ></div>
+                       @if (chunk.imageUrl){
+                         <div
+                           *ngIf="
+                                        message.pendingImages?.has(
+                                          chunk.imageUrl
+                                        )
+                                      "
+                           class="image-loading"
+                         >
+
+                         </div>
+
+                         <img
+                           *ngIf="
+                                        !message.pendingImages?.has(
+                                          chunk.imageUrl
+                                        )
+                                      "
+                           [src]="chunk.imageUrl"
+                           class="step-image"
+                         />
+
+                       <div>
+                       </div>}
+                     </div>
+
+                   }
+                 </div>
+               }
+             </div>
+           }
+          </div>
+          </div>
+        }
+      </div>
+    }
     </div>
+
     <div class="bg-white p-4 shadow border-top border-bottom d-flex align-items-center">
       <div class="flex-fill me-3">
-        <input pInputText type="text" placeholder="Ask me about your product..." class="w-100 rounded p-3"/>
+        <textarea
+          pInputTextarea
+          [(ngModel)]="currentMessage"
+          placeholder="Ask me anything about your product"
+          class="message-input"
+          class="w-100 rounded p-3"
+          rows="1"
+          [autoResize]="true"
+          [disabled]="isSendingMessage"
+          (keydown.enter)="sendChatMessage()"
+        ></textarea>
       </div>
       <div>
-        <p-button icon="pi pi-send" styleClass="send-button blue"></p-button>
+        <p-button icon="pi pi-send" styleClass="send-button blue"
+                  [loading]="isSendingMessage"
+                  (onClick)="sendChatMessage()"></p-button>
       </div>
     </div>
 
