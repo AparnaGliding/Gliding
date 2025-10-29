@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {catchError, map, Observable} from 'rxjs';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import {ArticleListResponseModel} from '../app-dashboard/app-dashboard.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {UserModel} from './admin-detail.model';
+import {IntegrationConnectionRequest, UserModel} from './admin-detail.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,31 @@ export class AdminDetailService {
       })
     );
   }
+
+
+  saveConnection(request: IntegrationConnectionRequest): Observable<IntegrationConnectionRequest | null> {
+    return this.http.post<IntegrationConnectionRequest>('/integration/save', request).pipe(
+      map((res: any) => {
+        return res || null;
+      }),
+      catchError(error => {
+        console.error('Error saving integration connection:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
+  getConnection(): Observable<IntegrationConnectionRequest[] | null> {
+    return this.http.get<IntegrationConnectionRequest[]>('/integration').pipe(
+      map((res: any) => {
+        return res || [];
+      }),
+      catchError(error => {
+        console.error('Error fetching Freshdesk connection:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
 
 }

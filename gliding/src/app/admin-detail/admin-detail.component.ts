@@ -1,18 +1,35 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AdminDetailService } from './admin-detail.service';
-import { UserModel } from './admin-detail.model';
+import { UserModel, IntegrationConnectionRequest } from './admin-detail.model';
 
 @Component({
   selector: 'app-admin-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-detail.component.html',
   styleUrl: './admin-detail.component.scss'
 })
 export class AdminDetailComponent implements OnInit, OnDestroy {
-  activeTab: string = 'user-permissions';
+  activeTab: string = 'integrations';
   users: UserModel[] = [];
   isLoading: boolean = false;
+  integrations: IntegrationConnectionRequest[] = [];
+
+  // Stats
+  activeUsersCount: number = 0;
+  adminUsersCount: number = 0;
+  totalIntegrationsCount: number = 0;
+
+  // Connect dialog state
+  showConnectDialog: boolean = false;
+  selectedIntegration: string = '';
+  connectForm: { clientId: string; clientSecret: string; url: string } = {
+    clientId: '',
+    clientSecret: '',
+    url: ''
+  };
+
 
   // Mock data for demonstration - replace with actual account/application IDs
   private accountId: number = 1;
@@ -22,6 +39,7 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadIntegrations();
   }
 
   ngOnDestroy(): void {
@@ -32,7 +50,55 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
     this.activeTab = tabName;
     if (tabName === 'user-permissions') {
       this.loadUsers();
+    } else if (tabName === 'integrations') {
+      this.loadIntegrations();
     }
+  }
+
+  openConnectDialog(integrationName: string): void {
+    this.selectedIntegration = integrationName;
+    this.connectForm = { clientId: '', clientSecret: '', url: '' };
+    this.showConnectDialog = true;
+  }
+
+  closeConnectDialog(): void {
+    this.showConnectDialog = false;
+  }
+
+  submitConnect(): void {
+    const payload: IntegrationConnectionRequest = {
+      clientId: this.connectForm.clientId,
+      clientSecret: this.connectForm.clientSecret,
+      integrationType: this.selectedIntegration,
+      oauthUri: this.connectForm.url,
+      isAuthorized: false,
+      id: 0
+    };
+
+    this.adminDetailService.saveConnection(payload).subscribe({
+      next: (res) => {
+        console.log('Connection saved:', res);
+        if (res) {
+          const authorized = (res as any).isAuthorized ?? true;
+          // Mark selected integration as connected in local list
+          const idx = this.integrations.findIndex(
+            i => i.integrationType === this.selectedIntegration
+          );
+          if (idx > -1) {
+            this.integrations[idx] = {
+              ...this.integrations[idx],
+              isAuthorized: authorized
+            };
+          } else {
+            this.integrations.push({ ...payload, isAuthorized: authorized });
+          }
+        }
+        this.closeConnectDialog();
+      },
+      error: (err) => {
+        console.error('Failed to save connection', err);
+      }
+    });
   }
 
   loadUsers(): void {
@@ -45,12 +111,31 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
         }));
         this.isLoading = false;
         console.log('Users loaded:', this.users);
+        // Update stats
+        this.activeUsersCount = this.users.filter(u => (u as any).status?.toLowerCase?.() === 'active').length;
+        this.adminUsersCount = this.users.filter(u => (u as any).type?.toUpperCase?.() === 'ADMIN').length;
       },
       error: (error) => {
         console.error('Error loading users:', error);
         this.isLoading = false;
         // Load mock data on error for demonstration
         this.users = this.getMockUsers();
+        this.activeUsersCount = this.users.filter(u => (u as any).status?.toLowerCase?.() === 'active').length;
+        this.adminUsersCount = this.users.filter(u => (u as any).type?.toUpperCase?.() === 'ADMIN').length;
+      }
+    });
+  }
+
+  loadIntegrations(): void {
+    this.adminDetailService.getConnection().subscribe({
+      next: (items) => {
+        this.integrations = items || [];
+        this.totalIntegrationsCount = this.integrations.length;
+      },
+      error: (err) => {
+        console.error('Error loading integrations', err);
+        this.integrations = this.integrations || [];
+        this.totalIntegrationsCount = this.integrations.length;
       }
     });
   }
@@ -98,7 +183,7 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
         email: 'john@example.com',
         status: 'active',
         type: 'ADMIN', // Role is stored in type field (uppercase to match API)
-        lastActive: '5 min ago' 
+        lastActive: '5 min ago'
       },
       {
         id: 2,
@@ -108,7 +193,7 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
         email: 'jane@example.com',
         status: 'active',
         type: 'USER', // Role is stored in type field (uppercase to match API)
-        lastActive: '1 hour ago' 
+        lastActive: '1 hour ago'
       },
       {
         id: 3,
@@ -118,7 +203,7 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
         email: 'mike@example.com',
         status: 'active',
         type: 'USER', // Role is stored in type field (uppercase to match API)
-        lastActive: '2 days ago' 
+        lastActive: '2 days ago'
       },
       {
         id: 4,
