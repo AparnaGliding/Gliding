@@ -1,7 +1,7 @@
 <div class="d-flex main-container mt-0">
   <div class="left-container bg-white">
     <div class = "pb-3">
-    <p-button styleClass="blue w-100"  icon = "pi pi-plus" label="New Conversation"></p-button>
+    <p-button styleClass="blue w-100"  icon = "pi pi-plus" label="New Conversation" (onClick)="startNewChat()"></p-button>
     </div>
     <div class="gap-2">
       <div class="text-secondary fw-medium mb-2 ">
@@ -22,7 +22,7 @@
   </div>
   <div class="middle-container d-flex flex-column overflow-y-auto">
     <div class =  "flex-fill p-4">
-    @if (selectedChatId) {
+    @if (selectedChatId && !isNewChatActive) {
       <div class="d-flex  flex-column gap-2 overflow-y-auto">
         @for (message of currentChatMessages;  track message.id) {
           <div class="d-flex  align-content-end gap-2 p-4 message-wrapper fs-6"
@@ -91,6 +91,28 @@
           </div>
           </div>
         }
+      </div>
+    } @else if (isNewChatActive) {
+      <div class="welcome-container d-flex flex-column justify-content-center align-items-center h-100">
+        <div class="welcome-content text-center">
+          <h2 class="mb-4">Welcome to {{app.name}} Assistant</h2>
+          <p class="text-secondary mb-4">I'm here to help you with questions about {{app.name}}. You can ask me anything about:</p>
+          <div class="welcome-features mb-4">
+            <div class="feature-item mb-2">
+              <i class="pi pi-book text-primary me-2"></i>
+              <span>Documentation and guides</span>
+            </div>
+            <div class="feature-item mb-2">
+              <i class="pi pi-cog text-primary me-2"></i>
+              <span>Configuration and setup</span>
+            </div>
+            <div class="feature-item mb-2">
+              <i class="pi pi-question-circle text-primary me-2"></i>
+              <span>Troubleshooting and support</span>
+            </div>
+          </div>
+          <p class="text-secondary">Type your question below to get started!</p>
+        </div>
       </div>
     }
     </div>

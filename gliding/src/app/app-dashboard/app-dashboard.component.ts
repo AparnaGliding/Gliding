@@ -92,7 +92,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
           if (appRequestsCompleted === totalAppRequests) {
             this.applicationsWithModules.push(appWithData);
             completedRequests++;
-            
+
             if (completedRequests === apps.length) {
               this.totalModules = totalModulesCount;
               this.totalArticles = totalArticlesCount;
@@ -110,7 +110,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
           if (appRequestsCompleted === totalAppRequests) {
             this.applicationsWithModules.push(appWithData);
             completedRequests++;
-            
+
             if (completedRequests === apps.length) {
               this.totalModules = totalModulesCount;
               this.totalArticles = totalArticlesCount;
@@ -130,7 +130,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
           if (appRequestsCompleted === totalAppRequests) {
             this.applicationsWithModules.push(appWithData);
             completedRequests++;
-            
+
             if (completedRequests === apps.length) {
               this.totalModules = totalModulesCount;
               this.isLoading = false;
@@ -146,7 +146,7 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
           if (appRequestsCompleted === totalAppRequests) {
             this.applicationsWithModules.push(appWithData);
             completedRequests++;
-            
+
             if (completedRequests === apps.length) {
               this.totalModules = totalModulesCount;
               this.totalArticles = totalArticlesCount;
@@ -164,17 +164,17 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     console.log('App modules:', app.modules);
     console.log('App moduleCount:', app.moduleCount);
     console.log('App articlesCount:', app.articlesCount);
-    
+
     // Find the full app data from applicationsWithModules to ensure we have all the loaded data
     const fullAppData = this.applicationsWithModules.find(a => a.id === app.id);
     console.log('=== DEBUG: Full app data from applicationsWithModules ===');
     console.log('Full app data found:', fullAppData);
     console.log('Full app modules:', fullAppData?.modules);
     console.log('Full app modules length:', fullAppData?.modules?.length);
-    
+
     // Use the full app data if available, otherwise use the passed app
     const appToUse = fullAppData || app;
-    
+
     // Prepare comprehensive application data
     const enhancedAppData: EnhancedApplicationData = {
       ...appToUse,
@@ -186,16 +186,16 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
       totalArticles: this.totalArticles,
       lastUpdated: new Date().toISOString()
     };
-    
+
     console.log('=== DEBUG: Enhanced data being passed ===');
     console.log('Full enhancedAppData:', enhancedAppData);
     console.log('Enhanced modules array:', enhancedAppData.modules);
     console.log('Enhanced modules length:', enhancedAppData.modules?.length);
     console.log('Sample module:', enhancedAppData.modules?.[0]);
-    
+
     // Navigate to app-detail component with comprehensive data
     this.router.navigate(['/apps', app.name, 'dashboard'], {
-      state: { 
+      state: {
         applicationData: enhancedAppData
       }
     });
@@ -214,7 +214,6 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         .filter(module => module.moduleSummary && module.moduleSummary.trim() !== '')
         .map(module => module.moduleSummary)
         .slice(0, 3); // Show only first 3 summaries to avoid overcrowding
-      
       if (summaries.length > 0) {
         return summaries.join(' • ');
       }

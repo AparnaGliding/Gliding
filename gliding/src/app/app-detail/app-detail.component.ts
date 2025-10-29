@@ -103,7 +103,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     this.pollingInterval = setInterval(() => {
       if (this.applicationId) {
         console.log('Polling: Refreshing modules for application:', this.applicationId);
-        this.loadModulesData();
+        // this.loadModulesData();
       }
     }, 60000);
   }

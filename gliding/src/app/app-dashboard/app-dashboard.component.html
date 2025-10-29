@@ -17,9 +17,7 @@
           </div>
         </div>
         <div class="stat-icon applications-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z" fill="currentColor"/>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers w-6 h-6 text-primary-600"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></svg>
         </div>
       </div>
     </div>
@@ -34,10 +32,7 @@
           </div>
         </div>
         <div class="stat-icon modules-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
-          </svg>
-        </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers w-6 h-6 text-purple-600"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></svg>        </div>
       </div>
     </div>
 
@@ -51,10 +46,7 @@
           </div>
         </div>
         <div class="stat-icon articles-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor"/>
-            <path d="M14 2v6h6" fill="currentColor"/>
-          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-6 h-6 text-green-600"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
         </div>
       </div>
     </div>
@@ -64,15 +56,14 @@
   <div class="applications-section">
     <div class="applications-header">
       <h2 class="section-title">Applications</h2>
-      <button class="create-btn">
-        <span class="plus-icon">+</span>
-        Create New Application
-      </button>
+<!--      <button class="create-btn">-->
+<!--        <span class="plus-icon">+</span>-->
+<!--        Create New Application-->
+<!--      </button>-->
     </div>
 
     <!-- Application Cards -->
     <div class="applications-grid">
-      <!-- Loading State -->
       <div *ngIf="isLoading" class="app-card">
         <div class="app-header">
           <h3 class="app-title">Loading applications...</h3>
@@ -83,13 +74,14 @@
       <!-- Dynamic Application Cards -->
       <div *ngFor="let app of applicationsWithModules" class="app-card">
         <div class="app-header">
-          <h3 class="app-title">{{ app.name }}</h3>
+          <h3 class="app-title mb-0">{{ app.name }}</h3>
           <span class="status-badge active">Active</span>
         </div>
-        <p class="app-description">{{ getModuleSummaries(app) }}</p>
-
+   <div class="mb-1">
+     Main product documentation for our SaaS platform
+   </div>
         <div class="app-stats">
-          <div class="app-stat">
+          <div class="app-stat" >
             <span class="stat-label">Modules</span>
             <span class="stat-value">{{ app.moduleCount || 0 }}</span>
           </div>

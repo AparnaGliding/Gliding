@@ -1,12 +1,12 @@
 .dashboard-container {
   padding: 2rem;
   width: 100%;
-  background-color: #f8fafc;
+  background-color: #EFF6FF;
   max-width: 100%;
   padding-left: 9%;
   padding-right: 9%;
-
-
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 // Header Section
@@ -14,15 +14,16 @@
   margin-bottom: 2rem;
 
   .main-title {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 700;
     color: #1e293b;
     margin: 0 0 0.5rem 0;
+    line-height: 2.5rem;
   }
 
   .subtitle {
     font-size: 1rem;
-    color: #64748b;
+    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
     margin: 0;
   }
 }
@@ -32,13 +33,13 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .stat-card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e2e8f0;
   transition: all 0.2s ease;
@@ -58,13 +59,14 @@
 .stat-info {
   .stat-title {
     font-size: 0.875rem;
-    color: #64748b;
+    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
     margin: 0 0 0.5rem 0;
-    font-weight: 500;
+    font-weight: 300;
+    line-height: 1.25rem;
   }
 
   .stat-number {
-    font-size: 2rem;
+    font-size: 1.875rem;
     font-weight: 700;
     color: #1e293b;
     margin: 0;
@@ -138,10 +140,9 @@
   }
 }
 
-// Applications Grid
 .applications-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
@@ -183,9 +184,8 @@
 
   .app-title {
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #1e293b;
-    margin: 0;
   }
 
   .status-badge {
@@ -208,7 +208,6 @@
   line-height: 1.5;
 }
 
-// Module Summaries Section
 .module-summaries {
   margin-bottom: 1.5rem;
   padding: 1rem;
@@ -243,14 +242,13 @@
   gap: 2rem;
   margin-bottom: 1.5rem;
 
+
   .app-stat {
     display: flex;
     flex-direction: column;
 
     .stat-label {
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
     }
 
     .stat-value {

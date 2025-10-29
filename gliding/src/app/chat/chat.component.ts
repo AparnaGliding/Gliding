@@ -30,7 +30,7 @@ export class ChatComponent implements OnInit {
   appId: string;
   userId = 1;
   selectedChatId: string | null = null;
-  isNewChatActive: boolean;
+  isNewChatActive: boolean = false;
   userQuestion = '';
   currentChatMessages: ChatMessage[] = [];
   currentMessage: string;
@@ -61,7 +61,9 @@ export class ChatComponent implements OnInit {
       domain : 'Terzo_Cloud_Contracts_final'
     };
     this.loadModules();
-    this.loadArticles();
+    // this.loadArticles();
+    // Start with new chat active by default
+    this.isNewChatActive = true;
   }
 
   loadChatHistory() {
@@ -115,6 +117,14 @@ export class ChatComponent implements OnInit {
     this.selectedChatId = chat.chatId.toString();
     this.isNewChatActive = false;
     this.loadChatMessages(chat.chatId);
+  }
+
+  startNewChat() {
+    this.selectedChatId = null;
+    this.isNewChatActive = true;
+    this.currentChatMessages = [];
+    this.currentMessage = '';
+    this.hasUnsavedChatChanges = false;
   }
 
   processMarkdownText(text: string): string {
@@ -249,6 +259,7 @@ export class ChatComponent implements OnInit {
     this.scrollToBottom();
     if (!this.selectedChatId) {
       this.selectedChatId = this.chatService.getNextChatId();
+      this.isNewChatActive = false; // Switch from welcome to chat view
     }
     this.hasUnsavedChatChanges = true;
     const botMessage: ChatMessage = {
@@ -321,10 +332,10 @@ export class ChatComponent implements OnInit {
             botMessage.supportingImages = arr;
             botMessage.isVerificationStep = true;
             botMessage.messageId = jsonChunk.messageId;
-      this.currentChatMessages.push(botMessage);
-      this.replaceLoadingImagesWithActual(botMessage);
-      this.cdr.detectChanges();
-    } } catch (error) {
+            // Don't push again - botMessage is already in currentChatMessages
+            this.replaceLoadingImagesWithActual(botMessage);
+            this.cdr.detectChanges();
+          } } catch (error) {
       console.error('Error parsing message:', error);
     }
         this.scrollToBottom();

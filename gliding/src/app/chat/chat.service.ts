@@ -24,7 +24,8 @@ export class ChatService {
       .set('applicationId', accountId.toString())
       .set('userId', userId.toString())
       .set('offset', offset.toString())
-      .set('limit', limit.toString());
+      .set('limit', limit.toString())
+       .set('applicationModuleId', 1);
 
     return this.http.get<ChatModel[]>('/chat/history', {params}).pipe(
       map((res: any) => {
@@ -63,7 +64,8 @@ export class ChatService {
         if (response.status === 200 && response.body) {
           return URL.createObjectURL(response.body);
         }
-    }),
+        throw new Error('Invalid response');
+      }),
       catchError(() => {
         return throwError(() => new Error(`Screenshot not found: ${filename}`));
       })
