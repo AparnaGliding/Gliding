@@ -1,25 +1,20 @@
-<app-header [showAppDropdown]="true"></app-header>
+<app-header
+  [showAppDropdown]="true"
+  [currentAppName]="applicationName"
+  [applications]="allApplications"
+  [tabs]="navigationTabs"
+  (appSelected)="selectApplication($event)"
+  (createNewApplication)="createNewApplication()"
+  (tabSelected)="onTabClick($event)"></app-header>
 
 <div class="module-detail-page">
-  <!-- Top Navigation Tabs (same as app-detail) -->
-  <div class="navigation-tabs">
-    <button
-      *ngFor="let tab of navigationTabs"
-      class="nav-tab"
-      [class.active]="tab.active"
-      (click)="onTopTabClick(tab.name)">
-      {{ tab.name }}
-    </button>
-  </div>
 
   <div class="content-wrap">
-    <div class="back-link" (click)="backToModules()">
-      ← Back to Modules
-    </div>
+    <div class="back-link" (click)="backToModules()">← Back to Modules</div>
 
     <div class="layout">
       <!-- Left Summary Panel -->
-      <aside class="summary">
+      <aside class="summary" *ngIf="currentModule as cm">
         <div class="summary-header">
           <div class="icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,29 +23,29 @@
             </svg>
           </div>
           <div class="title-row">
-            <h2 class="title">Authentication</h2>
-            <span class="status active">Active</span>
+            <h2 class="title">{{ cm.moduleName }}</h2>
+            <span class="status" [class.active]="cm.crawlStatus==='ACTIVE'">{{ cm.crawlStatus || 'Active' }}</span>
           </div>
         </div>
 
         <div class="summary-block">
           <div class="label">Summary</div>
-          <div class="value">User authentication and authorization</div>
+          <div class="value">{{ cm.moduleSummary || 'No description available' }}</div>
         </div>
 
         <div class="summary-block">
           <div class="label">Last Crawled</div>
-          <div class="value">Oct 20, 2025</div>
+          <div class="value">{{ cm.modifiedAt | date:'MMM d, y' }}</div>
         </div>
 
         <div class="summary-block">
           <div class="label">Features</div>
-          <div class="value">6 features crawled</div>
+          <div class="value">{{ modulesFound || 0 }} features crawled</div>
         </div>
 
         <div class="summary-block">
           <div class="label">Articles</div>
-          <div class="value">4 articles</div>
+          <div class="value">{{ articlesGenerated || 0 }} articles</div>
         </div>
       </aside>
 
@@ -64,29 +59,22 @@
             [class.active]="t.active"
             (click)="onInnerTabClick(t.name)">
             {{ t.name }}
+            <ng-container *ngIf="t.name==='Features'">({{ modulesFound || 0 }})</ng-container>
+            <ng-container *ngIf="t.name==='Articles'">({{ articlesGenerated || 0 }})</ng-container>
           </button>
         </div>
 
         <!-- Features content placeholder -->
         <section *ngIf="innerActiveTab==='Features'" class="features">
           <h3>Features</h3>
-          <div class="feature-card">
-            <div class="index">1</div>
+          <div class="feature-card" *ngFor="let m of modules; let i = index">
+            <div class="index">{{ i + 1 }}</div>
             <div class="body">
-              <div class="name">User Login</div>
-              <div class="desc">Standard username/password authentication</div>
-              <div class="endpoint">/api/auth/login</div>
-              <div class="related">
-                <span>Related Articles:</span>
-                <a>Authentication Setup</a>
-              </div>
+              <div class="name">{{ m.moduleName }}</div>
+              <div class="desc">{{ m.moduleSummary || 'No summary available' }}</div>
+              <div class="endpoint">{{ m.moduleUrl }}</div>
             </div>
           </div>
-        </section>
-
-        <!-- AMA placeholder -->
-        <section *ngIf="innerActiveTab==='AMA'" class="ama">
-          <p>AMA content will be shown here.</p>
         </section>
 
         <!-- Articles placeholder -->

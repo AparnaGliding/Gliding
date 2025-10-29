@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
 import { ApplicationListingModel, ApplicationModuleModel } from '../app-dashboard/app-dashboard.model';
 import { HeaderComponent } from '../header/header.component';
@@ -52,6 +52,16 @@ export class AppModuleComponent implements OnInit, OnDestroy {
       }
     });
     this.subscriptions.push(sub);
+
+    // Keep tab highlight in sync with URL (covers external navigations)
+    const routeSyncSub = this.router.events.subscribe(evt => {
+      if (evt instanceof NavigationEnd) {
+        this.syncActiveTabFromUrl();
+      }
+    });
+    this.subscriptions.push(routeSyncSub);
+    // Initial sync
+    this.syncActiveTabFromUrl();
   }
 
   ngOnDestroy(): void {
@@ -117,6 +127,22 @@ export class AppModuleComponent implements OnInit, OnDestroy {
       this.router.navigate(['/apps', this.applicationName, 'settings']);
     }
     // Other tabs can be wired later when routes are available
+  }
+
+  private syncActiveTabFromUrl(): void {
+    const url = this.router.url || '';
+    let tab: string = 'Modules';
+    if (url.includes('/dashboard')) {
+      tab = 'Dashboard';
+    } else if (url.includes('/modules')) {
+      tab = 'Modules';
+    } else if (url.includes('/settings')) {
+      tab = 'Settings';
+    } else if (url.includes('/ama')) {
+      tab = 'AMA';
+    }
+    this.activeTab = tab;
+    this.navigationTabs.forEach(t => t.active = (t.name === tab));
   }
 
   setView(mode: 'list' | 'table') {

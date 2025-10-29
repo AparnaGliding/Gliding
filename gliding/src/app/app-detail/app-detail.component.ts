@@ -174,6 +174,10 @@ export class AppDetailComponent implements OnInit, OnDestroy {
         // For other tabs, just switch the tab without changing URL
         break;
     }
+    if (tabName === 'Modules') {
+      this.router.navigate(['/apps', this.applicationName, 'modules']);
+    }
+    // TODO: Implement tab content switching or routing for other tabs
   }
 
   toggleDropdown(): void {
