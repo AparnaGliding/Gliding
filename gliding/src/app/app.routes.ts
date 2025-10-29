@@ -28,12 +28,28 @@ export const routes: Routes = [
     loadComponent: () => import('./login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'auth/signup',
+    loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
+  },
+  {
+    path: 'apps/:applicationId/chat/:moduleId',
+    loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+  },
+  {
+    path: 'apps/:id/knowledge-hub',
+    loadComponent: () => import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
+  },
+  {
     path: 'apps/:name/dashboard',
     loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent),
     children: [
       {
         path: ':id/chat/:moduleId',
         loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+      },
+      {
+        path: ':id/knowledge-hub/:moduleId',
+        loadComponent: () =>  import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
       }
     ]
   },

@@ -1,56 +1,186 @@
-<div class="container-fluid p-4">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h2 class="mb-4 fw-bold">Knowledge Hub</h2>
-      
-      <div class="row align-items-center mb-4">
-        <div class="col-md-8">
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0">
-              <i class="bi bi-search text-muted"></i>
-            </span>
-            <input 
-              type="text" 
-              class="form-control border-start-0 ps-0" 
-              placeholder="Find articles or modules..."
-              [(ngModel)]="searchTerm"
-              (input)="onSearch()">
-          </div>
+<div class="knowledge-hub-container">
+  <!-- Left Sidebar Panel -->
+  <div class="sidebar">
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs-horizontal">
+      <button
+        class="nav-tab"
+        [class.active]="activeTab === ReferencableType.FAQ"
+        (click)="onTabClick(ReferencableType.FAQ)">
+        <i class="bi bi-question-circle me-2"></i>
+        FAQs
+      </button>
+      <button
+        class="nav-tab"
+        [class.active]="activeTab === ReferencableType.ARTICLE"
+        (click)="onTabClick(ReferencableType.ARTICLE)">
+        <i class="bi bi-file-text me-2"></i>
+        Articles
+      </button>
+    </div>
+
+    <!-- Category Structure -->
+    <div class="category-section">
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="text-center py-3">
+        <div class="spinner-border spinner-border-sm text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-        
-        <div class="col-md-4">
-          <div class="d-flex gap-2 justify-content-end">
-            <button 
-              type="button" 
-              class="btn btn-primary px-3"
-              [class.active]="activeFilter === 'All'"
-              (click)="setFilter('All')">
-              All
-            </button>
-            <button 
-              type="button" 
-              class="btn btn-outline-primary px-3"
-              [class.active]="activeFilter === 'Article'"
-              (click)="setFilter('Article')">
-              Article
-            </button>
-            <button 
-              type="button" 
-              class="btn btn-outline-primary px-3"
-              [class.active]="activeFilter === 'FAQ'"
-              (click)="setFilter('FAQ')">
-              FAQ
-            </button>
-            <button 
-              type="button" 
-              class="btn btn-outline-secondary px-3 ms-2">
-              Category
-            </button>
+        <span class="ms-2 text-muted">Loading categories...</span>
+      </div>
+
+      <!-- Hierarchical Category Structure -->
+      <div class="category-tree" *ngIf="!loading">
+        <ng-container *ngFor="let node of treeNodes">
+          <div
+            [class]="getNodeClass(node)"
+            (click)="onNodeClick(node)">
+            <i [class]="'bi ' + getNodeIcon(node) + ' me-2'"></i>
+            <span>{{ node.name }}</span>
+            <div *ngIf="node.loading" class="spinner-border spinner-border-sm ms-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-        </div>
+
+          <!-- Render children recursively -->
+          <ng-container *ngIf="node.expanded && node.children">
+            <ng-container *ngFor="let child of node.children">
+              <div
+                [class]="getNodeClass(child) + ' nested'"
+                (click)="onNodeClick(child)">
+                <i [class]="'bi ' + getNodeIcon(child) + ' me-2'"></i>
+                <span>{{ child.name }}</span>
+                <div *ngIf="child.loading" class="spinner-border spinner-border-sm ms-2" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+
+              <!-- Render nested children -->
+              <ng-container *ngIf="child.expanded && child.children">
+                <div
+                  *ngFor="let grandChild of child.children"
+                  [class]="getNodeClass(grandChild) + ' nested-deep'"
+                  (click)="onNodeClick(grandChild)">
+                  <i [class]="'bi ' + getNodeIcon(grandChild) + ' me-2'"></i>
+                  <span>{{ grandChild.name }}</span>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>
 
-  <app-knowledge-table [knowledgeItems]="filteredItems"></app-knowledge-table>
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Article Content Header -->
+    <div class="content-header" *ngIf="currentArticle">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-outline-secondary btn-sm me-3" (click)="onBackToWelcome()">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+          </button>
+          <span class="badge" [ngClass]="{
+            'bg-primary': currentArticle.type === ReferencableType.FAQ,
+            'bg-info': currentArticle.type === ReferencableType.ARTICLE
+          }">
+            {{ currentArticle.type }}
+          </span>
+          <span class="badge ms-2" [ngClass]="{
+            'bg-success': currentArticle.status === 'Published',
+            'bg-warning text-dark': currentArticle.status === 'Draft',
+            'bg-secondary': currentArticle.status === 'Review'
+          }">
+            {{ currentArticle.status }}
+          </span>
+        </div>
+        <div>
+          <button class="btn btn-outline-secondary btn-sm me-2" (click)="onEditArticle()">
+            <i class="bi bi-pencil me-1"></i>
+            Edit
+          </button>
+          <button class="btn btn-primary btn-sm me-2" (click)="onPublishArticle()"
+                  [disabled]="currentArticle.status === 'Published'">
+            <i class="bi bi-upload me-1"></i>
+            Publish
+          </button>
+          <button class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-link-45deg me-1"></i>
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Article -->
+    <div *ngIf="loadingArticle" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading article...</span>
+      </div>
+      <p class="mt-3 text-muted">Loading article content...</p>
+    </div>
+
+    <!-- Article Content -->
+    <div class="article-content" *ngIf="currentArticle && !loadingArticle">
+      <h1 class="article-title mb-4">{{ currentArticle.title }}</h1>
+
+<!--      <div class="article-meta mb-4">-->
+<!--        <div class="d-flex align-items-center text-muted">-->
+<!--          <i class="bi bi-person me-2"></i>-->
+<!--          <span class="me-3">{{ currentArticle.author || 'Unknown Author' }}</span>-->
+<!--          <i class="bi bi-calendar3 me-2"></i>-->
+<!--          <span class="me-3">Created: {{ currentArticle.createdAt | date:'medium' }}</span>-->
+<!--          <i class="bi bi-clock me-2"></i>-->
+<!--          <span>Modified: {{ currentArticle.modifiedAt | date:'medium' }}</span>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="article-body" [innerHTML]="currentArticle.content">
+      </div>
+    </div>
+
+    <!-- Welcome Content -->
+    <div class="welcome-content" *ngIf="showWelcome && !loadingArticle">
+      <h2 class="mb-4">Welcome to Knowledge Hub</h2>
+      <div class="welcome-message">
+        <p class="lead">Start building your knowledge base by creating articles and FAQs.</p>
+<!--        <p>Use the left panel to organize your content into categories and manage your knowledge base structure.</p>-->
+
+        <div class="getting-started mt-4">
+          <h5>Getting Started:</h5>
+          <ul class="list-unstyled mt-3">
+            <li class="mb-2">
+              <i class="bi bi-check-circle text-success me-2"></i>
+              Create categories to organize your content
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle text-success me-2"></i>
+              Add articles with detailed information
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle text-success me-2"></i>
+              Create FAQs
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-check-circle text-success me-2"></i>
+              Publish and share your knowledge base
+            </li>
+          </ul>
+        </div>
+
+        <div class="action-buttons mt-4">
+          <button class="btn btn-primary me-3">
+            <i class="bi bi-plus-circle me-2"></i>
+            Create First Article
+          </button>
+          <button class="btn btn-outline-primary">
+            <i class="bi bi-question-circle me-2"></i>
+            Add FAQ
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

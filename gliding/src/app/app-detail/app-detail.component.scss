@@ -10,7 +10,6 @@
   transition: all 0.3s ease;
   overflow-x: auto;
   /* space for fixed header */
-  padding: 88px 9% 24px;
 }
 
 /* Page Header (inside app detail) */
@@ -561,6 +560,15 @@
   h2 {
     color: #1f2937;
     margin-bottom: 1rem;
+  }
+
+  /* AMA tab should fill the space and not have padding */
+  &:has(router-outlet) {
+    padding: 0;
+    text-align: left;
+    color: inherit;
+    height: calc(100vh - 120px); /* Adjusted for removed padding */
+    overflow: hidden;
   }
 }
 

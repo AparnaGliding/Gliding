@@ -1,0 +1,46 @@
+<div class="background">
+  <div class="row flex-column align-items-center justify-content-center h-100 w-100">
+    <div class="text-center upper-container mb-4">
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <img class="logo ms-0" alt="" src="../../assets/images/logo.svg"/>
+<!--        <div class="fw-bold fs-3">ASSISTQ</div>-->
+      </div>
+      <div class="fw-bolder fs-3 mb-2">Create Account</div>
+      <div class="fw-light text-muted fs-6">Sign up to start building your documentation workspace</div>
+    </div>
+    <div class="signup-container mb-5 rounded-4">
+      <div class="d-flex flex-column gap-3">
+        <div>
+          <label for="fullName" class="label-text mb-2">Full Name</label>
+          <input type="text" pInputText id="fullName" name="fullName" class="w-100 py-3 pe-12 ps-10"
+                 placeholder="Enter your full name" [(ngModel)]="fullName"/>
+        </div>
+        <div>
+          <label for="email" class="label-text mb-2">Email Address</label>
+          <input type="email" pInputText id="email" name="email" class="w-100 py-3 pe-12 ps-10"
+                 placeholder="Enter your email address" [(ngModel)]="email"/>
+        </div>
+        <div>
+          <label for="password" class="label-text mb-2">Password</label>
+          <input type="password" pInputText id="password" name="password" class="w-100 py-3 pe-12 ps-10 mb-2"
+                 placeholder="Create a password" [(ngModel)]="password"/>
+        </div>
+
+        <div class="d-flex justify-content-start">
+          <div>
+            <p-check-box class="me-2" [(ngModel)]="agreeToTerms" [binary]="true"></p-check-box>
+            <label class="me-lg-1">I agree to the Terms of Service and Privacy Policy</label>
+          </div>
+        </div>
+
+        <p-button label="Sign Up" styleClass="w-100 blue mb-3" (click)="signUp()" [loading]="isLoading"></p-button>
+        <div class="text-center">
+          Already have an account? <span class="pointer text-primary" (click)="navigateToLogin()">Sign in</span>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      By signing up, you agree to our Terms of Service and Privacy Policy
+    </div>
+  </div>
+</div>

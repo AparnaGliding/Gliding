@@ -9,7 +9,7 @@
     (createNewApplication)="createNewApplication()"
     (tabSelected)="onTabClick($event)"></app-header>
   <!-- Main Content -->
-  <div class="main-content py-5">
+  <div class="main-content">
     <!-- Header now renders app dropdown and tabs -->
 
     <!-- Dashboard Content -->
@@ -57,14 +57,6 @@
         </div>
       </div>
 
-      <!-- Debug Section (temporary) -->
-<!--      <div class="debug-section" style="background: #f0f0f0; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">-->
-<!--        <h4>DEBUG INFO:</h4>-->
-<!--        <p><strong>Modules array length:</strong> {{ modules?.length || 0 }}</p>-->
-<!--        <p><strong>Application data exists:</strong> {{ !!applicationData }}</p>-->
-<!--        <p><strong>Raw modules data:</strong></p>-->
-<!--        <pre style="font-size: 12px; max-height: 200px; overflow-y: auto;">{{ modules | json }}</pre>-->
-<!--      </div>-->
 
       <!-- Modules Section -->
       <div class="modules-section">
@@ -146,6 +138,9 @@
               <button class="module-nav-btn ama-btn" (click)="onModuleAMA(module)">
                 AMA
               </button>
+              <button class="module-nav-btn ama-btn" (click)="onModuleknowledgeBase(module)">
+                Knowledge Base
+              </button>
               <button class="module-nav-btn details-btn" (click)="onModuleViewDetails(module)">
                 View Details
               </button>
@@ -155,11 +150,19 @@
       </div>
     </div>
 
-    <!-- Other Tab Contents -->
-    <div *ngIf="activeTab !== 'Dashboard' && activeTab !== 'AMA'" class="tab-content">
-      <h2>{{ activeTab }} Content</h2>
-      <p>{{ activeTab }} content will be implemented here.</p>
+    <!-- AMA Tab Content -->
+    <div *ngIf="activeTab === 'AMA'" class="tab-content">
+      <router-outlet></router-outlet>
     </div>
+    <div *ngIf="activeTab === 'Knowledge Hub'" class="tab-content">
+      <router-outlet></router-outlet>
+    </div>
+
+
+    <!-- Other Tab Contents -->
+<!--    <div *ngIf="activeTab !== 'Dashboard' && activeTab !== 'AMA'" class="tab-content">-->
+<!--      <h2>{{ activeTab }} Content</h2>-->
+<!--      <p>{{ activeTab }} content will be implemented here.</p>-->
+<!--    </div>-->
 </div>
-    <router-outlet></router-outlet>
 </div>

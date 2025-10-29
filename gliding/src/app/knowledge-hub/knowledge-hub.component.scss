@@ -1,3 +1,282 @@
+.knowledge-hub-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.sidebar {
+  width: 280px;
+  background-color: white;
+  border-right: 1px solid #dee2e6;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.sidebar-header h5 {
+  color: #495057;
+  font-weight: 600;
+}
+
+.nav-tabs-horizontal {
+  display: flex;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 1rem;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #6c757d;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-tab:hover {
+  color: #495057;
+  border-bottom-color: #dee2e6;
+}
+
+.nav-tab.active {
+  color: #0d6efd;
+  border-bottom-color: #0d6efd;
+  font-weight: 600;
+}
+
+.category-section {
+  padding-top: 0;
+}
+
+.category-tree {
+  margin-left: 0;
+}
+
+.tree-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.tree-item:hover {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.tree-item.expandable {
+  font-weight: 500;
+}
+
+.tree-item.nested {
+  margin-left: 1.5rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.tree-item.nested:hover {
+  background-color: #e3f2fd;
+  color: #0d6efd;
+}
+
+.tree-item.nested-deep {
+  margin-left: 3rem;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.tree-item.nested-deep:hover {
+  background-color: #e3f2fd;
+  color: #0d6efd;
+}
+
+.tree-item.file-item {
+  color: #495057;
+}
+
+.tree-item.file-item:hover {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.tree-item.selected {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.tree-item.selected:hover {
+  background-color: #0b5ed7;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.tree-item i {
+  font-size: 0.875rem;
+  width: 16px;
+  text-align: center;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: white;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.content-header {
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-content {
+  max-width: 800px;
+}
+
+.welcome-content h2 {
+  color: #212529;
+  font-weight: 600;
+}
+
+.welcome-message .lead {
+  color: #6c757d;
+  font-size: 1.125rem;
+}
+
+.getting-started {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #0d6efd;
+}
+
+.getting-started h5 {
+  color: #495057;
+  font-weight: 600;
+}
+
+.getting-started li {
+  color: #6c757d;
+}
+
+.action-buttons {
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.article-content {
+  max-width: none;
+}
+
+.article-title {
+  color: #212529;
+  font-weight: 600;
+  line-height: 1.2;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 1rem;
+}
+
+.article-meta {
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f8f9fa;
+  padding-bottom: 1rem;
+}
+
+.article-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #495057;
+}
+
+.article-body h1,
+.article-body h2,
+.article-body h3,
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+  color: #212529;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.article-body p {
+  margin-bottom: 1rem;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.article-body li {
+  margin-bottom: 0.5rem;
+}
+
+.article-body blockquote {
+  border-left: 4px solid #0d6efd;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6c757d;
+}
+
+.article-body code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.article-body pre {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.article-body th,
+.article-body td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.article-body th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
 .btn.active {
   background-color: #0d6efd !important;
   border-color: #0d6efd !important;

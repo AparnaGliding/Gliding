@@ -42,8 +42,6 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     { name: 'Modules', active: false },
     { name: 'AMA', active: false },
     { name: 'Knowledge Hub', active: false },
-    { name: 'Analytics', active: false },
-    { name: 'Map', active: false },
     { name: 'Settings', active: false }
   ];
 
@@ -123,8 +121,21 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   onModuleAMA(module: ApplicationModuleModel): void {
     console.log('Opening AMA for module:', module.moduleName);
     this.onTabClick('AMA');
-    const moduleId = 1;
-    this.router.navigate(['/apps', 1, 'chat', 1]);
+
+    // Navigate to the chat route: /apps/:applicationId/chat/:moduleId
+    const chatRoute = ['/apps', this.applicationName, 'dashboard' , this.applicationId || '1', 'chat', module.id || '1'];
+    console.log('Navigating to chat route:', chatRoute);
+    this.router.navigate(chatRoute);
+  }
+
+  onModuleknowledgeBase(module: ApplicationModuleModel): void {
+    console.log('Opening AMA for module:', module.moduleName);
+    this.onTabClick('Knowledge Hub');
+
+    // Navigate to the chat route: /apps/:applicationId/chat/:moduleId
+    const chatRoute = ['/apps', this.applicationName, 'dashboard' , this.applicationId || '1', 'knowledge-hub', module.id || '1'];
+    console.log('Navigating to chat route:', chatRoute);
+    this.router.navigate(chatRoute);
   }
 
   onModuleViewDetails(module: ApplicationModuleModel): void {
@@ -145,11 +156,24 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     });
     console.log('Switched to tab:', tabName);
 
-    // Navigate to Settings route if Settings tab is clicked
-    if (tabName === 'Settings') {
-      this.router.navigate(['/apps', this.applicationName, 'settings']);
+    // Handle routing based on tab
+    switch (tabName) {
+      case 'Dashboard':
+        this.router.navigate(['/apps', this.applicationName, 'dashboard']);
+        break;
+      case 'Modules':
+        this.router.navigate(['/apps', this.applicationName, 'modules']);
+        break;
+      case 'Knowledge Hub':
+        this.router.navigate(['/apps', this.applicationId || '1', 'knowledge-hub']);
+        break;
+      case 'Settings':
+        this.router.navigate(['/apps', this.applicationName, 'settings']);
+        break;
+      default:
+        // For other tabs, just switch the tab without changing URL
+        break;
     }
-    // TODO: Implement tab content switching or routing for other tabs
   }
 
   toggleDropdown(): void {

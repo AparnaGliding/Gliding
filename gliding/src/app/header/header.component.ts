@@ -1,5 +1,5 @@
 import { Component, HostListener, Input, Output, EventEmitter } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApplicationListingModel } from '../app-dashboard/app-dashboard.model';
 
@@ -21,6 +21,8 @@ export class HeaderComponent {
 
   isDropdownOpen: boolean = false;
 
+  constructor(private router: Router) {}
+
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -37,6 +39,8 @@ export class HeaderComponent {
 
   onTabClick(tabName: string): void {
     this.tabSelected.emit(tabName);
+    // Don't handle routing here - let the parent component handle it
+    // The parent component has the context needed for proper routing
   }
 
   @HostListener('document:click', ['$event'])

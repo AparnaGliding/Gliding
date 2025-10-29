@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import {map, catchError, of, throwError} from 'rxjs';
+import {map, catchError, of, throwError, Observable} from 'rxjs';
+
+export interface UserSignUpModel {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +44,10 @@ export class AuthService {
           this.loggedIn = !!responseData;
           return this.loggedIn;
         }));
+  }
+
+  signUp(userSignUpModel: UserSignUpModel): Observable<any> {
+    return this.http.post<any>('/auth/sign-up', userSignUpModel);
   }
 
 }

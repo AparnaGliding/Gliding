@@ -1,4 +1,4 @@
-<div class="d-flex main-container">
+<div class="d-flex main-container mt-0">
   <div class="left-container bg-white">
     <div class = "pb-3">
     <p-button styleClass="blue w-100"  icon = "pi pi-plus" label="New Conversation"></p-button>
@@ -101,8 +101,7 @@
           pInputTextarea
           [(ngModel)]="currentMessage"
           placeholder="Ask me anything about your product"
-          class="message-input"
-          class="w-100 rounded p-3"
+          class="message-input w-100 rounded p-3"
           rows="1"
           [autoResize]="true"
           [disabled]="isSendingMessage"

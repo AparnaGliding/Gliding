@@ -1,10 +1,10 @@
 <div class="background">
   <div class="row flex-column align-items-center justify-content-center h-100 w-100">
     <div class="text-center upper-container mb-4">
-<!--      <div class="d-flex align-items-center justify-content-center mb-3">-->
-<!--        <img class="logo me-2" alt="" src="../../assets/images/logo.svg"/>-->
+      <div class="d-flex align-items-center justify-content-center mb-3">
+        <img class="logo ms-0" alt="" src="../../assets/images/logo.svg"/>
 <!--        <div class="fw-bold fs-3">ASSISTQ</div>-->
-<!--      </div>-->
+      </div>
       <div class="fw-bolder fs-3 mb-2">Welcome Back</div>
       <div class="fw-light text-muted fs-6">Sign in to access your documentation workspace</div>
     </div>
@@ -33,7 +33,7 @@
 
       <p-button label="Sign In" styleClass="w-100 blue mb-3" (click)="logInByPassword()"></p-button>
       <div class = "text-center">
-        Don't have an account? Sign up
+        Don't have an account? <span class="pointer text-primary" (click)="navigateToSignup()">Sign up</span>
       </div>
       </div>
 
