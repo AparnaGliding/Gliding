@@ -32,91 +32,90 @@
   <!-- Tab: General -->
   <div *ngIf="activeTab === 'General'" class="settings-content">
     <!-- Top cards -->
-    <div class="settings-card-grid">
-      <div class="settings-card">
-        <div class="card-header">
-          <div class="card-icon status-icon"><i class="pi pi-check-circle"></i></div>
-          <div class="card-title">Authentication Status</div>
-          <div class="card-subtitle">Connected</div>
-        </div>
-        <div class="card-body two-col">
-          <div>
-            <div class="muted">Status:</div>
-            <div class="success">Active</div>
-          </div>
-          <div class="text-right">
-            <div class="muted">Type:</div>
-            <div class="strong">{{authStatus.type}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="settings-card">
-        <div class="card-header">
-          <div class="card-icon date-icon"><i class="pi pi-calendar"></i></div>
-          <div class="card-title">Authentication Date</div>
-          <div class="card-subtitle">Initial setup</div>
-        </div>
-        <div class="card-body two-col">
-          <div>
-            <div class="muted">First Auth:</div>
-            <div class="strong">{{authStatus.firstAuth}}</div>
-          </div>
-          <div class="text-right">
-            <div class="muted">Last Updated:</div>
-            <div class="strong">{{authStatus.lastUpdated}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="settings-card">
-        <div class="card-header">
-          <div class="card-icon security-icon"><i class="pi pi-shield"></i></div>
-          <div class="card-title">Security</div>
-          <div class="card-subtitle">Access tokens</div>
-        </div>
-        <div class="card-body two-col">
-          <div>
-            <div class="muted">Token Expiry:</div>
-            <div class="strong">{{authStatus.tokenExpiry}}</div>
-          </div>
-          <div class="text-right">
-            <div class="muted">Scope:</div>
-            <div class="strong">{{authStatus.scope}}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+<!--    <div class="settings-card-grid">-->
+<!--      <div class="settings-card">-->
+<!--        <div class="card-header">-->
+<!--          <div class="card-icon status-icon"><i class="pi pi-check-circle"></i></div>-->
+<!--&lt;!&ndash;          <div class="card-title">Authentication Status</div>&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="card-subtitle">Connected</div>&ndash;&gt;-->
+<!--        </div>-->
+<!--        <div class="card-body two-col">-->
+<!--          <div>-->
+<!--            <div class="muted">Status:</div>-->
+<!--            <div class="success">Active</div>-->
+<!--          </div>-->
+<!--          <div class="text-right">-->
+<!--            <div class="muted">Type:</div>-->
+<!--            <div class="strong">{{authStatus.type}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="settings-card">-->
+<!--        <div class="card-header">-->
+<!--          <div class="card-icon date-icon"><i class="pi pi-calendar"></i></div>-->
+<!--          <div class="card-title">Authentication Date</div>-->
+<!--          <div class="card-subtitle">Initial setup</div>-->
+<!--        </div>-->
+<!--        <div class="card-body two-col">-->
+<!--          <div>-->
+<!--            <div class="muted">First Auth:</div>-->
+<!--            <div class="strong">{{authStatus.firstAuth}}</div>-->
+<!--          </div>-->
+<!--          <div class="text-right">-->
+<!--            <div class="muted">Last Updated:</div>-->
+<!--            <div class="strong">{{authStatus.lastUpdated}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="settings-card">-->
+<!--        <div class="card-header">-->
+<!--          <div class="card-icon security-icon"><i class="pi pi-shield"></i></div>-->
+<!--          <div class="card-title">Security</div>-->
+<!--          <div class="card-subtitle">Access tokens</div>-->
+<!--        </div>-->
+<!--        <div class="card-body two-col">-->
+<!--          <div>-->
+<!--            <div class="muted">Token Expiry:</div>-->
+<!--            <div class="strong">{{authStatus.tokenExpiry}}</div>-->
+<!--          </div>-->
+<!--          <div class="text-right">-->
+<!--            <div class="muted">Scope:</div>-->
+<!--            <div class="strong">{{authStatus.scope}}</div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <!-- Authentication Details -->
-    <div class="settings-section">
-      <h3 class="section-title">Authentication Details</h3>
-      <div class="settings-grid">
-        <div class="setting-item">
-          <label class="setting-label">Authentication Method</label>
-          <div class="radio-group">
-            <label class="radio-item">
-              <input type="radio" name="authMethod" checked>
-              <span>OAuth 2.0 with GitHub</span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-item">
-          <label class="setting-label">Authenticated By</label>
-          <input class="setting-input" placeholder="john@example.com" />
-        </div>
-      </div>
-    </div>
+<!--    &lt;!&ndash; Authentication Details &ndash;&gt;-->
+<!--    <div class="settings-section">-->
+<!--      <h3 class="section-title">Authentication Details</h3>-->
+<!--      <div class="settings-grid">-->
+<!--        <div class="setting-item">-->
+<!--          <label class="setting-label">Authentication Method</label>-->
+<!--          <div class="radio-group">-->
+<!--            <label class="radio-item">-->
+<!--              <input type="radio" name="authMethod" checked>-->
+<!--              <span>OAuth 2.0 with GitHub</span>-->
+<!--            </label>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="setting-item">-->
+<!--          <label class="setting-label">Authenticated By</label>-->
+<!--          <input class="setting-input" placeholder="john@example.com" />-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <div class="settings-actions">
-      <button class="btn-secondary" (click)="onResetSettings()">Reset</button>
-      <button class="btn-primary" (click)="onSaveSetting('general', true)">Save Changes</button>
-    </div>
+<!--    <div class="settings-actions">-->
+<!--      <button class="btn-secondary" (click)="onResetSettings()">Reset</button>-->
+<!--      <button class="btn-primary" (click)="onSaveSetting('general', true)">Save Changes</button>-->
+<!--    </div>-->
   </div>
 
   <!-- Tab: Chat Embed placeholder -->
   <div *ngIf="activeTab === 'Chat Embed'" class="settings-content">
     <div class="settings-section">
       <h3 class="section-title">Chat Embed</h3>
-      <p>Configure your chat widget here.</p>
     </div>
   </div>
 
@@ -124,7 +123,6 @@
   <div *ngIf="activeTab === 'API'" class="settings-content">
     <div class="settings-section">
       <h3 class="section-title">API</h3>
-      <p>Manage API tokens and access.</p>
     </div>
   </div>
 </div>
