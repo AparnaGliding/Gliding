@@ -343,3 +343,22 @@
     align-items: flex-start;
   }
 }
+
+.create-app-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  background-color: #dbeafe;
+  border-radius: 9999px;
+}
+
+.create-app-title{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+}

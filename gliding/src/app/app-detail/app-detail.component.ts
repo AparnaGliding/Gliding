@@ -149,6 +149,9 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     if (tabName === 'Settings') {
       this.router.navigate(['/apps', this.applicationName, 'settings']);
     }
+    if (tabName === 'Modules') {
+      this.router.navigate(['/apps', this.applicationName, 'modules']);
+    }
     // TODO: Implement tab content switching or routing for other tabs
   }
 

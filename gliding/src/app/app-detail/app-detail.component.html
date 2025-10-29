@@ -31,10 +31,7 @@
 
           <div class="crawl-stat-card">
             <div class="stat-icon articles-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" fill="currentColor"/>
-                <path d="M14 2v6h6" fill="currentColor"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text w-8 h-8 text-green-600"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
             </div>
             <div class="stat-info">
               <div class="stat-number">{{ articlesGenerated }}</div>
@@ -44,10 +41,7 @@
 
           <div class="crawl-stat-card">
             <div class="stat-icon time-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-8 h-8 text-purple-600"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
             <div class="stat-info">
               <div class="stat-number">{{ lastCrawled }}</div>
@@ -123,23 +117,6 @@
               </div>
             </div>
 
-            <div class="module-actions">
-              <div class="crawl-depth">
-                <label>Crawl Depth:</label>
-                <select class="depth-select">
-                  <option [selected]="module.crawlDepth === 3">3 levels</option>
-                  <option>2 levels</option>
-                  <option>1 level</option>
-                </select>
-              </div>
-              <button class="module-rerun-btn" (click)="onRerunCrawl(module.moduleName)">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 4v6h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Re-run Crawl
-              </button>
-            </div>
 
             <!-- Module Navigation Buttons -->
             <div class="module-navigation">
@@ -152,6 +129,15 @@
             </div>
           </div>
         </div>
+      </div>
+      <!-- AMA CTA -->
+      <div class="ama-cta">
+        <button class="ask-btn" (click)="onTabClick('AMA')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Ask Me Anything
+        </button>
       </div>
     </div>
 
