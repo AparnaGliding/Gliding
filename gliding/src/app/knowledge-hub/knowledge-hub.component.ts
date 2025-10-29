@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KnowledgeHubService } from './services/knowledge-hub.service';
-import { 
-  CategoryListResponseModel, 
-  DirectoryItemResponseModel, 
-  ReferencableType, 
+import {
+  CategoryListResponseModel,
+  DirectoryItemResponseModel,
+  ReferencableType,
   DirectoryItemType,
   TreeNode,
-  ArticleContent 
+  ArticleContent
 } from './models/knowledge-hub.models';
 
 @Component({
@@ -26,7 +26,7 @@ export class KnowledgeHubComponent implements OnInit {
   currentArticle: ArticleContent | null = null;
   loadingArticle = false;
   showWelcome = true;
-  
+
   // Expose enum to template
   ReferencableType = ReferencableType;
 
@@ -135,7 +135,7 @@ export class KnowledgeHubComponent implements OnInit {
     this.selectedItem = file;
     this.showWelcome = false;
     this.loadingArticle = true;
-    
+
     this.knowledgeHubService.getArticleById(file.id).subscribe({
       next: (article) => {
         this.currentArticle = article;
@@ -151,7 +151,7 @@ export class KnowledgeHubComponent implements OnInit {
 
   onEditArticle(): void {
     if (!this.currentArticle) return;
-    
+
     this.knowledgeHubService.getOnlyOfficeEditUrl(this.currentArticle.id).subscribe({
       next: (response) => {
         // Open OnlyOffice editor in a new window/tab
@@ -166,7 +166,7 @@ export class KnowledgeHubComponent implements OnInit {
 
   onPublishArticle(): void {
     if (!this.currentArticle) return;
-    
+
     if (confirm('Are you sure you want to publish this article?')) {
       this.knowledgeHubService.publishArticle(this.currentArticle.id).subscribe({
         next: () => {

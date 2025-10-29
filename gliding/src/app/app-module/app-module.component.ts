@@ -26,7 +26,7 @@ export class AppModuleComponent implements OnInit, OnDestroy {
     { name: 'Modules', active: true },
     { name: 'AMA', active: false },
     { name: 'Knowledge Hub', active: false },
-    { name: 'Analytics', active: false },
+
     { name: 'Settings', active: false }
   ];
 
@@ -125,6 +125,8 @@ export class AppModuleComponent implements OnInit, OnDestroy {
       this.router.navigate(['/apps', this.applicationName, 'modules']);
     } else if (tabName === 'Settings') {
       this.router.navigate(['/apps', this.applicationName, 'settings']);
+    } else if (tabName === 'AMA') {
+      this.router.navigate(['/apps', this.applicationName, 'dashboard' , this.applicationId , 'chat' , '1']);
     }
     // Other tabs can be wired later when routes are available
   }
@@ -138,7 +140,7 @@ export class AppModuleComponent implements OnInit, OnDestroy {
       tab = 'Modules';
     } else if (url.includes('/settings')) {
       tab = 'Settings';
-    } else if (url.includes('/ama')) {
+    } else if (url.includes('/chat')) {
       tab = 'AMA';
     }
     this.activeTab = tab;

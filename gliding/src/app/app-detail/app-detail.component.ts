@@ -164,14 +164,16 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       case 'Modules':
         this.router.navigate(['/apps', this.applicationName, 'modules']);
         break;
-      case 'Knowledge Hub':
-        this.router.navigate(['/apps', this.applicationId || '1', 'knowledge-hub']);
-        break;
       case 'Settings':
         this.router.navigate(['/apps', this.applicationName, 'settings']);
         break;
+      case 'AMA':
+        this.router.navigate(['/apps', this.applicationName, 'dashboard' , this.applicationId , 'chat' , '1']);
+        break;
+      case 'Knowledge Hub':
+        this.router.navigate(['/apps', this.applicationName , 'dashboard' , this.applicationId || '1', 'knowledge-hub' , '1']);
+        break;
       default:
-        // For other tabs, just switch the tab without changing URL
         break;
     }
     if (tabName === 'Modules') {

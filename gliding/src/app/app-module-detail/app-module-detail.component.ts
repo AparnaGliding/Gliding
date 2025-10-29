@@ -23,7 +23,7 @@ export class AppModuleDetailComponent implements OnInit {
     { name: 'Modules', active: false },
     { name: 'AMA', active: false },
     { name: 'Knowledge Hub', active: false },
-    { name: 'Analytics', active: false },
+
     { name: 'Settings', active: false }
   ];
 
