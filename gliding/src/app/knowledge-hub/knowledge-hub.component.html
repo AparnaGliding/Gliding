@@ -19,7 +19,6 @@
       </button>
     </div>
 
-    <!-- Category Structure -->
     <div class="category-section">
       <!-- Loading indicator -->
       <div *ngIf="loading" class="text-center py-3">
@@ -29,7 +28,6 @@
         <span class="ms-2 text-muted">Loading categories...</span>
       </div>
 
-      <!-- Hierarchical Category Structure -->
       <div class="category-tree" *ngIf="!loading">
         <ng-container *ngFor="let node of treeNodes">
           <div
@@ -42,7 +40,6 @@
             </div>
           </div>
 
-          <!-- Render children recursively -->
           <ng-container *ngIf="node.expanded && node.children">
             <ng-container *ngFor="let child of node.children">
               <div
@@ -72,9 +69,7 @@
     </div>
   </div>
 
-  <!-- Main Content Area -->
   <div class="main-content">
-    <!-- Article Content Header -->
     <div class="content-header" *ngIf="currentArticle">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center">

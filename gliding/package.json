@@ -24,6 +24,7 @@
     "@primeng/themes": "^20.2.0",
     "@primeuix/themes": "^1.2.5",
     "bootstrap": "^5.3.8",
+    "ng2-pdf-viewer": "^10.4.0",
     "ngx-toastr": "^19.0.0",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",

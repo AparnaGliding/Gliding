@@ -6,13 +6,17 @@
 }
 
 .main-content {
-  flex: 1;
-  transition: all 0.3s ease;
-  overflow-x: auto;
-  /* space for fixed header */
+  padding: 2rem;
+  width: 100%;
+  background-color: #EFF6FF;
+  max-width: 100%;
+  padding-left: 9%;
+  padding-right: 9%;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Page Header (inside app detail) */
+
 .page-header {
   margin-bottom: 2rem;
 
