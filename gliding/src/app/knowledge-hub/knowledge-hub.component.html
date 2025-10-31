@@ -179,3 +179,80 @@
     </div>
   </div>
 </div>
+
+<!-- Publish Modal -->
+<div class="modal fade show" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="showPublishModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Publish Article</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closePublishModal()"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="modalLoading" class="text-center py-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!modalLoading">
+          <!-- Category Section -->
+          <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">Category</h6>
+              <button class="btn btn-outline-secondary btn-sm" (click)="categoryMode = categoryMode==='select' ? 'create' : 'select'">
+                <i class="bi" [ngClass]="categoryMode==='select' ? 'bi-plus-circle' : 'bi-x'" class="me-1"></i>
+                {{ categoryMode==='select' ? 'Create Category' : 'Cancel' }}
+              </button>
+            </div>
+            <div *ngIf="categoryMode==='select'">
+              <select class="form-select" [ngModel]="selectedCategoryId" (ngModelChange)="onCategoryChange($event)">
+                <option [ngValue]="null" disabled>Select a category</option>
+                <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+              </select>
+            </div>
+            <div *ngIf="categoryMode==='create'" class="border rounded p-3 mt-2">
+              <label class="form-label">Create New Category</label>
+              <input type="text" class="form-control mb-2" [(ngModel)]="newCategoryName" placeholder="Category name" />
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-sm" (click)="createCategoryAction()">Create</button>
+                <button class="btn btn-outline-secondary btn-sm" (click)="categoryMode='select'">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Folder Section -->
+          <div class="mb-4" [class.opacity-50]="!selectedCategoryId">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <h6 class="mb-0">Folder</h6>
+              <button class="btn btn-outline-secondary btn-sm" [disabled]="!selectedCategoryId" (click)="folderMode = folderMode==='select' ? 'create' : 'select'">
+                <i class="bi" [ngClass]="folderMode==='select' ? 'bi-plus-circle' : 'bi-x'" class="me-1"></i>
+                {{ folderMode==='select' ? 'Create Folder' : 'Cancel' }}
+              </button>
+            </div>
+            <div *ngIf="folderMode==='select'">
+              <select class="form-select" [(ngModel)]="selectedFolderId" [disabled]="!selectedCategoryId">
+                <option [ngValue]="null" disabled>Select a folder</option>
+                <option *ngFor="let f of folders" [ngValue]="f.id">{{ f.name }}</option>
+              </select>
+            </div>
+            <div *ngIf="folderMode==='create'" class="border rounded p-3 mt-2">
+              <label class="form-label">Create New Folder</label>
+              <input type="text" class="form-control mb-2" [(ngModel)]="newFolderName" placeholder="Folder name" />
+              <div class="d-flex gap-2">
+                <button class="btn btn-primary btn-sm" (click)="createFolderAction()" [disabled]="!selectedCategoryId">Create</button>
+                <button class="btn btn-outline-secondary btn-sm" (click)="folderMode='select'">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer actions -->
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-secondary me-2" (click)="closePublishModal()">Cancel</button>
+            <button class="btn btn-success" (click)="confirmPublish()" [disabled]="!selectedCategoryId || !selectedFolderId">Publish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
