@@ -31,14 +31,14 @@ export const routes: Routes = [
     path: 'auth/signup',
     loadComponent: () => import('./signup/signup.component').then(m => m.SignupComponent)
   },
-  {
-    path: 'apps/:applicationId/chat/:moduleId',
-    loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
-  },
-  {
-    path: 'apps/:id/knowledge-hub',
-    loadComponent: () => import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
-  },
+  // {
+  //   path: 'apps/:applicationId/chat/:moduleId',
+  //   loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+  // },
+  // {
+  //   path: 'apps/:id/knowledge-hub',
+  //   loadComponent: () => import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
+  // },
   {
     path: 'apps/:name/dashboard',
     loadComponent: () => import('./app-detail/app-detail.component').then(m => m.AppDetailComponent),
@@ -50,21 +50,33 @@ export const routes: Routes = [
       {
         path: ':id/knowledge-hub/:moduleId',
         loadComponent: () =>  import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
+      },
+      {
+        path: 'modules',
+        loadComponent: () => import('./app-module/app-module.component').then(m => m.AppModuleComponent)
+      },
+      {
+        path: 'modules/:id',
+        loadComponent: () => import('./app-module-detail/app-module-detail.component').then(m => m.AppModuleDetailComponent)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
       }
     ]
   },
-  {
-    path: 'apps/:name/settings',
-    loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
-  },
-  {
-    path: 'apps/:name/modules',
-    loadComponent: () => import('./app-module/app-module.component').then(m => m.AppModuleComponent)
-  },
-  {
-    path: 'apps/:name/modules/:id',
-    loadComponent: () => import('./app-module-detail/app-module-detail.component').then(m => m.AppModuleDetailComponent)
-  },
+  // {
+  //   path: 'apps/:name/dashboard/:id/chat/:moduleId',
+  //   loadComponent: () => import('./chat/chat.component').then(m => m.ChatComponent)
+  // },
+  // {
+  //   path: 'apps/:name/dashboard/:id/knowledge-hub/:moduleId',
+  //   loadComponent: () =>  import('./knowledge-hub/knowledge-hub.component').then(m => m.KnowledgeHubComponent)
+  // },
+  // {
+  //   path: 'apps/:name/settings',
+  //   loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
+  // }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],

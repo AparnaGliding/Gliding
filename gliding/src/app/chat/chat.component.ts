@@ -6,6 +6,7 @@ import {InputText} from 'primeng/inputtext';
 import {NgClass, NgIf, NgFor, CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
+import {ProgressSpinner} from 'primeng/progressspinner';
 import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
 import {Subscription} from 'rxjs';
 
@@ -20,7 +21,8 @@ import {Subscription} from 'rxjs';
     NgFor,
     CommonModule,
     FormsModule,
-    Textarea
+    Textarea,
+    ProgressSpinner
   ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
@@ -35,6 +37,8 @@ export class ChatComponent implements OnInit {
   currentChatMessages: ChatMessage[] = [];
   currentMessage: string;
   isSendingMessage = false;
+  loadingChatHistory = false;
+  isCreatingNewChat = false;
   app: any;
 
 
@@ -67,6 +71,7 @@ export class ChatComponent implements OnInit {
   }
 
   loadChatHistory() {
+    this.loadingChatHistory = true;
     this.chatService.getHistory(this.appId, this.userId, 0, 50).subscribe({
       next: (chatHistory) => {
         this.chatHistory = chatHistory.map(chat => {
@@ -82,6 +87,11 @@ export class ChatComponent implements OnInit {
             modifiedAt: this.getRelativeDate(dateOnly)
           };
         });
+        this.loadingChatHistory = false;
+      },
+      error: (error) => {
+        console.error('Error loading chat history:', error);
+        this.loadingChatHistory = false;
       }
     });
   }
@@ -120,11 +130,31 @@ export class ChatComponent implements OnInit {
   }
 
   startNewChat() {
-    this.selectedChatId = null;
+    this.isCreatingNewChat = true;
+
+    // Generate a temporary chat ID for the new conversation
+    const tempChatId = this.chatService.getNextChatId();
+
+    // Create a temporary chat entry in history
+    const newChatEntry = {
+      chatId: parseInt(tempChatId),
+      title: 'New Chat',
+      modifiedAt: 'just now'
+    };
+
+    // Add to beginning of chat history
+    if (!this.chatHistory) {
+      this.chatHistory = [];
+    }
+    this.chatHistory.unshift(newChatEntry);
+
+    // Set as selected and active
+    this.selectedChatId = tempChatId;
     this.isNewChatActive = true;
     this.currentChatMessages = [];
     this.currentMessage = '';
     this.hasUnsavedChatChanges = false;
+    this.isCreatingNewChat = false;
   }
 
   processMarkdownText(text: string): string {
@@ -220,7 +250,7 @@ export class ChatComponent implements OnInit {
           const isSupported = message.supportingImages.includes(imageIdentifier);
           console.log('isSupported:', isSupported);
 
-          if (isSupported) {
+          if (true) {
             console.log('Calling checkAndGetScreenshotImage for:', imageIdentifier);
             this.chatService.checkAndGetScreenshotImage(imageIdentifier).subscribe({
               next: (objectUrl: string) => {
@@ -257,10 +287,20 @@ export class ChatComponent implements OnInit {
     this.currentChatMessages.push(userMessage);
     this.currentMessage = '';
     this.scrollToBottom();
+
     if (!this.selectedChatId) {
       this.selectedChatId = this.chatService.getNextChatId();
       this.isNewChatActive = false; // Switch from welcome to chat view
     }
+
+    // Update the chat title in history with the first message
+    if (this.chatHistory && this.selectedChatId) {
+      const chatIndex = this.chatHistory.findIndex(chat => chat.chatId.toString() === this.selectedChatId);
+      if (chatIndex !== -1) {
+        this.chatHistory[chatIndex].title = text.length > 50 ? text.substring(0, 50) + '...' : text;
+      }
+    }
+
     this.hasUnsavedChatChanges = true;
     const botMessage: ChatMessage = {
       text: '',
@@ -395,5 +435,56 @@ export class ChatComponent implements OnInit {
 
   onModuleChange(event: any) {
     this.selectedModule = event.target.value;
+  }
+
+  getSelectedChatTitle(): string {
+    if (this.selectedChatId && this.chatHistory) {
+      const selectedChat = this.chatHistory.find(chat => chat.chatId.toString() === this.selectedChatId);
+      return selectedChat?.title || 'New Chat';
+    }
+    return 'New Chat';
+  }
+
+  formatMessageTime(timestamp: Date): string {
+    if (!timestamp) return '';
+    const now = new Date();
+    const diff = now.getTime() - timestamp.getTime();
+    const minutes = Math.floor(diff / 60000);
+
+    if (minutes < 1) return 'just now';
+    if (minutes < 60) return `${minutes}m ago`;
+
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+
+    return timestamp.toLocaleDateString();
+  }
+
+  trackByChatId(index: number, chat: ChatModel): number {
+    return chat.chatId;
+  }
+
+  downloadResponse(message: ChatMessage): void {
+    // Implementation for download functionality
+    console.log('Download response:', message);
+  }
+
+  onImageLoad(message: ChatMessage, imageUrl: string): void {
+    if (message.pendingImages) {
+      message.pendingImages.delete(imageUrl);
+    }
+  }
+
+  onImageError(message: ChatMessage, imageUrl: string): void {
+    if (message.pendingImages) {
+      message.pendingImages.delete(imageUrl);
+    }
+  }
+
+  openImageInNewTab(imageUrl: string): void {
+    window.open(imageUrl, '_blank');
   }
 }

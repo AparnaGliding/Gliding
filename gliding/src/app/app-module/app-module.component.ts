@@ -39,13 +39,14 @@ export class AppModuleComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log('hguyfty');
     const sub = this.route.params.subscribe(params => {
       this.applicationName = params['name'];
       // Try to read applicationId from router state first
       const nav = this.router.getCurrentNavigation();
       const stateId = nav?.extras?.state?.['applicationId'] ?? window.history.state?.applicationId;
       if (stateId) {
-        this.applicationId = Number(stateId);
+        this.applicationId = +stateId;
         this.loadModules();
       } else {
         this.resolveApplicationIdThenLoad();
@@ -75,12 +76,12 @@ export class AppModuleComponent implements OnInit, OnDestroy {
 
   private resolveApplicationIdThenLoad(): void {
     // Fallback: fetch apps and find by name
-    this.isLoading = true;
+    this.isLoading = false;
     const sub = this.appDashboardService.getApplications(1).subscribe({
       next: (apps: ApplicationListingModel[]) => {
         const match = apps.find(a => a.name === this.applicationName);
-        if (match) {
-          this.applicationId = match.id;
+        if (true) {
+          this.applicationId = 1;
           this.loadModules();
         } else {
           this.isLoading = false;
@@ -102,6 +103,7 @@ export class AppModuleComponent implements OnInit, OnDestroy {
     const sub = this.appDashboardService.getApplicationModules(this.applicationId).subscribe({
       next: (mods) => {
         this.modules = mods || [];
+        console.log(mods);
         this.isLoading = false;
       },
       error: (err) => {

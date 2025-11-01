@@ -10,7 +10,7 @@ import {environment} from '../../environments/environment';
 
 export class ChatService {
   private chatIdCounter = 0;
-  private baseUrl = `http://${environment.hostname}${environment.backend_path}/api/aq/chat`;
+  private baseUrl = `http://localhost:8080/api/aq/chat`;
   constructor(private http: HttpClient) {
   }
 
@@ -79,9 +79,10 @@ export class ChatService {
       const params = new URLSearchParams({
         question: req.question,
         domain: req.domain,
-        accountId: req.accountId,
+        applicationId: req.accountId,
         userId: req.userId,
         chatId: req.chatId,
+        applicationModuleId: '1'
       }).toString();
       const url = `${this.baseUrl}?${params}`;
       const es = new EventSource(url, { withCredentials: false });

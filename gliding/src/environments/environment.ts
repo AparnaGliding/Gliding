@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  hostname: '3.94.163.157',
+  hostname: ':8080',
   backend_path: ':8080',
   name: 'local' };

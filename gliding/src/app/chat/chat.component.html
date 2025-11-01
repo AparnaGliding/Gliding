@@ -7,8 +7,30 @@
       <div class="text-secondary fw-medium mb-2 ">
         Your Conversations
       </div>
+
+      <!-- Loading state -->
+      @if (loadingChatHistory) {
+        <div class="loading-state text-center py-3">
+          <i class="pi pi-spin pi-spinner text-primary"></i>
+          <p class="text-secondary mt-2">Loading conversations...</p>
+        </div>
+      }
+
+      <!-- Empty state -->
+      @if (!loadingChatHistory && (!chatHistory || chatHistory.length === 0)) {
+        <div class="empty-state text-center py-4">
+          <i class="pi pi-comments text-secondary fs-1 mb-3"></i>
+          <h5>No conversations yet</h5>
+          <p class="text-secondary">Start your first conversation to see it here</p>
+        </div>
+      }
+
+      <!-- Chat items -->
+      @if (!loadingChatHistory && chatHistory && chatHistory.length > 0) {
         @for (history of chatHistory; track history.chatId) {
-          <div (click)="selectChat(history)">
+          <div (click)="selectChat(history)"
+               class="chat-item p-2 rounded mb-2 cursor-pointer"
+               [class.bg-primary-subtle]="selectedChatId === history.chatId.toString()">
            <div class = "fw-medium heading-text fs-6" >
          {{history.title}}
              </div>
@@ -17,12 +39,13 @@
           </div>
           </div>
         }
+      }
 
     </div>
   </div>
   <div class="middle-container d-flex flex-column overflow-y-auto">
     <div class =  "flex-fill p-4">
-    @if (selectedChatId && !isNewChatActive) {
+    @if (selectedChatId || isNewChatActive) {
       <div class="d-flex  flex-column gap-2 overflow-y-auto">
         @for (message of currentChatMessages;  track message.id) {
           <div class="d-flex  align-content-end gap-2 p-4 message-wrapper fs-6"
@@ -32,6 +55,9 @@
            @if(message.isUser) {
             <div>
               {{message.text}}
+              <div class="message-meta text-secondary small mt-1">
+                {{formatMessageTime(message.timestamp)}}
+              </div>
             </div>} @else {
              <div
                *ngIf="message.isThoughtProcess && message.text"
@@ -64,9 +90,10 @@
                                           chunk.imageUrl
                                         )
                                       "
-                           class="image-loading"
+                           class="image-loading text-center py-3"
                          >
-
+                           <i class="pi pi-spin pi-spinner text-primary"></i>
+                           <p class="text-secondary mt-2">Loading image...</p>
                          </div>
 
                          <img
@@ -77,6 +104,8 @@
                                       "
                            [src]="chunk.imageUrl"
                            class="step-image"
+                           (click)="openImageInNewTab(chunk.imageUrl)"
+                           style="cursor: pointer;"
                          />
 
                        <div>
@@ -87,31 +116,67 @@
                  </div>
                }
              </div>
+             <div class="message-meta text-secondary small mt-2">
+               {{formatMessageTime(message.timestamp)}}
+             </div>
            }
           </div>
           </div>
         }
-      </div>
-    } @else if (isNewChatActive) {
-      <div class="welcome-container d-flex flex-column justify-content-center align-items-center h-100">
-        <div class="welcome-content text-center">
-          <h2 class="mb-4">Welcome to {{app.name}} Assistant</h2>
-          <p class="text-secondary mb-4">I'm here to help you with questions about {{app.name}}. You can ask me anything about:</p>
-          <div class="welcome-features mb-4">
-            <div class="feature-item mb-2">
-              <i class="pi pi-book text-primary me-2"></i>
-              <span>Documentation and guides</span>
-            </div>
-            <div class="feature-item mb-2">
-              <i class="pi pi-cog text-primary me-2"></i>
-              <span>Configuration and setup</span>
-            </div>
-            <div class="feature-item mb-2">
-              <i class="pi pi-question-circle text-primary me-2"></i>
-              <span>Troubleshooting and support</span>
+
+        <!-- Typing indicator -->
+        @if (isSendingMessage) {
+          <div class="d-flex align-content-start gap-2 p-4 message-wrapper fs-6">
+            <div class="bot-message">
+              <div class="typing-indicator">
+                <div class="typing-dots">
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+                <span class="ms-2 text-secondary">AI is typing...</span>
+              </div>
             </div>
           </div>
-          <p class="text-secondary">Type your question below to get started!</p>
+        }
+      </div>
+
+      <!-- Welcome state for new chats -->
+      @if (isNewChatActive && currentChatMessages.length === 0) {
+        <div class="welcome-container d-flex flex-column justify-content-center align-items-center h-100">
+          <div class="welcome-content text-center">
+            <h2 class="mb-4">Welcome to {{app.name}} Assistant</h2>
+            <p class="text-secondary mb-4">I'm here to help you with questions about {{app.name}}. You can ask me anything about:</p>
+            <div class="welcome-features mb-4">
+              <div class="feature-item mb-2">
+                <i class="pi pi-book text-primary me-2"></i>
+                <span>Documentation and guides</span>
+              </div>
+              <div class="feature-item mb-2">
+                <i class="pi pi-cog text-primary me-2"></i>
+                <span>Configuration and setup</span>
+              </div>
+              <div class="feature-item mb-2">
+                <i class="pi pi-question-circle text-primary me-2"></i>
+                <span>Troubleshooting and support</span>
+              </div>
+            </div>
+            <p class="text-secondary">Type your question below to get started!</p>
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="welcome-container d-flex flex-column justify-content-center align-items-center h-100">
+        <div class="welcome-content text-center">
+          <i class="pi pi-comments display-1 text-primary mb-4"></i>
+          <h2 class="mb-4">Welcome to Chat History</h2>
+          <p class="text-secondary mb-4">Select a conversation from the sidebar or start a new chat to begin</p>
+          <p-button
+            label="Start New Chat"
+            icon="pi pi-plus"
+            styleClass="blue"
+            (onClick)="startNewChat()"
+          ></p-button>
         </div>
       </div>
     }

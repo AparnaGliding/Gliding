@@ -140,13 +140,12 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
   onModuleViewDetails(module: ApplicationModuleModel): void {
     console.log('Viewing details for module:', module.moduleName);
-    // Navigate to app modules list route
-    this.router.navigate(['/apps', this.applicationName, 'modules', module.id]);
+    this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules', module.id]);
   }
 
   onViewAll(): void {
-    // Navigate to app modules list route
-    this.router.navigate(['/apps', this.applicationName, 'modules']);
+    console.log('Viewing all modules for application:', this.applicationName);
+    this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
   }
 
   onTabClick(tabName: string): void {
@@ -161,11 +160,8 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       case 'Dashboard':
         this.router.navigate(['/apps', this.applicationName, 'dashboard']);
         break;
-      case 'Modules':
-        this.router.navigate(['/apps', this.applicationName, 'modules']);
-        break;
       case 'Settings':
-        this.router.navigate(['/apps', this.applicationName, 'settings']);
+        this.router.navigate(['/apps', this.applicationName, 'dashboard', 'settings']);
         break;
       case 'AMA':
         this.router.navigate(['/apps', this.applicationName, 'dashboard' , this.applicationId , 'chat' , '1']);
@@ -177,7 +173,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
         break;
     }
     if (tabName === 'Modules') {
-      this.router.navigate(['/apps', this.applicationName, 'modules']);
+      this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
     }
     // TODO: Implement tab content switching or routing for other tabs
   }

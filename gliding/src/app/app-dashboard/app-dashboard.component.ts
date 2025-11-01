@@ -159,23 +159,9 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
   }
 
   openApplication(app: ApplicationListingModel & { modules?: ApplicationModuleModel[], moduleCount?: number, articlesCount?: number }): void {
-    console.log('=== DEBUG: Opening application ===');
-    console.log('App object received:', app);
-    console.log('App modules:', app.modules);
-    console.log('App moduleCount:', app.moduleCount);
-    console.log('App articlesCount:', app.articlesCount);
-
-    // Find the full app data from applicationsWithModules to ensure we have all the loaded data
     const fullAppData = this.applicationsWithModules.find(a => a.id === app.id);
-    console.log('=== DEBUG: Full app data from applicationsWithModules ===');
-    console.log('Full app data found:', fullAppData);
-    console.log('Full app modules:', fullAppData?.modules);
-    console.log('Full app modules length:', fullAppData?.modules?.length);
-
-    // Use the full app data if available, otherwise use the passed app
     const appToUse = fullAppData || app;
 
-    // Prepare comprehensive application data
     const enhancedAppData: EnhancedApplicationData = {
       ...appToUse,
       modules: appToUse.modules || [],
@@ -186,13 +172,6 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
       totalArticles: this.totalArticles,
       lastUpdated: new Date().toISOString()
     };
-
-    console.log('=== DEBUG: Enhanced data being passed ===');
-    console.log('Full enhancedAppData:', enhancedAppData);
-    console.log('Enhanced modules array:', enhancedAppData.modules);
-    console.log('Enhanced modules length:', enhancedAppData.modules?.length);
-    console.log('Sample module:', enhancedAppData.modules?.[0]);
-
     // Navigate to app-detail component with comprehensive data
     this.router.navigate(['/apps', app.name, 'dashboard'], {
       state: {

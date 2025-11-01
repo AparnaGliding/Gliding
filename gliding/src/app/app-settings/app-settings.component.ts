@@ -108,8 +108,6 @@ export class AppSettingsComponent implements OnInit {
       this.router.navigate(['/apps', this.applicationName, 'dashboard']);
     } else if (tabName === 'Modules') {
       this.router.navigate(['/apps', this.applicationName, 'modules']);
-    } else if (tabName === 'Settings') {
-      this.router.navigate(['/apps', this.applicationName, 'settings']);
     }
     // Other tabs can be wired later when routes are available
   }

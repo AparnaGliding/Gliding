@@ -6,16 +6,11 @@
 }
 
 .main-content {
-  padding: 2rem;
-  width: 100%;
+  flex: 1;
+  transition: all 0.3s ease;
+  overflow-x: auto;
   background-color: #EFF6FF;
-  max-width: 100%;
-  padding-left: 9%;
-  padding-right: 9%;
-  min-height: 100vh;
-  box-sizing: border-box;
 }
-
 
 .page-header {
   margin-bottom: 2rem;
@@ -229,6 +224,9 @@
 
 /* Dashboard Content */
 .dashboard-content {
+  padding: 2rem;
+  padding-left: 9%;
+  padding-right: 9%;
   .section-title {
     font-size: 30px;
     font-weight: 700;

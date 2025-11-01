@@ -1,6 +1,6 @@
 .main-container {
   background-color: #EFF6FF;
-  height: 100%;
+  height: calc(100vh - 128px);
   display: flex;
 }
 
@@ -180,12 +180,12 @@
 .welcome-container {
   .welcome-content {
     max-width: 600px;
-    
+
     h2 {
       color: #1f2937;
       font-weight: 600;
     }
-    
+
     .welcome-features {
       .feature-item {
         display: flex;
@@ -193,16 +193,136 @@
         justify-content: center;
         font-size: 1rem;
         color: #374151;
-        
+
         i {
           font-size: 1.25rem;
         }
       }
     }
-    
+
     p {
       font-size: 1.1rem;
       line-height: 1.6;
     }
+  }
+}
+
+/* Chat item styles */
+.chat-item {
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f8f9fa !important;
+    transform: translateX(2px);
+  }
+
+  &.bg-primary-subtle {
+    background-color: #e3f2fd !important;
+    border-left: 3px solid #2196f3;
+  }
+}
+
+/* Typing indicator animation */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+
+  .typing-dots {
+    display: flex;
+    gap: 4px;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #6c757d;
+      animation: typing 1.4s infinite ease-in-out;
+
+      &:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+/* Loading states */
+.loading-state {
+  padding: 1rem;
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+.empty-state {
+  padding: 2rem 1rem;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  h5 {
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+}
+
+/* Message meta styles */
+.message-meta {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Image loading improvements */
+.image-loading {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #dee2e6;
+
+  i {
+    font-size: 1.25rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+.step-image {
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 }
