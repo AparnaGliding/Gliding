@@ -70,7 +70,7 @@ export class AppModuleComponent implements OnInit, OnDestroy {
   }
 
   onOpenModule(module: ApplicationModuleModel): void {
-    if (!this.applicationName) { return; }
+    // if (!this.applicationName) { return; }
     this.router.navigate(['/apps', this.applicationName, 'modules', module.id]);
   }
 

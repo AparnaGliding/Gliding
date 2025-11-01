@@ -145,8 +145,13 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
   onViewAll(): void {
     console.log('Viewing all modules for application:', this.applicationName);
+    this.activeTab = 'Modules';
+    this.navigationTabs.forEach(tab => {
+      tab.active = tab.name === 'Modules';
+    });
     this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
   }
+
 
   onTabClick(tabName: string): void {
     this.activeTab = tabName;
