@@ -129,12 +129,32 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
   loadIntegrations(): void {
     this.adminDetailService.getConnection().subscribe({
       next: (items) => {
-        this.integrations = items || [];
+        const fetched = items || [];
+        // Ensure Freshdesk appears even if not yet connected
+        const hasFreshdesk = fetched.some(i => (i.integrationType || '').toLowerCase() === 'freshdesk');
+        this.integrations = hasFreshdesk
+          ? fetched
+          : [...fetched, {
+              clientId: '',
+              clientSecret: '',
+              integrationType: 'Freshdesk',
+              oauthUri: '',
+              isAuthorized: false,
+              id: 0
+            } as IntegrationConnectionRequest];
         this.totalIntegrationsCount = this.integrations.length;
       },
       error: (err) => {
         console.error('Error loading integrations', err);
-        this.integrations = this.integrations || [];
+        // On error, still show placeholder Freshdesk card
+        this.integrations = this.integrations && this.integrations.length > 0 ? this.integrations : [{
+          clientId: '',
+          clientSecret: '',
+          integrationType: 'Freshdesk',
+          oauthUri: '',
+          isAuthorized: false,
+          id: 0
+        } as IntegrationConnectionRequest];
         this.totalIntegrationsCount = this.integrations.length;
       }
     });

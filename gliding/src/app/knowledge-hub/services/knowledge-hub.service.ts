@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {map, Observable, throwError} from 'rxjs';
 import { CategoryListResponseModel, DirectoryItemResponseModel, ReferencableType, ArticleContent } from '../models/knowledge-hub.models';
+import {
+  FreshdeskCategoryRequest,
+  FreshdeskFolderRequest,
+  ListCategoryModel,
+  ListFolderModel
+} from '../knowledge-hub.model';
+import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +56,72 @@ export class KnowledgeHubService {
 
   getOnlyOfficeEditUrl(articleId: number): Observable<{editUrl: string}> {
     return this.http.get<{editUrl: string}>(`/article/${articleId}/edit-url`);
+  }
+
+  createCategory(category: FreshdeskCategoryRequest): Observable<boolean> {
+
+    return this.http.post<boolean>('/freshdesk/create/category', category, {observe: 'response'}).pipe(
+      map((res: any) => {
+        return res.body || false;
+      }),
+      catchError(error => {
+        console.error('Error creating category in freshdesk :', error);
+        return throwError(() => false);
+      })
+    );
+  }
+
+
+  listAllCategory(): Observable<ListCategoryModel[] | null> {
+    return this.http.get<ListCategoryModel[]>('/freshdesk/list/category').pipe(
+      map((res: any) => {
+        return res || [];
+      }),
+      catchError(error => {
+        console.error('Error fetching Freshdesk connection:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
+  createFolder(folder: FreshdeskFolderRequest, categoryId: number): Observable<boolean> {
+    return this.http.post<boolean>(`/freshdesk/create/folder/${categoryId}`, folder, { observe: 'response' }).pipe(
+      map((res: any) => {
+        // Treat HTTP 200 as success even if body is empty/falsey
+        return (res?.body === true) || (res?.status === 200);
+      }),
+      catchError(error => {
+        console.error('Error creating category in freshdesk :', error);
+        return throwError(() => false);
+      })
+    );
+  }
+
+
+  listAllFolders(category: ListCategoryModel): Observable<ListFolderModel[] | null> {
+    // @ts-ignore
+    return this.http.post<ListFolderModel[]>('/freshdesk/list/folder', category).pipe(
+      map((res: any) => {
+        return res || [];
+      }),
+      catchError(error => {
+        console.error('Error fetching Freshdesk connection:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
+
+  publishFreshdeskArticle(articleId: number, folderId: number): Observable<any> {
+    return this.http.post(`/freshdesk/publish/${articleId}/${folderId}`, {}, { observe: 'response' })
+      .pipe(
+        map((res: any) => {
+          return res.body;
+        }),
+        catchError(error => {
+          console.error('Error publishing article:', error);
+          return throwError(() => null);
+        })
+      );
   }
 }

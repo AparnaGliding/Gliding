@@ -58,6 +58,9 @@
                 <div class="integration-details">
                   <h3 class="integration-name">{{ item.integrationType }}</h3>
                   <p class="integration-description">Integration</p>
+                  <span class="status-chip" [class.connected]="item.isAuthorized" [class.disconnected]="!item.isAuthorized">
+                    {{ item.isAuthorized ? 'Connected' : 'Not Authorized' }}
+                  </span>
                 </div>
               </div>
               <div class="connection-status" [ngClass]="item.isAuthorized ? 'connected' : 'disconnected'">
