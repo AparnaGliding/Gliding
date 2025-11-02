@@ -292,3 +292,48 @@
   border-color: #86b7fe;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
+
+// PDF-specific styles
+.tree-item.pdf-file {
+  color: #dc3545;
+}
+
+.tree-item.pdf-file:hover {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.tree-item.pdf-file.selected {
+  background-color: #dc3545;
+  color: white;
+}
+
+.tree-item.pdf-file.selected:hover {
+  background-color: #bb2d3b;
+}
+
+.pdf-preview {
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-viewer-container {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.pdf-iframe {
+  border: none;
+  border-radius: 0.5rem;
+  min-height: 600px;
+}
+
+.pdf-fallback {
+  background-color: white;
+  border-radius: 0.5rem;
+  margin: 1rem;
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { KnowledgeHubService } from './services/knowledge-hub.service';
 import {
   CategoryListResponseModel,
@@ -28,6 +29,12 @@ export class KnowledgeHubComponent implements OnInit {
   loadingArticle = false;
   showWelcome = true;
 
+  // PDF viewer properties
+  currentPdfUrl: string | null = null;
+  safePdfUrl: SafeResourceUrl | null = null;
+  showPdfPreview = false;
+  isPdfFile = false;
+
   // Expose enum to template
   ReferencableType = ReferencableType;
 
@@ -44,7 +51,10 @@ export class KnowledgeHubComponent implements OnInit {
   newFolderName = '';
   modalLoading = false;
 
-  constructor(private knowledgeHubService: KnowledgeHubService) {}
+  constructor(
+    private knowledgeHubService: KnowledgeHubService,
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -132,10 +142,12 @@ export class KnowledgeHubComponent implements OnInit {
             categoryId: item.categoryId,
             children: [],
             expanded: false,
+            url: item.url,
             loading: false
           }));
           folder.expanded = true;
           folder.loading = false;
+          console.log(items);
         },
         error: (error) => {
           console.error('Error loading folder items:', error);
@@ -150,18 +162,29 @@ export class KnowledgeHubComponent implements OnInit {
     this.selectedItem = file;
     this.showWelcome = false;
     this.loadingArticle = true;
-
-    this.knowledgeHubService.getArticleById(file.id).subscribe({
-      next: (article) => {
-        this.currentArticle = article;
-        this.loadingArticle = false;
-      },
-      error: (error) => {
-        console.error('Error loading article:', error);
-        this.loadingArticle = false;
-        // Show error message or fallback content
-      }
-    });
+    
+    // Reset previous states
+    this.currentArticle = null;
+    this.currentPdfUrl = null;
+    this.safePdfUrl = null;
+    this.showPdfPreview = false;
+    this.isPdfFile = false;
+    
+    const filename = file.name;
+    
+    // Check if file is PDF
+    if (filename && filename.toLowerCase().endsWith('.pdf')) {
+      this.isPdfFile = true;
+      this.currentPdfUrl = `assets/${filename}`;
+      // Sanitize the URL for safe use in iframe
+      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.currentPdfUrl);
+      this.showPdfPreview = true;
+      this.loadingArticle = false;
+    } else {
+      // Handle non-PDF files (existing article loading logic can be added here)
+      this.loadingArticle = false;
+      console.log('Non-PDF file selected:', filename);
+    }
   }
 
   onEditArticle(): void {
@@ -188,6 +211,26 @@ export class KnowledgeHubComponent implements OnInit {
     this.showWelcome = true;
     this.currentArticle = null;
     this.selectedItem = null;
+    this.currentPdfUrl = null;
+    this.safePdfUrl = null;
+    this.showPdfPreview = false;
+    this.isPdfFile = false;
+  }
+
+  downloadPdf(): void {
+    if (!this.currentPdfUrl) return;
+    
+    const link = document.createElement('a');
+    link.href = this.currentPdfUrl;
+    link.download = this.selectedItem?.name || 'document.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  openPdfInNewTab(): void {
+    if (!this.currentPdfUrl) return;
+    window.open(this.currentPdfUrl, '_blank');
   }
 
   getNodeIcon(node: TreeNode): string {
@@ -196,6 +239,10 @@ export class KnowledgeHubComponent implements OnInit {
     } else if (node.type === 'folder') {
       return node.expanded ? 'bi-folder2-open' : 'bi-folder2';
     } else {
+      // Check if file is PDF
+      if (node.name && node.name.toLowerCase().endsWith('.pdf')) {
+        return 'bi-file-pdf';
+      }
       return 'bi-file-text';
     }
   }
@@ -207,6 +254,10 @@ export class KnowledgeHubComponent implements OnInit {
     }
     if (node.type === 'file') {
       classes.push('file-item');
+      // Add PDF-specific class
+      if (node.name && node.name.toLowerCase().endsWith('.pdf')) {
+        classes.push('pdf-file');
+      }
     }
     if (this.selectedItem?.id === node.id) {
       classes.push('selected');
