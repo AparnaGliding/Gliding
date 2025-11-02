@@ -145,6 +145,7 @@ export class KnowledgeHubComponent implements OnInit {
     }
   }
 
+
   private selectFile(file: TreeNode): void {
     this.selectedItem = file;
     this.showWelcome = false;
