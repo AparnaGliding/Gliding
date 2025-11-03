@@ -101,15 +101,15 @@ export class ChatComponent implements OnInit {
             modifiedAt: this.getRelativeDate(dateOnly)
           };
         });
-        
+
         // Find the largest chat ID and store it
-        this.maxChatId = this.chatHistory.length > 0 
+        this.maxChatId = this.chatHistory.length > 0
           ? Math.max(...this.chatHistory.map(chat => chat.chatId))
           : 0;
-        
+
         // Update the chat service with the next available ID
         this.chatService.setNextChatId(this.maxChatId + 1);
-        
+
         this.loadingChatHistory = false;
       },
       error: (error) => {
@@ -550,7 +550,7 @@ export class ChatComponent implements OnInit {
     this.selectedCategoryId = categoryId;
     this.selectedFolderId = null;
     this.folders = [];
-    
+
     if (categoryId) {
       this.loadFoldersForCategory(categoryId);
     }
@@ -558,7 +558,7 @@ export class ChatComponent implements OnInit {
 
   loadFoldersForCategory(categoryId: number): void {
     this.modalLoading = true;
-    
+
     // Use Knowledge Hub API to get items by category and filter for folders only
     this.knowledgeHubService.getItemsByCategory(categoryId).subscribe({
       next: (items) => {
@@ -588,7 +588,7 @@ export class ChatComponent implements OnInit {
       const file = await this.renderMessageToPdfMake(this.selectedMessageForArticle, name);
       this.chatService.uploadFile(
         file,
-        `${name}.pdf`,
+        name,
         this.selectedFolderId,
         this.selectedCategoryId,
         this.userId,
@@ -616,7 +616,11 @@ export class ChatComponent implements OnInit {
 
   private buildSuggestedFileName(message: any): string {
     let base = '';
-    if (message?.text) {
+    if (this.userQuestion) {
+      base = String(this.userQuestion).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    } else if (message?.userQuestion) {
+      base = String(message.userQuestion).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    } else if (message?.text) {
       base = String(message.text).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
     } else if (Array.isArray(message?.textChunks) && message.textChunks.length) {
       base = String(message.textChunks.map((c: any) => c.text).join(' ')).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
@@ -627,8 +631,10 @@ export class ChatComponent implements OnInit {
     if (base.length > 60) {
       base = base.slice(0, 60).trim();
     }
-    const date = new Date().toISOString().slice(0, 10);
-    return `${base} - ${date}`;
+    base = base.replace(/[^A-Za-z0-9]+/g, '_');
+    base = base.replace(/_+/g, '_');
+    base = base.replace(/^_+|_+$/g, '');
+    return base;
   }
 
   private async renderMessageToPdfMake(message: any, name: string): Promise<File> {
