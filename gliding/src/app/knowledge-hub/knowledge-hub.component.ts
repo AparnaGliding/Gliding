@@ -21,7 +21,7 @@ import { FreshdeskCategoryRequest, FreshdeskFolderRequest, ListCategoryModel, Li
   styleUrl: './knowledge-hub.component.scss'
 })
 export class KnowledgeHubComponent implements OnInit {
-  activeTab: ReferencableType = ReferencableType.FAQ;
+  activeTab: ReferencableType = ReferencableType.ARTICLE;
   treeNodes: TreeNode[] = [];
   loading = false;
   selectedItem: TreeNode | null = null;
@@ -75,9 +75,14 @@ export class KnowledgeHubComponent implements OnInit {
           type: 'category',
           referencableType: category.type,
           children: [],
-          expanded: false,
+          expanded: true,
           loading: false
         }));
+        
+        // Auto-expand all categories
+        this.treeNodes.forEach(category => {
+          this.loadCategoryItems(category);
+        });
         this.loading = false;
       },
       error: (error) => {
@@ -97,33 +102,68 @@ export class KnowledgeHubComponent implements OnInit {
     }
   }
 
+  private loadCategoryItems(category: TreeNode): void {
+    category.loading = true;
+    this.knowledgeHubService.getItemsByCategory(category.id).subscribe({
+      next: (items) => {
+        category.children = items.map(item => ({
+          id: item.id,
+          name: item.name,
+          type: item.itemType === DirectoryItemType.FOLDER ? 'folder' : 'file',
+          parentId: item.parentId,
+          categoryId: item.categoryId,
+          children: [],
+          expanded: item.itemType === DirectoryItemType.FOLDER ? true : false,
+          loading: false
+        }));
+        
+        // Auto-expand all folders
+        const folders = category.children.filter(child => child.type === 'folder');
+        folders.forEach(folder => {
+          this.loadFolderItems(folder);
+        });
+        
+        category.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading category items:', error);
+        category.loading = false;
+      }
+    });
+  }
+
   private toggleCategory(category: TreeNode): void {
     if (category.expanded) {
       category.expanded = false;
       category.children = [];
     } else {
-      category.loading = true;
-      this.knowledgeHubService.getItemsByCategory(category.id).subscribe({
-        next: (items) => {
-          category.children = items.map(item => ({
-            id: item.id,
-            name: item.name,
-            type: item.itemType === DirectoryItemType.FOLDER ? 'folder' : 'file',
-            parentId: item.parentId,
-            categoryId: item.categoryId,
-            children: [],
-            expanded: false,
-            loading: false
-          }));
-          category.expanded = true;
-          category.loading = false;
-        },
-        error: (error) => {
-          console.error('Error loading category items:', error);
-          category.loading = false;
-        }
-      });
+      category.expanded = true;
+      this.loadCategoryItems(category);
     }
+  }
+
+  private loadFolderItems(folder: TreeNode): void {
+    folder.loading = true;
+    this.knowledgeHubService.getItemsByCategory(folder.categoryId!, folder.id).subscribe({
+      next: (items) => {
+        folder.children = items.map(item => ({
+          id: item.id,
+          name: item.name,
+          type: item.itemType === DirectoryItemType.FOLDER ? 'folder' : 'file',
+          parentId: item.parentId,
+          categoryId: item.categoryId,
+          children: [],
+          expanded: false,
+          url: item.url,
+          loading: false
+        }));
+        folder.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading folder items:', error);
+        folder.loading = false;
+      }
+    });
   }
 
   private toggleFolder(folder: TreeNode): void {
@@ -131,29 +171,8 @@ export class KnowledgeHubComponent implements OnInit {
       folder.expanded = false;
       folder.children = [];
     } else {
-      folder.loading = true;
-      this.knowledgeHubService.getItemsByCategory(folder.categoryId!, folder.id).subscribe({
-        next: (items) => {
-          folder.children = items.map(item => ({
-            id: item.id,
-            name: item.name,
-            type: item.itemType === DirectoryItemType.FOLDER ? 'folder' : 'file',
-            parentId: item.parentId,
-            categoryId: item.categoryId,
-            children: [],
-            expanded: false,
-            url: item.url,
-            loading: false
-          }));
-          folder.expanded = true;
-          folder.loading = false;
-          console.log(items);
-        },
-        error: (error) => {
-          console.error('Error loading folder items:', error);
-          folder.loading = false;
-        }
-      });
+      folder.expanded = true;
+      this.loadFolderItems(folder);
     }
   }
 

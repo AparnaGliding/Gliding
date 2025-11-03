@@ -141,6 +141,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   onModuleViewDetails(module: ApplicationModuleModel): void {
     console.log('Viewing details for module:', module.moduleName);
     this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules', module.id]);
+
   }
 
   onViewAll(): void {

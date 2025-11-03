@@ -33,9 +33,9 @@
           <!-- Category Level -->
           <div class="tree-node category-node" [class.expanded]="node.expanded" (click)="onNodeClick(node)">
             <div class="node-content">
-              <i class="bi bi-chevron-right expand-icon" [class.rotated]="node.expanded"></i>
-              <i class="bi bi-folder2 node-icon category-icon"></i>
+              <i class="bi bi-collection node-icon category-icon"></i>
               <span class="node-label">{{ node.name }}</span>
+              <i class="bi" [class.bi-chevron-down]="node.expanded" [class.bi-chevron-right]="!node.expanded" class="expand-icon ms-auto"></i>
               <div *ngIf="node.loading" class="spinner-border spinner-border-sm ms-auto" role="status">
                 <span class="visually-hidden">Loading...</span>
               </div>
@@ -50,10 +50,10 @@
                    [class.selected]="selectedItem?.id === child.id"
                    (click)="onNodeClick(child)">
                 <div class="node-content">
-                  <i class="bi bi-chevron-right expand-icon" [class.rotated]="child.expanded" *ngIf="child.type === 'folder'"></i>
-                  <i class="bi bi-folder2 node-icon folder-icon" *ngIf="child.type === 'folder'"></i>
+                  <i class="bi bi-folder node-icon folder-icon" *ngIf="child.type === 'folder'"></i>
                   <i class="bi bi-file-text node-icon file-icon" *ngIf="child.type === 'file'"></i>
                   <span class="node-label">{{ child.name }}</span>
+                  <i class="bi" [class.bi-chevron-down]="child.expanded" [class.bi-chevron-right]="!child.expanded" class="expand-icon ms-auto" *ngIf="child.type === 'folder'"></i>
                   <div *ngIf="child.loading" class="spinner-border spinner-border-sm ms-auto" role="status">
                     <span class="visually-hidden">Loading...</span>
                   </div>
