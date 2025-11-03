@@ -233,6 +233,16 @@ export class KnowledgeHubComponent implements OnInit {
     window.open(this.currentPdfUrl, '_blank');
   }
 
+  copyLink(): void {
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      alert('Link copied to clipboard!');
+    }).catch(err => {
+      console.error('Failed to copy link: ', err);
+      alert('Failed to copy link');
+    });
+  }
+
   getNodeIcon(node: TreeNode): string {
     if (node.type === 'category') {
       return node.expanded ? 'bi-chevron-down' : 'bi-chevron-right';

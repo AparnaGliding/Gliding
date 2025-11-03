@@ -105,10 +105,364 @@
 <!--    </div>-->
   </div>
 
-  <!-- Tab: Chat Embed placeholder -->
+  <!-- Tab: Chat Embed -->
   <div *ngIf="activeTab === 'Chat Embed'" class="settings-content">
-    <div class="settings-section">
-      <h3 class="section-title">Chat Embed</h3>
+    <!-- Header Card -->
+    <div class="embed-header-card">
+      <div class="embed-header-icon">
+        <i class="pi pi-comments"></i>
+      </div>
+      <div class="embed-header-content">
+        <h3 class="embed-title">Customer Support Widget (External)</h3>
+        <p class="embed-description">
+          This embeddable chat widget is for end-users of third-party applications to get instant answers.
+          It's fully customizable and can be embedded in any website or app.
+        </p>
+        <p class="embed-note">
+          <i class="pi pi-info-circle"></i>
+          Looking for the internal admin workspace? Access the <strong>AMA</strong> tab for content creation.
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="embed-main-grid">
+      <!-- Left Column: Appearance Settings -->
+      <div class="embed-section">
+        <div class="section-header">
+          <i class="pi pi-palette"></i>
+          <h4>Appearance</h4>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Primary Color</label>
+          <div class="color-input-group">
+            <input
+              type="color"
+              [(ngModel)]="chatEmbedSettings.primaryColor"
+              class="color-picker">
+            <input
+              type="text"
+              [(ngModel)]="chatEmbedSettings.primaryColor"
+              class="color-text-input"
+              placeholder="#0066FF">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Chat Title</label>
+          <input
+            type="text"
+            [(ngModel)]="chatEmbedSettings.chatTitle"
+            class="form-input"
+            placeholder="AssistQ">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Greeting Message</label>
+          <textarea
+            [(ngModel)]="chatEmbedSettings.greetingMessage"
+            class="form-textarea"
+            rows="3"
+            placeholder="Hi! Ask me anything about our product."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Input Placeholder</label>
+          <input
+            type="text"
+            [(ngModel)]="chatEmbedSettings.inputPlaceholder"
+            class="form-input"
+            placeholder="Ask a question...">
+        </div>
+      </div>
+
+      <!-- Right Column: Embed Code -->
+      <div class="embed-section">
+        <div class="section-header">
+          <i class="pi pi-code"></i>
+          <h4>Embed Code</h4>
+          <button class="preview-btn" (click)="togglePreview()">
+            <i class="pi pi-eye"></i>
+            Preview
+          </button>
+        </div>
+
+        <!-- Iframe Embed -->
+        <div class="embed-code-section">
+          <div class="embed-code-header">
+            <span class="embed-code-title">Iframe Embed</span>
+            <button class="copy-btn" (click)="copyToClipboard(getIframeEmbedCode())">
+              <i class="pi pi-copy"></i>
+              Copy
+            </button>
+          </div>
+          <div class="embed-code-container">
+            <pre class="embed-code">{{ getIframeEmbedCode() }}</pre>
+          </div>
+        </div>
+
+        <!-- JavaScript Embed -->
+        <div class="embed-code-section">
+          <div class="embed-code-header">
+            <span class="embed-code-title">JavaScript Embed</span>
+            <button class="copy-btn" (click)="copyToClipboard(getJavaScriptEmbedCode())">
+              <i class="pi pi-copy"></i>
+              Copy
+            </button>
+          </div>
+          <div class="embed-code-container">
+            <pre class="embed-code">{{ getJavaScriptEmbedCode() }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Response Behavior Section -->
+    <div class="embed-section full-width">
+      <div class="section-header">
+        <i class="pi pi-cog"></i>
+        <h4>Response Behavior</h4>
+      </div>
+
+      <div class="behavior-grid">
+        <!-- Tone Selection -->
+        <div class="behavior-group">
+          <label class="behavior-label">Tone</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.tone === 'Professional'"
+              (click)="responseBehavior.tone = 'Professional'">
+              <span class="btn-title">Professional</span>
+              <span class="btn-subtitle">Business-like</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.tone === 'Friendly'"
+              (click)="responseBehavior.tone = 'Friendly'">
+              <span class="btn-title">Friendly</span>
+              <span class="btn-subtitle">Warm</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.tone === 'Casual'"
+              (click)="responseBehavior.tone = 'Casual'">
+              <span class="btn-title">Casual</span>
+              <span class="btn-subtitle">Relaxed</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.tone === 'Technical'"
+              (click)="responseBehavior.tone = 'Technical'">
+              <span class="btn-title">Technical</span>
+              <span class="btn-subtitle">Precise</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Response Length -->
+        <div class="behavior-group">
+          <label class="behavior-label">Response Length</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.responseLength === 'Brief'"
+              (click)="responseBehavior.responseLength = 'Brief'">
+              <span class="btn-title">Brief</span>
+              <span class="btn-subtitle">1-2 sentences</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.responseLength === 'Moderate'"
+              (click)="responseBehavior.responseLength = 'Moderate'">
+              <span class="btn-title">Moderate</span>
+              <span class="btn-subtitle">Balanced</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.responseLength === 'Detailed'"
+              (click)="responseBehavior.responseLength = 'Detailed'">
+              <span class="btn-title">Detailed</span>
+              <span class="btn-subtitle">Comprehensive</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Formality Level -->
+        <div class="behavior-group">
+          <label class="behavior-label">Formality Level</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.formalityLevel === 'Formal'"
+              (click)="responseBehavior.formalityLevel = 'Formal'">
+              <span class="btn-title">Formal</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.formalityLevel === 'Balanced'"
+              (click)="responseBehavior.formalityLevel = 'Balanced'">
+              <span class="btn-title">Balanced</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="responseBehavior.formalityLevel === 'Informal'"
+              (click)="responseBehavior.formalityLevel = 'Informal'">
+              <span class="btn-title">Informal</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Instructions -->
+        <div class="behavior-group full-width">
+          <label class="behavior-label">Custom Instructions <span class="optional">(Optional)</span></label>
+          <textarea
+            [(ngModel)]="responseBehavior.customInstructions"
+            class="form-textarea"
+            rows="4"
+            placeholder="Add specific instructions about how the AI should respond..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to Embed & Position Grid -->
+    <div class="embed-bottom-grid">
+      <!-- How to Embed Section -->
+      <div class="embed-section">
+        <div class="section-header">
+          <i class="pi pi-question-circle"></i>
+          <h4>How to Embed</h4>
+        </div>
+
+        <div class="how-to-steps">
+          <div class="step-item">
+            <span class="step-number">1</span>
+            <span class="step-text">Customize appearance and behavior above</span>
+          </div>
+          <div class="step-item">
+            <span class="step-number">2</span>
+            <span class="step-text">Copy the embed code (iframe or JavaScript)</span>
+          </div>
+          <div class="step-item">
+            <span class="step-number">3</span>
+            <span class="step-text">Paste before the closing &lt;/body&gt; tag in your website</span>
+          </div>
+          <div class="step-item">
+            <span class="step-number">4</span>
+            <span class="step-text">The widget will appear for your end-users</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Position Section -->
+      <div class="embed-section">
+        <div class="section-header">
+          <i class="pi pi-th-large"></i>
+          <h4>Position</h4>
+        </div>
+
+        <div class="position-grid">
+          <button
+            class="position-btn"
+            [class.active]="positionSettings.position === 'Bottom Right'"
+            (click)="positionSettings.position = 'Bottom Right'">
+            Bottom Right
+          </button>
+          <button
+            class="position-btn"
+            [class.active]="positionSettings.position === 'Bottom Left'"
+            (click)="positionSettings.position = 'Bottom Left'">
+            Bottom Left
+          </button>
+          <button
+            class="position-btn"
+            [class.active]="positionSettings.position === 'Top Right'"
+            (click)="positionSettings.position = 'Top Right'">
+            Top Right
+          </button>
+          <button
+            class="position-btn"
+            [class.active]="positionSettings.position === 'Top Left'"
+            (click)="positionSettings.position = 'Top Left'">
+            Top Left
+          </button>
+        </div>
+
+        <div class="position-option">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="positionSettings.showPoweredBy"
+              class="checkbox-input">
+            <span class="checkbox-text">Show "Powered by Gliding"</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div *ngIf="showPreviewModal" class="preview-modal-overlay" (click)="closePreviewModal()">
+      <div class="preview-modal" (click)="$event.stopPropagation()">
+        <div class="preview-header">
+          <div class="preview-title">
+            <i class="pi pi-eye"></i>
+            Chat Widget Preview
+          </div>
+          <button class="preview-close-btn" (click)="closePreviewModal()">
+            <i class="pi pi-times"></i>
+          </button>
+        </div>
+
+        <div class="preview-content">
+          <!-- Chat Widget Preview -->
+          <div class="chat-widget-preview" [style.--primary-color]="chatEmbedSettings.primaryColor">
+            <!-- Widget Header -->
+            <div class="widget-header">
+              <div class="widget-title">{{ chatEmbedSettings.chatTitle }}</div>
+<!--              <div class="widget-status">-->
+<!--                <span class="status-dot"></span>-->
+<!--                Online-->
+<!--              </div>-->
+            </div>
+
+            <!-- Messages Area -->
+            <div class="widget-messages">
+              <div *ngFor="let message of previewMessages"
+                   class="message-item"
+                   [class.bot-message]="message.isBot"
+                   [class.user-message]="!message.isBot">
+                <div class="message-bubble">
+                  {{ message.text }}
+                </div>
+                <div class="message-time">
+                  {{ message.timestamp | date:'short' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="widget-input-area">
+              <input
+                #previewInput
+                type="text"
+                class="widget-input"
+                [placeholder]="chatEmbedSettings.inputPlaceholder"
+                (keydown.enter)="sendPreviewMessage(previewInput.value); previewInput.value = ''">
+              <button
+                class="widget-send-btn"
+                (click)="sendPreviewMessage(previewInput.value); previewInput.value = ''">
+                <i class="pi pi-send"></i>
+              </button>
+            </div>
+
+            <!-- Powered By (if enabled) -->
+            <div *ngIf="positionSettings.showPoweredBy" class="widget-powered-by">
+              Powered by Gliding
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
