@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
 import { ApplicationModuleModel, ApplicationListingModel, EnhancedApplicationData } from '../app-dashboard/app-dashboard.model';
@@ -60,6 +60,14 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
     // Load all applications for dropdown
     this.loadAllApplications();
+
+    // Ensure correct tab is active on hard refresh / direct URL entry
+    this.setActiveTabFromUrl(this.router.url);
+    this.router.events.subscribe((evt) => {
+      if (evt instanceof NavigationEnd) {
+        this.setActiveTabFromUrl(evt.urlAfterRedirects || evt.url);
+      }
+    });
 
     // Get application data from router state if available
     const navigation = this.router.getCurrentNavigation();
@@ -165,6 +173,12 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     switch (tabName) {
       case 'Dashboard':
         this.router.navigate(['/apps', this.applicationName, 'dashboard']);
+        // Ensure dashboard data is present after a hard refresh from child routes
+        if (!this.applicationId) {
+          this.loadApplicationData(this.applicationName);
+        } else if (!this.modules || this.modules.length === 0) {
+          this.loadModulesData();
+        }
         break;
       case 'Settings':
         this.router.navigate(['/apps', this.applicationName, 'dashboard', 'settings']);
@@ -182,6 +196,23 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
     }
     // TODO: Implement tab content switching or routing for other tabs
+  }
+
+  private setActiveTabFromUrl(url: string): void {
+    // Normalize URL
+    const u = url.toLowerCase();
+    let tab: string = 'Dashboard';
+    if (u.includes('/modules')) {
+      tab = 'Modules';
+    } else if (u.includes('/settings')) {
+      tab = 'Settings';
+    } else if (u.includes('/chat/')) {
+      tab = 'AMA';
+    } else if (u.includes('/knowledge-hub')) {
+      tab = 'Knowledge Hub';
+    }
+    this.activeTab = tab;
+    this.navigationTabs.forEach(t => t.active = (t.name === tab));
   }
 
   toggleDropdown(): void {
@@ -228,6 +259,25 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       next: (apps: ApplicationListingModel[]) => {
         this.allApplications = apps;
         console.log('All applications loaded for dropdown:', this.allApplications);
+        // If we don't have applicationId yet (e.g., hard refresh on child route), try to resolve it now
+        if (!this.applicationId && this.applicationName) {
+          const found = this.allApplications.find(a => a.name === this.applicationName);
+          if (found) {
+            this.applicationId = String(found.id);
+            // Populate lightweight applicationData so dashboard can load
+            this.applicationData = {
+              ...(found as any),
+              id: found.id,
+              modules: [],
+              moduleCount: 0,
+              articlesCount: 0,
+              lastUpdated: new Date().toISOString()
+            } as EnhancedApplicationData;
+            // Preload dashboard metrics
+            this.populateData();
+            this.loadModulesData();
+          }
+        }
       },
       error: (error) => {
         console.error('Error loading applications for dropdown:', error);
@@ -237,8 +287,30 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   }
 
   private loadApplicationData(appName: string): void {
-    // TODO: Implement logic to load specific application data
-    // This could involve calling a service to get application details by name
+    // Resolve application by name then load dashboard data
+    this.appDashboardService.getApplications(1).subscribe({
+      next: (apps: ApplicationListingModel[]) => {
+        const app = apps.find(a => a.name === appName);
+        if (app) {
+          this.applicationId = String(app.id);
+          this.applicationData = {
+            ...(app as any),
+            id: app.id,
+            modules: [],
+            moduleCount: 0,
+            articlesCount: 0,
+            lastUpdated: new Date().toISOString()
+          } as EnhancedApplicationData;
+          this.populateData();
+          this.loadModulesData();
+        } else {
+          console.warn('Application not found for name:', appName);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to resolve application by name:', err);
+      }
+    });
   }
 
   private populateData(): void {
