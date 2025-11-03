@@ -63,3 +63,18 @@ export interface ArticleListResponseModel {
   question: string;
   createdAt: Date;
 }
+
+
+export interface DirectoryItemResponseModel {
+  id: number;
+  name: string;
+  parentId: number;
+  createdAt: Date;
+  modifiedAt: Date;
+  itemType: string;
+  size: string;
+  userId: number;
+  applicationId: number;
+  categoryId: number;
+  url: string;
+}
