@@ -2,6 +2,9 @@ import {Button} from 'primeng/button';
 import {ActivatedRoute} from '@angular/router';
 import {ChatService} from './chat.service';
 import {ChatMessage, ChatModel, ChatRequest, ApplicationModuleModel, ArticleListResponseModel} from './chat.model';
+import {KnowledgeHubService} from '../knowledge-hub/services/knowledge-hub.service';
+import {ListCategoryModel, ListFolderModel} from '../knowledge-hub/knowledge-hub.model';
+import {ReferencableType, DirectoryItemType} from '../knowledge-hub/models/knowledge-hub.models';
 import {InputText} from 'primeng/inputtext';
 import {NgClass, NgIf, NgFor, CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -49,10 +52,21 @@ export class ChatComponent implements OnInit {
   private hasUnsavedChatChanges = false;
   private isTyping = false;
   private currentStreamSub?: Subscription;
+  private maxChatId = 0;
+
+  // Add to Article modal properties
+  showAddToArticleModal = false;
+  categories: ListCategoryModel[] = [];
+  folders: ListFolderModel[] = [];
+  selectedCategoryId: number | null = null;
+  selectedFolderId: number | null = null;
+  modalLoading = false;
+  selectedMessageForArticle: ChatMessage | null = null;
 
   constructor(private route: ActivatedRoute,
               private chatService: ChatService,
               private cdr: ChangeDetectorRef,
+              private knowledgeHubService: KnowledgeHubService
   ) {
   }
 
@@ -87,6 +101,15 @@ export class ChatComponent implements OnInit {
             modifiedAt: this.getRelativeDate(dateOnly)
           };
         });
+        
+        // Find the largest chat ID and store it
+        this.maxChatId = this.chatHistory.length > 0 
+          ? Math.max(...this.chatHistory.map(chat => chat.chatId))
+          : 0;
+        
+        // Update the chat service with the next available ID
+        this.chatService.setNextChatId(this.maxChatId + 1);
+        
         this.loadingChatHistory = false;
       },
       error: (error) => {
@@ -486,5 +509,103 @@ export class ChatComponent implements OnInit {
 
   openImageInNewTab(imageUrl: string): void {
     window.open(imageUrl, '_blank');
+  }
+
+  // Add to Article modal methods
+  openAddToArticleModal(message?: ChatMessage): void {
+    this.selectedMessageForArticle = message || null;
+    this.showAddToArticleModal = true;
+    this.selectedCategoryId = null;
+    this.selectedFolderId = null;
+    this.categories = [];
+    this.folders = [];
+    this.loadCategories();
+  }
+
+  closeAddToArticleModal(): void {
+    this.showAddToArticleModal = false;
+    this.selectedMessageForArticle = null;
+  }
+
+  loadCategories(): void {
+    this.modalLoading = true;
+    // Use Knowledge Hub API instead of Freshdesk API
+    this.knowledgeHubService.getAllCategories(ReferencableType.ARTICLE).subscribe({
+      next: (categories) => {
+        // Map the response to match the expected format
+        this.categories = categories.map(category => ({
+          id: category.id,
+          name: category.name
+        }));
+        this.modalLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.modalLoading = false;
+      }
+    });
+  }
+
+  onCategoryChange(categoryId: number | null): void {
+    this.selectedCategoryId = categoryId;
+    this.selectedFolderId = null;
+    this.folders = [];
+    
+    if (categoryId) {
+      this.loadFoldersForCategory(categoryId);
+    }
+  }
+
+  loadFoldersForCategory(categoryId: number): void {
+    this.modalLoading = true;
+    
+    // Use Knowledge Hub API to get items by category and filter for folders only
+    this.knowledgeHubService.getItemsByCategory(categoryId).subscribe({
+      next: (items) => {
+        // Filter only folder items and map to the expected format
+        this.folders = items
+          .filter(item => item.itemType === DirectoryItemType.FOLDER) // Only get folders
+          .map(folder => ({
+            id: folder.id,
+            name: folder.name
+          }));
+        this.modalLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading folders:', error);
+        this.modalLoading = false;
+      }
+    });
+  }
+
+  confirmAddToArticle(): void {
+    if (!this.selectedCategoryId || !this.selectedFolderId || !this.selectedMessageForArticle) {
+      return;
+    }
+
+    // Here you would implement the logic to add the specific message content to an article
+    console.log('Adding message to article:', {
+      message: this.selectedMessageForArticle,
+      categoryId: this.selectedCategoryId,
+      folderId: this.selectedFolderId,
+      categoryName: this.getSelectedCategoryName(),
+      folderName: this.getSelectedFolderName()
+    });
+    
+    this.closeAddToArticleModal();
+    // You could add a toast notification here
+    alert(`Message content will be added to ${this.getSelectedCategoryName()} / ${this.getSelectedFolderName()}!`);
+  }
+
+  getSelectedCategoryName(): string {
+    if (!this.selectedCategoryId) return '';
+    const category = this.categories.find(c => c.id === this.selectedCategoryId);
+    return category ? category.name : '';
+  }
+
+  getSelectedFolderName(): string {
+    if (!this.selectedFolderId) return '';
+    const folder = this.folders.find(f => f.id === this.selectedFolderId);
+    return folder ? folder.name : '';
   }
 }

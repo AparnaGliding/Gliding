@@ -14,9 +14,14 @@ export class ChatService {
   constructor(private http: HttpClient) {
   }
 
+  setNextChatId(nextId: number): void {
+    this.chatIdCounter = nextId;
+  }
+
   getNextChatId(): string {
+    const currentId = this.chatIdCounter;
     this.chatIdCounter++;
-    return this.chatIdCounter.toString();
+    return currentId.toString();
   }
 
   getHistory(accountId: string, userId: number, offset: number = 0, limit: number = 50): Observable<ChatModel[]> {
