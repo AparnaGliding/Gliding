@@ -79,7 +79,7 @@ export class ChatComponent implements OnInit {
       domain : 'Terzo_Cloud_Contracts_final'
     };
     this.loadModules();
-    // this.loadArticles();
+    this.loadArticles();
     // Start with new chat active by default
     this.isNewChatActive = true;
   }
@@ -446,7 +446,7 @@ export class ChatComponent implements OnInit {
   }
 
   loadArticles() {
-    this.chatService.getArticles(1, this.userId, 0, 3).subscribe({
+    this.chatService.getArticles(1, this.userId, 0, 5).subscribe({
       next: (articles) => {
         this.articles = articles;
       },
@@ -598,6 +598,8 @@ export class ChatComponent implements OnInit {
       ).subscribe({
         next: () => {
           this.modalLoading = false;
+          // refresh generated articles list
+          this.loadArticles();
           this.closeAddToArticleModal();
           alert('Content exported to PDF and uploaded successfully.');
         },
