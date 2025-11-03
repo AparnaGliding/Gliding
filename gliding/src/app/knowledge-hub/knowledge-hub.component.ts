@@ -181,9 +181,18 @@ export class KnowledgeHubComponent implements OnInit {
       this.showPdfPreview = true;
       this.loadingArticle = false;
     } else {
-      // Handle non-PDF files (existing article loading logic can be added here)
-      this.loadingArticle = false;
-      console.log('Non-PDF file selected:', filename);
+      // Handle non-PDF files - load article content
+      this.knowledgeHubService.getArticleById(file.id).subscribe({
+        next: (article) => {
+          this.currentArticle = article;
+          this.loadingArticle = false;
+        },
+        error: (error) => {
+          console.error('Error loading article:', error);
+          this.loadingArticle = false;
+          // Show error message or fallback content
+        }
+      });
     }
   }
 

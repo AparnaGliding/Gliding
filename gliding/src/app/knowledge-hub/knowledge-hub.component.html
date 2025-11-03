@@ -88,23 +88,33 @@
       </div>
 
       <div class="header-actions">
-        <button class="btn btn-success btn-sm me-2" (click)="onPublishArticle()" *ngIf="currentArticle"
-                [disabled]="currentArticle.status === 'Published'">
+        <!-- Article buttons - show when we have article content -->
+        <button class="btn btn-success btn-sm me-2" (click)="onPublishArticle()"
+                [disabled]="currentArticle?.status === 'Published'">
           <i class="bi bi-upload me-1"></i>
           Publish
         </button>
-        <button class="btn btn-primary btn-sm me-2" (click)="onEditArticle()" *ngIf="currentArticle">
+        <button class="btn btn-primary btn-sm me-2" (click)="onEditArticle()">
           <i class="bi bi-pencil me-1"></i>
           Edit
         </button>
+
+        <!-- PDF buttons - show when we have PDF content -->
         <button class="btn btn-outline-secondary btn-sm me-2" (click)="downloadPdf()" *ngIf="showPdfPreview">
           <i class="bi bi-download me-1"></i>
           Download
         </button>
-        <button class="btn btn-outline-secondary btn-sm" (click)="copyLink()">
-          <i class="bi bi-link-45deg me-1"></i>
-          Copy Link
-        </button>
+<!--        <button class="btn btn-outline-secondary btn-sm me-2" (click)="openPdfInNewTab()" *ngIf="showPdfPreview">-->
+<!--          <i class="bi bi-box-arrow-up-right me-1"></i>-->
+<!--          Open in New Tab-->
+<!--        </button>-->
+
+        <!-- Copy link button - always available when content is shown -->
+<!--        <button class="btn btn-outline-secondary btn-sm" (click)="copyLink()">-->
+<!--          <i class="bi bi-link-45deg me-1"></i>-->
+<!--          Copy Link-->
+<!--        </button>-->
+
       </div>
     </div>
 
