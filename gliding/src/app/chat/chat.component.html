@@ -119,11 +119,11 @@
              <div class="message-meta text-secondary small mt-2">
                {{formatMessageTime(message.timestamp)}}
              </div>
-             
+
              <!-- Add to Article Button for each bot message -->
              <div class="mt-2">
-               <p-button 
-                 label="Add to Article" 
+               <p-button
+                 label="Add to Article"
                  icon="pi pi-plus"
                  styleClass="p-button-outlined p-button-sm p-button-secondary"
                  (onClick)="openAddToArticleModal(message)">
@@ -144,7 +144,7 @@
                   <span class="dot"></span>
                   <span class="dot"></span>
                 </div>
-                <span class="ms-2 text-secondary">AI is typing...</span>
+                <span class="ms-2 text-secondary">typing...</span>
               </div>
             </div>
           </div>
@@ -260,7 +260,7 @@
         </div>
         <div class="modal-body">
           <p class="text-muted mb-4">Select the location where you want to add this content.</p>
-          
+
           @if (modalLoading) {
             <div class="text-center py-3">
               <div class="spinner-border text-primary" role="status">
@@ -273,9 +273,9 @@
             <!-- Category Section -->
             <div class="mb-4">
               <label class="form-label fw-medium">1. Select Category</label>
-              <select 
-                class="form-select" 
-                [ngModel]="selectedCategoryId" 
+              <select
+                class="form-select"
+                [ngModel]="selectedCategoryId"
                 (ngModelChange)="onCategoryChange($event)">
                 <option [ngValue]="null" disabled>Select a category</option>
                 @for (category of categories; track category.id) {
@@ -287,9 +287,9 @@
             <!-- Folder Section -->
             <div class="mb-4" [class.opacity-50]="!selectedCategoryId">
               <label class="form-label fw-medium">2. Select Folder</label>
-              <select 
-                class="form-select" 
-                [(ngModel)]="selectedFolderId" 
+              <select
+                class="form-select"
+                [(ngModel)]="selectedFolderId"
                 [disabled]="!selectedCategoryId">
                 <option [ngValue]="null" disabled>Select a folder</option>
                 @for (folder of folders; track folder.id) {
@@ -302,7 +302,7 @@
             @if (selectedCategoryId && selectedFolderId) {
               <div class="alert alert-info">
                 <strong>Content will be added to:</strong><br>
-                <span class="text-primary">{{ getSelectedCategoryName() }}</span> / 
+                <span class="text-primary">{{ getSelectedCategoryName() }}</span> /
                 <span class="text-primary">{{ getSelectedFolderName() }}</span>
               </div>
             }
@@ -310,9 +310,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeAddToArticleModal()">Cancel</button>
-          <button 
-            type="button" 
-            class="btn btn-primary" 
+          <button
+            type="button"
+            class="btn btn-primary"
             (click)="confirmAddToArticle()"
             [disabled]="!selectedCategoryId || !selectedFolderId || modalLoading">
             Add to Article
