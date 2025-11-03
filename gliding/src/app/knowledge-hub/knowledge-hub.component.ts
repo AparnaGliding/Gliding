@@ -78,7 +78,7 @@ export class KnowledgeHubComponent implements OnInit {
           expanded: true,
           loading: false
         }));
-        
+
         // Auto-expand all categories
         this.treeNodes.forEach(category => {
           this.loadCategoryItems(category);
@@ -116,13 +116,13 @@ export class KnowledgeHubComponent implements OnInit {
           expanded: item.itemType === DirectoryItemType.FOLDER ? true : false,
           loading: false
         }));
-        
+
         // Auto-expand all folders
         const folders = category.children.filter(child => child.type === 'folder');
         folders.forEach(folder => {
           this.loadFolderItems(folder);
         });
-        
+
         category.loading = false;
       },
       error: (error) => {
@@ -181,21 +181,20 @@ export class KnowledgeHubComponent implements OnInit {
     this.selectedItem = file;
     this.showWelcome = false;
     this.loadingArticle = true;
-    
+
     // Reset previous states
     this.currentArticle = null;
     this.currentPdfUrl = null;
     this.safePdfUrl = null;
     this.showPdfPreview = false;
     this.isPdfFile = false;
-    
+
     const filename = file.name;
-    
+
     // Check if file is PDF
     if (filename && filename.toLowerCase().endsWith('.pdf')) {
       this.isPdfFile = true;
-      this.currentPdfUrl = `assets/${filename}`;
-      // Sanitize the URL for safe use in iframe
+      this.currentPdfUrl = `http://localhost:4200/assets/${filename}`;
       this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.currentPdfUrl);
       this.showPdfPreview = true;
       this.loadingArticle = false;
@@ -247,7 +246,7 @@ export class KnowledgeHubComponent implements OnInit {
 
   downloadPdf(): void {
     if (!this.currentPdfUrl) return;
-    
+
     const link = document.createElement('a');
     link.href = this.currentPdfUrl;
     link.download = this.selectedItem?.name || 'document.pdf';
