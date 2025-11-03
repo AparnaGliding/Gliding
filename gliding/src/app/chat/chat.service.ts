@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {map, Observable, throwError} from 'rxjs';
-import {ChatMessageModel, ChatModel, ChatRequest, ApplicationModuleModel, ArticleListResponseModel} from './chat.model';
+import {ChatMessageModel, ChatModel, ChatRequest, ApplicationModuleModel, ArticleListResponseModel, DirectoryItemResponseModel} from './chat.model';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 @Injectable({
@@ -146,4 +146,20 @@ export class ChatService {
       })
     );
   }
+
+  uploadFile(file: File, name: string, parentId: number | null | undefined, categoryId: number, userId: number, applicationId: number, isFolder: boolean, userUploaded: boolean): Observable<DirectoryItemResponseModel> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', name);
+    if (parentId !== null && parentId !== undefined) {
+      formData.append('parentId', parentId.toString());
+    }
+    formData.append('categoryId', categoryId.toString());
+    formData.append('userId', userId.toString());
+    formData.append('applicationId', applicationId.toString());
+    formData.append('isFolder', String(isFolder));
+    formData.append('userUploaded', String(userUploaded));
+    return this.http.post<DirectoryItemResponseModel>('/directory/file', formData);
+  }
+
 }

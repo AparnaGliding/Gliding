@@ -11,7 +11,7 @@ import {FormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {Subscription, lastValueFrom} from 'rxjs';
 
 
 @Component({
@@ -578,23 +578,134 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  confirmAddToArticle(): void {
+  async confirmAddToArticle(): Promise<void> {
     if (!this.selectedCategoryId || !this.selectedFolderId || !this.selectedMessageForArticle) {
       return;
     }
+    this.modalLoading = true;
+    try {
+      const name = this.buildSuggestedFileName(this.selectedMessageForArticle);
+      const file = await this.renderMessageToPdfMake(this.selectedMessageForArticle, name);
+      this.chatService.uploadFile(
+        file,
+        `${name}.pdf`,
+        this.selectedFolderId,
+        this.selectedCategoryId,
+        this.userId,
+        this.app?.id,
+        false,
+        true
+      ).subscribe({
+        next: () => {
+          this.modalLoading = false;
+          this.closeAddToArticleModal();
+          alert('Content exported to PDF and uploaded successfully.');
+        },
+        error: (err) => {
+          console.error('Upload failed', err);
+          this.modalLoading = false;
+          alert('Upload failed. Check console for details.');
+        }
+      });
+    } catch (e) {
+      console.error('PDF generation failed', e);
+      this.modalLoading = false;
+      alert('PDF generation failed. Make sure required libraries are installed.');
+    }
+  }
 
-    // Here you would implement the logic to add the specific message content to an article
-    console.log('Adding message to article:', {
-      message: this.selectedMessageForArticle,
-      categoryId: this.selectedCategoryId,
-      folderId: this.selectedFolderId,
-      categoryName: this.getSelectedCategoryName(),
-      folderName: this.getSelectedFolderName()
+  private buildSuggestedFileName(message: any): string {
+    let base = '';
+    if (message?.text) {
+      base = String(message.text).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    } else if (Array.isArray(message?.textChunks) && message.textChunks.length) {
+      base = String(message.textChunks.map((c: any) => c.text).join(' ')).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    }
+    if (!base) {
+      base = 'Chat Export';
+    }
+    if (base.length > 60) {
+      base = base.slice(0, 60).trim();
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    return `${base} - ${date}`;
+  }
+
+  private async renderMessageToPdfMake(message: any, name: string): Promise<File> {
+    const pdfMakeMod: any = await import('pdfmake/build/pdfmake');
+    const pdfFontsMod: any = await import('pdfmake/build/vfs_fonts');
+    const pdfMake = pdfMakeMod.default || pdfMakeMod;
+    const fonts = (pdfFontsMod && (pdfFontsMod.default || pdfFontsMod)) as any;
+    let vfs = (pdfMake as any).vfs;
+    if (!vfs) {
+      vfs = fonts?.pdfMake?.vfs || fonts?.vfs;
+    }
+    if (!vfs) {
+      const keys = Object.keys(fonts || {});
+      const looksLikeRawMap = keys.some(k => /\.ttf$/i.test(k));
+      if (looksLikeRawMap) {
+        vfs = fonts;
+      }
+    }
+    if (!vfs) {
+      console.error('pdfmake vfs not found; module keys:', Object.keys(fonts || {}));
+      throw new Error('pdfmake fonts (vfs) not found. Install pdfmake and ensure vfs_fonts is bundled.');
+    }
+    (pdfMake as any).vfs = vfs;
+
+    const content: any[] = [];
+    const toPlain = (html: string) => html.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '');
+
+    if (message?.text) {
+      content.push({ text: toPlain(message.text), margin: [0, 0, 0, 8] });
+    }
+    if (Array.isArray(message?.textChunks)) {
+      for (const chunk of message.textChunks) {
+        if (chunk?.text) {
+          content.push({ text: toPlain(chunk.text), margin: [0, 6, 0, 6] });
+        }
+        if (chunk?.imageUrl) {
+          try {
+            const dataUrl = await this.resolveImageToDataURL(chunk.imageUrl);
+            content.push({ image: dataUrl, width: 450, margin: [0, 6, 0, 12] });
+          } catch {}
+        }
+      }
+    }
+
+    if (content.length === 0) {
+      content.push({ text: ' ', margin: [0, 0, 0, 0] });
+    }
+
+    const docDefinition = {
+      info: { title: name },
+      pageSize: 'A4',
+      pageMargins: [40, 40, 40, 40],
+      content
+    } as any;
+
+    const blob: Blob = await new Promise((resolve) => {
+      pdfMake.createPdf(docDefinition).getBlob((b: Blob) => resolve(b));
     });
-    
-    this.closeAddToArticleModal();
-    // You could add a toast notification here
-    alert(`Message content will be added to ${this.getSelectedCategoryName()} / ${this.getSelectedFolderName()}!`);
+    return new File([blob], `${name}.pdf`, { type: 'application/pdf' });
+  }
+
+  private async resolveImageToDataURL(identifier: string): Promise<string> {
+    const isAbsolute = /^(https?:)?\/\//i.test(identifier) || identifier.startsWith('data:');
+    let objectUrl: string;
+    if (isAbsolute) {
+      objectUrl = identifier;
+    } else {
+      objectUrl = await lastValueFrom(this.chatService.checkAndGetScreenshotImage(identifier));
+    }
+    const res = await fetch(objectUrl, { mode: 'cors' });
+    const blob = await res.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
   }
 
   getSelectedCategoryName(): string {

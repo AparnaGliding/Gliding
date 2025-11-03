@@ -51,7 +51,8 @@
           <div class="d-flex  align-content-end gap-2 p-4 message-wrapper fs-6"
                [ngClass]="{'justify-content-end': message.isUser, 'justify-content-start': !message.isUser}">
           <div [class.user-message]="message.isUser"
-               [class.bot-message]="!message.isUser">
+               [class.bot-message]="!message.isUser"
+               [attr.data-message-id]="!message.isUser ? message.id : null">
            @if(message.isUser) {
             <div>
               {{message.text}}
