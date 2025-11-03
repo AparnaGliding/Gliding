@@ -9,6 +9,15 @@
   border-right: 1px solid #e5e7eb;
   height: 100%;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollable conversations list */
+.conversation-list {
+  flex: 1;
+  min-height: 0; /* allow to shrink inside flex parent */
+  overflow-y: auto;
 }
 
 .middle-container {
@@ -53,8 +62,12 @@
 
 .heading-text{
   color: rgb(55 65 81 / var(--tw-text-opacity, 1));
-  width: 243px;
+  width: 100%;
+  max-width: 243px;
   height: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 

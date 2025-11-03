@@ -3,7 +3,7 @@
     <div class = "pb-3">
     <p-button styleClass="blue w-100"  icon = "pi pi-plus" label="New Conversation" (onClick)="startNewChat()"></p-button>
     </div>
-    <div class="gap-2">
+    <div class="gap-2 conversation-list">
       <div class="text-secondary fw-medium mb-2 ">
         Your Conversations
       </div>
@@ -31,8 +31,8 @@
           <div (click)="selectChat(history)"
                class="chat-item p-2 rounded mb-2 cursor-pointer"
                [class.bg-primary-subtle]="selectedChatId === history.chatId.toString()">
-           <div class = "fw-medium heading-text fs-6" >
-         {{history.title}}
+           <div class="fw-medium heading-text fs-6" [title]="history.title">
+             {{history.title}}
              </div>
           <div class = "fw-light text-secondary">
             {{history.modifiedAt}}
