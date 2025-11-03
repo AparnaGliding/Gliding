@@ -34,6 +34,8 @@ export class KnowledgeHubComponent implements OnInit {
   safePdfUrl: SafeResourceUrl | null = null;
   showPdfPreview = false;
   isPdfFile = false;
+  // Track which item is being published (works for both article and PDF)
+  publishingArticleId: number | null = null;
 
   // Expose enum to template
   ReferencableType = ReferencableType;
@@ -215,9 +217,10 @@ export class KnowledgeHubComponent implements OnInit {
   }
 
   onEditArticle(): void {
-    if (!this.currentArticle) return;
+    const targetId = this.isPdfFile && this.selectedItem ? this.selectedItem.id : this.currentArticle?.id;
+    if (!targetId) return;
 
-    this.knowledgeHubService.getOnlyOfficeEditUrl(this.currentArticle.id).subscribe({
+    this.knowledgeHubService.getOnlyOfficeEditUrl(targetId).subscribe({
       next: (response) => {
         // Open OnlyOffice editor in a new window/tab
         window.open(response.editUrl, '_blank', 'width=1200,height=800');
@@ -230,8 +233,9 @@ export class KnowledgeHubComponent implements OnInit {
   }
 
   onPublishArticle(): void {
-    if (!this.currentArticle) return;
-    this.openPublishModal();
+    const targetId = this.isPdfFile && this.selectedItem ? this.selectedItem.id : this.currentArticle?.id;
+    if (!targetId) return;
+    this.openPublishModal(targetId);
   }
 
   onBackToWelcome(): void {
@@ -316,7 +320,6 @@ export class KnowledgeHubComponent implements OnInit {
 
   // Publish modal methods
   private loadAllCategoriesForModal(): void {
-    if (!this.currentArticle) return;
     this.modalLoading = true;
     this.knowledgeHubService.listAllCategory().subscribe({
       next: (cats) => {
@@ -345,7 +348,7 @@ export class KnowledgeHubComponent implements OnInit {
     });
   }
 
-  openPublishModal(): void {
+  openPublishModal(articleId: number): void {
     this.showPublishModal = true;
     this.categoryMode = 'select';
     this.folderMode = 'select';
@@ -356,6 +359,7 @@ export class KnowledgeHubComponent implements OnInit {
     this.newFolderName = '';
     this.categories = [];
     this.folders = [];
+    this.publishingArticleId = articleId;
     this.loadAllCategoriesForModal();
   }
 
@@ -456,12 +460,14 @@ export class KnowledgeHubComponent implements OnInit {
   }
 
   confirmPublish(): void {
-    if (!this.currentArticle) return;
+    if (!this.publishingArticleId) return;
     if (!this.selectedCategoryId || !this.selectedFolderId) return;
     this.modalLoading = true;
-    this.knowledgeHubService.publishFreshdeskArticle(this.currentArticle.id, this.selectedFolderId).subscribe({
+    this.knowledgeHubService.publishFreshdeskArticle(this.publishingArticleId, this.selectedFolderId).subscribe({
       next: () => {
-        this.currentArticle!.status = 'Published';
+        if (this.currentArticle && this.currentArticle.id === this.publishingArticleId) {
+          this.currentArticle.status = 'Published';
+        }
         this.modalLoading = false;
         this.closePublishModal();
         alert('Article published successfully!');
