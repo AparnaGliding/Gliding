@@ -697,7 +697,7 @@ export class ChatComponent implements OnInit {
   }
 
   private async resolveImageToDataURL(identifier: string): Promise<string> {
-    const isAbsolute = /^(https?:)?\/\//i.test(identifier) || identifier.startsWith('data:');
+    const isAbsolute = /^(https?:)?\/\//i.test(identifier) || identifier.startsWith('data:') || identifier.startsWith('blob:');
     let objectUrl: string;
     if (isAbsolute) {
       objectUrl = identifier;

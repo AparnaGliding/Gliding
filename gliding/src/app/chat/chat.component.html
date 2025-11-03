@@ -121,8 +121,8 @@
                {{formatMessageTime(message.timestamp)}}
              </div>
 
-             <!-- Add to Article Button for each bot message -->
-             <div class="mt-2">
+             <!-- Add to Article Button for each bot message - only show when not sending -->
+             <div class="mt-2" *ngIf="!isSendingMessage">
                <p-button
                  label="Add to Article"
                  icon="pi pi-plus"
