@@ -265,7 +265,7 @@ export class ChatComponent implements OnInit {
     if (
       message.textChunks &&
       Array.isArray(message.textChunks) &&
-      Array.isArray(message.supportingImages)
+      message.supportingImages
     ) {
       message.textChunks.forEach((chunk) => {
         const imageIdentifier = chunk.imageUrl;
@@ -588,7 +588,7 @@ export class ChatComponent implements OnInit {
       const file = await this.renderMessageToPdfMake(this.selectedMessageForArticle, name);
       this.chatService.uploadFile(
         file,
-        name,
+        `${name}.pdf`,
         this.selectedFolderId,
         this.selectedCategoryId,
         this.userId,
