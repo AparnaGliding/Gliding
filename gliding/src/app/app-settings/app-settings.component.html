@@ -439,27 +439,21 @@
                   </div>
                 </div>
 
-                <!-- Bot Message -->
                 <div *ngIf="!message.isUser" class="message-item bot-message">
-                  <!-- Thought Process -->
                   <div *ngIf="message.isThoughtProcess && message.text" class="thought-process">
                     <div class="thought-label">🤔 Thinking...</div>
                     <div [innerHTML]="message.text"></div>
                   </div>
 
-                  <!-- Verification Step Content -->
                   <div *ngIf="message.isVerificationStep && message.textChunks && message.textChunks.length > 0">
                     <div *ngFor="let chunk of message.textChunks" class="text-chunk">
-                      <!-- Image if available -->
                       <div *ngIf="chunk.imageUrl" class="message-image">
                         <img [src]="chunk.imageUrl" [alt]="chunk.imageName" class="step-image">
                       </div>
-                      <!-- Text content -->
                       <div class="message-bubble" [innerHTML]="chunk.text"></div>
                     </div>
                   </div>
 
-                  <!-- Simple text message (fallback) -->
                   <div *ngIf="!message.isThoughtProcess && !message.isVerificationStep && message.text" class="message-bubble">
                     {{ message.text }}
                   </div>

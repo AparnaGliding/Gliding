@@ -85,19 +85,24 @@
                          [innerHTML]="chunk.text"
                        ></div>
                        @if (chunk.imageUrl){
-<!--                         <div-->
-<!--                           *ngIf="-->
-<!--                                        message.pendingImages?.has(-->
-<!--                                          chunk.imageUrl-->
-<!--                                        )-->
-<!--                                      "-->
-<!--                           class="image-loading text-center py-3"-->
-<!--                         >-->
-<!--                           <i class="pi pi-spin pi-spinner text-primary"></i>-->
-<!--                           <p class="text-secondary mt-2">Loading image...</p>-->
-<!--                         </div>-->
+                         <div
+                           *ngIf="
+                                        message.pendingImages?.has(
+                                          chunk.imageUrl
+                                        )
+                                      "
+                           class="image-loading text-center py-3"
+                         >
+                           <i class="pi pi-spin pi-spinner text-primary"></i>
+                           <p class="text-secondary mt-2">Loading image...</p>
+                         </div>
 
                          <img
+                           *ngIf="
+                                        !message.pendingImages?.has(
+                                          chunk.imageUrl
+                                        )
+                                      "
                            [src]="chunk.imageUrl"
                            class="step-image"
                            (click)="openImageInNewTab(chunk.imageUrl)"

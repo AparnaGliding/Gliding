@@ -262,6 +262,7 @@ export class ChatComponent implements OnInit {
 
 
   replaceLoadingImagesWithActual(message: ChatMessage) {
+    console.log('verification -- inside' , [...message.pendingImages]);
     if (
       message.textChunks &&
       Array.isArray(message.textChunks) &&
@@ -274,7 +275,7 @@ export class ChatComponent implements OnInit {
           const isSupported = message.supportingImages.includes(imageIdentifier);
           console.log('isSupported:', isSupported);
 
-          if (true) {
+          if (chunk.imageUrl && message.pendingImages?.has(chunk.imageUrl)) {
             console.log('Calling checkAndGetScreenshotImage for:', imageIdentifier);
             this.chatService.checkAndGetScreenshotImage(imageIdentifier).subscribe({
               next: (objectUrl: string) => {
@@ -390,6 +391,8 @@ export class ChatComponent implements OnInit {
                 }
               });
             }
+            console.log('verification -- false ' , [...botMessage.pendingImages]);
+
           } else if (jsonChunk.isVerificationStep === true && jsonChunk.isFollowUpQuestion === false) {
             let str = jsonChunk.supportingImages;
             str = str.replace(/^\[|\]$/g, '').trim();
@@ -397,6 +400,7 @@ export class ChatComponent implements OnInit {
             botMessage.supportingImages = arr;
             botMessage.isVerificationStep = true;
             botMessage.messageId = jsonChunk.messageId;
+            console.log('verification -- true ' , [...botMessage.pendingImages]);
             this.replaceLoadingImagesWithActual(botMessage);
             this.cdr.detectChanges();
           } } catch (error) {
@@ -602,7 +606,6 @@ export class ChatComponent implements OnInit {
           // refresh generated articles list
           this.loadArticles();
           this.closeAddToArticleModal();
-          alert('Content exported to PDF and uploaded successfully.');
         },
         error: (err) => {
           console.error('Upload failed', err);

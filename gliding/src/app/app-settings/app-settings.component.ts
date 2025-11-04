@@ -230,7 +230,7 @@ export class AppSettingsComponent implements OnInit {
       // Create chat request for streamChat
       const chatRequest: ChatRequest = {
         question: userMessage,
-        domain: domain || this.applicationName || 'default',
+        domain: 'Terzo_Cloud_Contracts_final' ,
         accountId: '1',
         userId: '1',
         chatId: '30'
@@ -241,7 +241,7 @@ export class AppSettingsComponent implements OnInit {
         next: async (chunk) => {
           try {
             const jsonChunk = JSON.parse(chunk);
-            if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false) {
+            if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
               botMessage.isThoughtProcess = true;
               botMessage.isVerificationStep = false;
               if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
@@ -255,7 +255,7 @@ export class AppSettingsComponent implements OnInit {
                 });
               }
               this.cdr.detectChanges();
-            } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false) {
+            } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
               botMessage.isThoughtProcess = false;
               botMessage.isVerificationStep = true;
               botMessage.chatId = jsonChunk.chatId;
@@ -272,7 +272,7 @@ export class AppSettingsComponent implements OnInit {
                   }
                 });
               }
-            } else if (jsonChunk.isVerificationStep === true) {
+            } else if (jsonChunk.isVerificationStep === true && jsonChunk.isFollowUpQuestion === false) {
               let str = jsonChunk.supportingImages;
               str = str.replace(/^\[|\]$/g, '').trim();
               const arr = str ? [str] : [];
@@ -287,7 +287,6 @@ export class AppSettingsComponent implements OnInit {
         },
         complete: () => {
           this.previewIsSendingMessage = false;
-          // Update legacy preview messages for compatibility
           if (botMessage.isVerificationStep && botMessage.textChunks && botMessage.textChunks.length > 0) {
             const finalText = botMessage.textChunks.map(chunk => chunk.text).join('\n');
             this.previewMessages.push({
