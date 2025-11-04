@@ -60,5 +60,19 @@ export class AppDashboardService {
     );
   }
 
+  getModuleFunctionalities(applicationId: number, moduleId: number, offset: number = 0, limit: number = 50): Observable<ApplicationListingModel[]> {
+    const params = new HttpParams()
+      .set('offset', offset.toString())
+      .set('limit', limit.toString());
+    return this.http.get<ApplicationListingModel[]>(`/application/${applicationId}/modules/${moduleId}/functionalities`, { params }).pipe(
+      map((res: any) => {
+        console.log('Functionalities API response:', res);
+        return res || [];
+      }),
+      catchError(error => {
+        throw error;
+      })
+    );
+  }
 
 }

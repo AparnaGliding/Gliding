@@ -40,6 +40,7 @@ export class AppModuleDetailComponent implements OnInit {
   currentModule: ApplicationModuleModel | null = null;
   isLoading: boolean = true;
   articles: ArticleListResponseModel[] = [];
+  functionalities: ApplicationListingModel[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -144,10 +145,10 @@ export class AppModuleDetailComponent implements OnInit {
     this.appDashboardService.getApplications(1).subscribe({
       next: (apps) => {
         const match = apps.find(a => a.name === this.applicationName);
-        if (match) {
-          this.applicationId = match.id;
-          this.loadModules(match.id);
-          this.loadArticles(match.id);
+        if (true) {
+          this.applicationId = 1;
+          this.loadModules(1);
+          this.loadArticles(1);
         } else {
           // Fallback to mock data when app cannot be resolved
           const appId = 0;
@@ -155,8 +156,8 @@ export class AppModuleDetailComponent implements OnInit {
           this.modulesFound = this.modules.length;
           const idNum = Number(this.moduleId);
           this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
-          this.articles = this.getMockArticles();
-          this.articlesGenerated = this.articles.length;
+          this.articles = [];
+          this.articlesGenerated = 0;
           this.isLoading = false;
         }
       },
@@ -171,6 +172,12 @@ export class AppModuleDetailComponent implements OnInit {
         this.modulesFound = this.modules.length;
         const idNum = Number(this.moduleId);
         this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
+
+        // Load functionalities for this module
+        // if (this.currentModule) {
+          this.loadFunctionalities(appId, this.currentModule.id);
+        // }
+
         this.isLoading = false;
       },
       error: () => {
@@ -183,16 +190,30 @@ export class AppModuleDetailComponent implements OnInit {
     });
   }
 
+  private loadFunctionalities(appId: number, moduleId: number): void {
+    console.log('Loading functionalities for appId:', appId, 'moduleId:', moduleId);
+    this.appDashboardService.getModuleFunctionalities(appId, moduleId).subscribe({
+      next: (funcs) => {
+        console.log('Functionalities loaded:', funcs);
+        this.functionalities = funcs || [];
+      },
+      error: (err) => {
+        console.error('Error loading functionalities:', err);
+        this.functionalities = [];
+      }
+    });
+  }
+
   private loadArticles(appId: number): void {
     // TODO: replace hardcoded userId with actual logged-in user when available
     const userId = 1;
     this.appDashboardService.getArticle(appId, userId).subscribe({
       next: (arts) => {
-        this.articles = (arts && arts.length) ? arts : this.getMockArticles();
+        this.articles = (arts && arts.length) ? arts : [];
         this.articlesGenerated = this.articles.length;
       },
       error: () => {
-        this.articles = this.getMockArticles();
+        this.articles = [];
         this.articlesGenerated = this.articles.length;
       }
     });
@@ -226,15 +247,6 @@ export class AppModuleDetailComponent implements OnInit {
     ];
   }
 
-  private getMockArticles(): ArticleListResponseModel[] {
-    const now = new Date();
-    return [
-      { id: 101, question: 'Getting Started Guide', createdAt: now },
-      { id: 102, question: 'Authentication Setup', createdAt: now },
-      { id: 103, question: 'Implementing Social Login', createdAt: now },
-      { id: 104, question: 'Two-Factor Authentication Guide', createdAt: now }
-    ];
-  }
 
   private syncActiveTabFromUrl(): void {
     const url = this.router.url || '';
