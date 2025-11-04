@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
-import {ApplicationListingModel, ApplicationModuleModel} from '../app-dashboard/app-dashboard.model';
+import {ApplicationListingModel, ApplicationModuleModel, ArticleListResponseModel} from '../app-dashboard/app-dashboard.model';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
 
 @Component({
   selector: 'app-app-module-detail',
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule],
   templateUrl: './app-module-detail.component.html',
   styleUrls: ['./app-module-detail.component.scss']
 })
@@ -31,7 +31,6 @@ export class AppModuleDetailComponent implements OnInit {
   innerActiveTab: string = 'Features';
   innerTabs = [
     { name: 'Features', active: true },
-    { name: 'AMA', active: false },
     { name: 'Articles', active: false }
   ];
 
@@ -40,6 +39,7 @@ export class AppModuleDetailComponent implements OnInit {
   modules: ApplicationModuleModel[] = [];
   currentModule: ApplicationModuleModel | null = null;
   isLoading: boolean = true;
+  articles: ArticleListResponseModel[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -147,7 +147,16 @@ export class AppModuleDetailComponent implements OnInit {
         if (match) {
           this.applicationId = match.id;
           this.loadModules(match.id);
+          this.loadArticles(match.id);
         } else {
+          // Fallback to mock data when app cannot be resolved
+          const appId = 0;
+          this.modules = this.getMockModules(appId);
+          this.modulesFound = this.modules.length;
+          const idNum = Number(this.moduleId);
+          this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
+          this.articles = this.getMockArticles();
+          this.articlesGenerated = this.articles.length;
           this.isLoading = false;
         }
       },
@@ -158,14 +167,73 @@ export class AppModuleDetailComponent implements OnInit {
   private loadModules(appId: number): void {
     this.appDashboardService.getApplicationModules(appId).subscribe({
       next: (mods) => {
-        this.modules = mods || [];
+        this.modules = (mods && mods.length) ? mods : this.getMockModules(appId);
         this.modulesFound = this.modules.length;
         const idNum = Number(this.moduleId);
-        this.currentModule = this.modules.find(m => m.id === idNum) || null;
+        this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
         this.isLoading = false;
       },
-      error: () => { this.isLoading = false; }
+      error: () => {
+        this.modules = this.getMockModules(appId);
+        this.modulesFound = this.modules.length;
+        const idNum = Number(this.moduleId);
+        this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
+        this.isLoading = false;
+      }
     });
+  }
+
+  private loadArticles(appId: number): void {
+    // TODO: replace hardcoded userId with actual logged-in user when available
+    const userId = 1;
+    this.appDashboardService.getArticle(appId, userId).subscribe({
+      next: (arts) => {
+        this.articles = (arts && arts.length) ? arts : this.getMockArticles();
+        this.articlesGenerated = this.articles.length;
+      },
+      error: () => {
+        this.articles = this.getMockArticles();
+        this.articlesGenerated = this.articles.length;
+      }
+    });
+  }
+
+  private getMockModules(appId: number): ApplicationModuleModel[] {
+    const now = new Date();
+    return [
+      {
+        id: 1,
+        moduleName: 'User Login',
+        moduleUrl: '/api/auth/login',
+        moduleSummary: 'Standard username/password authentication',
+        applicationId: appId,
+        crawlStatus: 'ACTIVE',
+        createdAt: now,
+        modifiedAt: now,
+        version: 1
+      },
+      {
+        id: 2,
+        moduleName: 'Social Login',
+        moduleUrl: '/api/auth/social',
+        moduleSummary: 'OAuth integration with Google, GitHub, and Microsoft',
+        applicationId: appId,
+        crawlStatus: 'ACTIVE',
+        createdAt: now,
+        modifiedAt: now,
+        version: 1
+      }
+    ];
+  }
+
+  private getMockArticles(): ArticleListResponseModel[] {
+    const now = new Date();
+    return [
+      { id: 101, question: 'Getting Started Guide', createdAt: now },
+      { id: 102, question: 'Authentication Setup', createdAt: now },
+      { id: 103, question: 'Implementing Social Login', createdAt: now },
+      { id: 104, question: 'Two-Factor Authentication Guide', createdAt: now }
+    ];
   }
 
   private syncActiveTabFromUrl(): void {
