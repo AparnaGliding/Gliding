@@ -39,30 +39,16 @@ export class AppModuleComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    console.log('hguyfty');
-    const sub = this.route.parent?.params.subscribe(params => {
-      this.applicationName = params['name'];
-      console.log('Application Name:', this.applicationName);
-
-      // Try to read applicationId from router state first
-      const nav = this.router.getCurrentNavigation();
-      const stateId =
-        nav?.extras?.state?.['applicationId'] ??
-        window.history.state?.applicationId;
-
-      if (stateId) {
-        this.applicationId = +stateId;
-        this.loadModules();
-      } else {
-        this.resolveApplicationIdThenLoad();
-      }
+    const sub = this.route.parent?.params.subscribe(() => {
+      this.reloadFromRoute();
     });
-    this.subscriptions.push(sub);
+    if (sub) { this.subscriptions.push(sub); }
 
     // Keep tab highlight in sync with URL (covers external navigations)
     const routeSyncSub = this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
         this.syncActiveTabFromUrl();
+        this.reloadFromRoute();
       }
     });
     this.subscriptions.push(routeSyncSub);
@@ -103,9 +89,38 @@ export class AppModuleComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
+  private reloadFromRoute(): void {
+    this.applicationName = '';
+    this.applicationId = null;
+    this.modules = [];
+    this.error = null;
+
+    const parent = this.route.parent;
+    if (!parent) { return; }
+    const params = parent.snapshot.params || {};
+    const newName = params['name'];
+
+    this.applicationName = newName;
+
+    const nav = this.router.getCurrentNavigation();
+    const stateId =
+      nav?.extras?.state?.['applicationId'] ??
+      window.history.state?.applicationId ??
+      nav?.extras?.state?.['applicationData']?.id ??
+      window.history.state?.applicationData?.id;
+
+    if (stateId) {
+      this.applicationId = +stateId;
+      this.loadModules();
+    } else {
+      this.resolveApplicationIdThenLoad();
+    }
+  }
+
   private loadModules(): void {
     if (!this.applicationId) { return; }
     this.isLoading = true;
+    console.log(this.applicationId);
     const sub = this.appDashboardService.getApplicationModules(this.applicationId).subscribe({
       next: (mods) => {
         this.modules = mods || [];

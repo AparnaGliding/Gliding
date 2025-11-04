@@ -12,6 +12,8 @@ import {Textarea} from 'primeng/textarea';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, ElementRef, HostListener} from '@angular/core';
 import {Subscription, lastValueFrom} from 'rxjs';
+import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
+import { ApplicationListingModel } from '../app-dashboard/app-dashboard.model';
 
 
 @Component({
@@ -66,22 +68,43 @@ export class ChatComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private chatService: ChatService,
               private cdr: ChangeDetectorRef,
-              private knowledgeHubService: KnowledgeHubService
+              private knowledgeHubService: KnowledgeHubService,
+              private appDashboardService: AppDashboardService
   ) {
   }
 
   ngOnInit() {
-    this.appId = this.route.snapshot.paramMap.get('id')!;
-    this.loadChatHistory();
-    this.app = {
-      id : 1 ,
-      name : 'Terzo',
-      domain : 'Terzo_Cloud_Contracts_final'
-    };
-    this.loadModules();
-    this.loadArticles();
-    // Start with new chat active by default
-    this.isNewChatActive = true;
+    this.route.params.subscribe(params => {
+      this.appId = params['id'];
+      const appName = params['name'];
+      this.resolveAppAndLoad(appName);
+    });
+  }
+
+  private resolveAppAndLoad(appName: string) {
+    this.appDashboardService.getApplications(1).subscribe({
+      next: (apps: ApplicationListingModel[]) => {
+        const idNum = parseInt(this.appId);
+        const match = apps.find(a => a.id === idNum) || apps.find(a => a.name === appName);
+        this.app = {
+          id: match?.id || idNum,
+          name: match?.name || appName,
+          domain: (match as any)?.domain || ''
+        };
+        this.loadChatHistory();
+        this.loadModules();
+        this.loadArticles();
+        this.isNewChatActive = true;
+      },
+      error: () => {
+        const idNum = parseInt(this.appId);
+        this.app = { id: idNum, name: appName, domain: '' };
+        this.loadChatHistory();
+        this.loadModules();
+        this.loadArticles();
+        this.isNewChatActive = true;
+      }
+    });
   }
 
   loadChatHistory() {
@@ -242,7 +265,7 @@ export class ChatComponent implements OnInit {
                     let str = chunk.supportingImages;
                     // str = str.replace(/^\[|\]$/g, '').trim();
                     // const arr = str ? [str] : [];
-                   botMessage.supportingImages = str;
+                    botMessage.supportingImages = str;
                     botMessage.isVerificationStep = true;
                     botMessage.messageId = chunk.messageId;
                   }
@@ -371,7 +394,7 @@ export class ChatComponent implements OnInit {
             }
             // Force UI update
             this.cdr.detectChanges();
-        } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
+          } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
             botMessage.isThoughtProcess = false;
             botMessage.isVerificationStep = true;
             botMessage.chatId = jsonChunk.chatId;
@@ -403,10 +426,10 @@ export class ChatComponent implements OnInit {
             this.replaceLoadingImagesWithActual(botMessage);
             this.cdr.detectChanges();
           } } catch (error) {
-      console.error('Error parsing message:', error);
-    }
+          console.error('Error parsing message:', error);
+        }
         this.scrollToBottom();
-          },
+      },
 
       error: (err) => {
         console.error('Chat stream error:', err);
@@ -438,7 +461,7 @@ export class ChatComponent implements OnInit {
   }
 
   loadModules() {
-    this.chatService.getModulesForApplication(1).subscribe({
+    this.chatService.getModulesForApplication(parseInt(this.appId)).subscribe({
       next: (modules) => {
         this.modules = modules.filter(m => m.moduleName !== 'Product Overview');
         this.selectedModule = `${this.app.name} (All Modules)`;
@@ -450,7 +473,7 @@ export class ChatComponent implements OnInit {
   }
 
   loadArticles() {
-    this.chatService.getArticles(1, this.userId, 0, 5).subscribe({
+    this.chatService.getArticles(parseInt(this.appId), this.userId, 0, 5).subscribe({
       next: (articles) => {
         this.articles = articles;
       },

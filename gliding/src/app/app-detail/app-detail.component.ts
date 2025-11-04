@@ -52,10 +52,35 @@ export class AppDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Get the application name from route parameters
+    // React to application name changes on the same component instance
     this.route.params.subscribe(params => {
       this.applicationName = params['name'];
       console.log('Application name from route:', this.applicationName);
+
+      // Reset previous state when switching apps
+      if (this.pollingInterval) {
+        clearInterval(this.pollingInterval);
+      }
+      this.modules = [];
+      this.modulesFound = 0;
+      this.articlesGenerated = 0;
+      this.lastCrawled = '';
+      this.applicationId = '';
+      this.applicationData = null;
+
+      // Read router state every time (Angular reuses component on param change)
+      const nav = this.router.getCurrentNavigation();
+      const stateData = nav?.extras?.state?.['applicationData'] || window.history.state?.applicationData;
+
+      if (stateData) {
+        this.applicationData = stateData;
+        this.applicationId = String(this.applicationData.id);
+        this.populateData();
+        this.startPolling();
+      } else {
+        // Fallback: resolve by name
+        this.loadApplicationData(this.applicationName);
+      }
     });
 
     // Load all applications for dropdown
@@ -68,36 +93,6 @@ export class AppDetailComponent implements OnInit, OnDestroy {
         this.setActiveTabFromUrl(evt.urlAfterRedirects || evt.url);
       }
     });
-
-    // Get application data from router state if available
-    const navigation = this.router.getCurrentNavigation();
-    const routerState = window.history.state;
-
-    console.log('=== DEBUG: Checking router state ===');
-    console.log('getCurrentNavigation():', navigation);
-    console.log('window.history.state:', routerState);
-
-    // Try to get data from navigation first, then from history state
-    let applicationData = navigation?.extras?.state?.['applicationData'] || routerState?.applicationData;
-
-    if (applicationData) {
-      this.applicationData = applicationData;
-      this.applicationId = this.applicationData.id.toString();
-
-      // Debug logging
-      console.log('=== DEBUG: Application data received ===');
-      console.log('Full applicationData:', this.applicationData);
-      console.log('Modules array:', this.applicationData.modules);
-      console.log('Modules length:', this.applicationData.modules?.length);
-      console.log('First module:', this.applicationData.modules?.[0]);
-
-      this.populateData();
-      this.startPolling();
-    } else {
-      console.log('=== DEBUG: No router state data, using fallback ===');
-      // Fallback: load application data based on name
-      this.loadApplicationData(this.applicationName);
-    }
   }
 
   ngOnDestroy(): void {
@@ -148,13 +143,13 @@ export class AppDetailComponent implements OnInit, OnDestroy {
 
   onModuleViewDetails(module: ApplicationModuleModel): void {
     console.log('Viewing details for module:', module.moduleName);
-    
+
     // Set active tab to 'Modules' to show the router outlet
     this.activeTab = 'Modules';
     this.navigationTabs.forEach(tab => {
       tab.active = tab.name === 'Modules';
     });
-    
+
     // Navigate to module details
     this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules', module.id]);
   }
@@ -231,8 +226,27 @@ export class AppDetailComponent implements OnInit, OnDestroy {
     // Find the full application data from the current applications list if available
     const fullAppData = this.allApplications.find(a => a.id === app.id);
 
-    // Navigate to the selected application's detail page
-    this.router.navigate(['/apps', app.name, 'dashboard'], {
+    // Decide target section based on current URL to preserve context
+    const currentUrl = this.router.url || '';
+    const url = currentUrl.toLowerCase();
+    let targetCommands: any[] = ['/apps', app.name, 'dashboard'];
+    if (url.includes('/modules')) {
+      targetCommands = ['/apps', app.name, 'dashboard', 'modules'];
+    } else if (url.includes('/settings')) {
+      targetCommands = ['/apps', app.name, 'dashboard', 'settings'];
+    } else if (url.includes('/chat/')) {
+      // Preserve current moduleId if available; use new app id for route param
+      const parts = currentUrl.split('/');
+      const moduleId = parts[parts.length - 1] || '1';
+      targetCommands = ['/apps', app.name, 'dashboard', app.id, 'chat', moduleId];
+    } else if (url.includes('/knowledge-hub')) {
+      const parts = currentUrl.split('/');
+      const moduleId = parts[parts.length - 1] || '1';
+      targetCommands = ['/apps', app.name, 'dashboard', app.id, 'knowledge-hub', moduleId];
+    }
+
+    // Navigate to the selected application's page preserving context
+    this.router.navigate(targetCommands, {
       state: {
         applicationData: {
           ...fullAppData || app,

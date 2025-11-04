@@ -72,15 +72,15 @@ export class AppModuleDetailComponent implements OnInit {
     if (tabName === 'Dashboard') {
       this.router.navigate(['/apps', this.applicationName, 'dashboard']);
     } else if (tabName === 'Modules') {
-      this.router.navigate(['/apps', this.applicationName, 'modules']);
+      this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
     } else if (tabName === 'Settings') {
-      this.router.navigate(['/apps', this.applicationName, 'settings']);
+      this.router.navigate(['/apps', this.applicationName, 'dashboard', 'settings']);
     }
   }
 
   backToModules(): void {
     if (!this.applicationName) { return; }
-    this.router.navigate(['/apps', this.applicationName, 'modules']);
+    this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
   }
 
   onInnerTabClick(tabName: string): void {
@@ -96,8 +96,8 @@ export class AppModuleDetailComponent implements OnInit {
     // Find the full application data from the current applications list if available
     const fullAppData = this.allApplications.find(a => a.id === app.id);
 
-    // Navigate to the selected application's detail page
-    this.router.navigate(['/apps', app.name, 'dashboard'], {
+    // Navigate to the selected application's modules page (stay in Modules context)
+    this.router.navigate(['/apps', app.name, 'dashboard', 'modules'], {
       state: {
         applicationData: {
           ...fullAppData || app,
@@ -126,9 +126,9 @@ export class AppModuleDetailComponent implements OnInit {
     if (tabName === 'Dashboard') {
       this.router.navigate(['/apps', this.applicationName, 'dashboard']);
     } else if (tabName === 'Modules') {
-      this.router.navigate(['/apps', this.applicationName, 'modules']);
+      this.router.navigate(['/apps', this.applicationName, 'dashboard', 'modules']);
     } else if (tabName === 'Settings') {
-      this.router.navigate(['/apps', this.applicationName, 'settings']);
+      this.router.navigate(['/apps', this.applicationName, 'dashboard', 'settings']);
     }
     // Other tabs can be wired later when routes are available
   }
