@@ -7,8 +7,10 @@ import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
 import { ChatService } from '../chat/chat.service';
 import { ChatRequest, ChatMessage } from '../chat/chat.model';
-import { Subscription } from 'rxjs';
+import {map, Observable, Subscription, throwError} from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'app-app-settings',
@@ -17,7 +19,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrl: './app-settings.component.scss'
 })
 export class AppSettingsComponent implements OnInit {
-  activeTab: string = 'General';
+  activeTab: string = 'Chat Embed';
 
   authStatus = {
     connected: true,
@@ -68,7 +70,8 @@ export class AppSettingsComponent implements OnInit {
     private router: Router,
     private appDashboardService: AppDashboardService,
     private chatService: ChatService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +79,7 @@ export class AppSettingsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.applicationName = params['name'];
     });
+    this.setTab('Chat Embed');
 
     // Load applications for header dropdown
     this.appDashboardService.getApplications(1).subscribe({
@@ -302,6 +306,7 @@ export class AppSettingsComponent implements OnInit {
             });
           }
           this.cdr.detectChanges();
+          console.log(botMessage);
         },
         error: (error) => {
           console.error('Error in stream chat:', error);
@@ -376,6 +381,24 @@ export class AppSettingsComponent implements OnInit {
     this.isDropdownOpen = false;
     // Navigate back to main dashboard to create new application
     this.router.navigate(['/apps']);
+  }
+
+
+  checkAndGetScreenshotImage(filename: string): Observable<string> {
+    return this.http.get(`/screenshots/${filename}`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).pipe(
+      map((response: HttpResponse<Blob>) => {
+        if (response.status === 200 && response.body) {
+          return URL.createObjectURL(response.body);
+        }
+        throw new Error('Invalid response');
+      }),
+      catchError(() => {
+        return throwError(() => new Error(`Screenshot not found: ${filename}`));
+      })
+    );
   }
 
   onTabClick(tabName: string): void {

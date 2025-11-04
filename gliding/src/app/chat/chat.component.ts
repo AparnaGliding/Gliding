@@ -365,7 +365,6 @@ export class ChatComponent implements OnInit {
                   if (botMessage.text.length > 0) {
                     botMessage.text += '\n';
                   }
-                  // Process markdown formatting
                   botMessage.text = this.processMarkdownText(textItem.text);
                 }
               });

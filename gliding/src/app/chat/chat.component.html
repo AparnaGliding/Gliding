@@ -83,8 +83,7 @@
                        <div
                          class="step-text"
                          [innerHTML]="chunk.text"
-                       ></div>
-                       @if (chunk.imageUrl){
+                       ></div>@if (chunk.imageUrl){
                          <div
                            *ngIf="
                                         message.pendingImages?.has(
