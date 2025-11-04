@@ -1,12 +1,12 @@
 .dashboard-container {
-  padding: 2rem;
-  width: 100%;
-  background-color: #EFF6FF;
-  max-width: 100%;
-  padding-left: 9%;
-  padding-right: 9%;
   min-height: 100vh;
-  box-sizing: border-box;
+  background: linear-gradient(to bottom right, #f8fafc, #eff6ff);
+
+  .content-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
 }
 
 // Header Section
@@ -16,15 +16,16 @@
   .main-title {
     font-size: 2.25rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #111827;
     margin: 0 0 0.5rem 0;
-    line-height: 2.5rem;
+    line-height: 1.2;
   }
 
   .subtitle {
     font-size: 1rem;
-    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+    color: #6b7280;
     margin: 0;
+    line-height: 1.5;
   }
 }
 
@@ -38,16 +39,11 @@
 
 .stat-card {
   background: white;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
   transition: all 0.2s ease;
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
-  }
 }
 
 .stat-content {
@@ -59,41 +55,43 @@
 .stat-info {
   .stat-title {
     font-size: 0.875rem;
-    color: rgb(75 85 99 / var(--tw-text-opacity, 1));
-    margin: 0 0 0.5rem 0;
-    font-weight: 300;
+    color: #6b7280;
+    margin: 0 0 0.25rem 0;
+    font-weight: 400;
     line-height: 1.25rem;
   }
 
   .stat-number {
     font-size: 1.875rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #111827;
     margin: 0;
+    line-height: 1;
   }
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 
   &.applications-icon {
     background-color: #dbeafe;
-    color: #3b82f6;
+    color: #2563eb;
   }
 
   &.modules-icon {
-    background-color: #f3e8ff;
-    color: #8b5cf6;
+    background-color: #e9d5ff;
+    color: #7c3aed;
   }
 
   &.articles-icon {
-    background-color: #dcfce7;
-    color: #22c55e;
+    background-color: #d1fae5;
+    color: #059669;
   }
 }
 
@@ -107,8 +105,8 @@
 
     .section-title {
       font-size: 1.5rem;
-      font-weight: 600;
-      color: #1e293b;
+      font-weight: 700;
+      color: #111827;
       margin: 0;
     }
 
@@ -142,26 +140,35 @@
 
 .applications-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .app-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 0.75rem;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
   transition: all 0.2s ease;
+  cursor: pointer;
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    border-color: #bfdbfe;
   }
 
   &.create-app-card {
-    border: 2px dashed #cbd5e1;
-    background: #f8fafc;
+    border: 2px dashed #d1d5db;
+    background: white;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -169,9 +176,8 @@
     min-height: 280px;
 
     &:hover {
-      border-color: #3b82f6;
-      background: #f1f5f9;
-      transform: translateY(-2px);
+      border-color: #60a5fa;
+      background: #eff6ff;
     }
   }
 }
@@ -180,32 +186,54 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 
   .app-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #1e293b;
+    color: #111827;
+    flex: 1;
+    transition: color 0.2s ease;
   }
 
   .status-badge {
     padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+    border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 500;
+    flex-shrink: 0;
 
     &.active {
-      background-color: #dcfce7;
-      color: #166534;
+      background-color: #d1fae5;
+      color: #047857;
+    }
+
+    &.crawling {
+      background-color: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    &.error {
+      background-color: #fee2e2;
+      color: #dc2626;
     }
   }
 }
 
+.app-card:hover .app-title {
+  color: #2563eb;
+  transition: color 0.2s ease;
+}
+
 .app-description {
-  color: #64748b;
+  color: #6b7280;
   font-size: 0.875rem;
   margin: 0 0 1rem 0;
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .module-summaries {
@@ -238,10 +266,10 @@
 }
 
 .app-stats {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 1.5rem;
-
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
 
   .app-stat {
     display: flex;
@@ -249,12 +277,14 @@
 
     .stat-label {
       font-size: 0.875rem;
+      color: #6b7280;
+      margin-bottom: 0.25rem;
     }
 
     .stat-value {
       font-size: 1.25rem;
-      font-weight: 600;
-      color: #1e293b;
+      font-weight: 700;
+      color: #111827;
     }
   }
 }
@@ -263,12 +293,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
 
   .time-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #64748b;
+    color: #6b7280;
     font-size: 0.875rem;
 
     svg {
@@ -280,17 +312,19 @@
   .open-btn {
     background: none;
     border: none;
-    color: #3b82f6;
+    color: #2563eb;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 6px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: #f1f5f9;
-      color: #2563eb;
+      color: #1e40af;
+      gap: 0.5rem;
     }
   }
 }
@@ -307,7 +341,7 @@
 
 // Responsive Design
 @media (max-width: 768px) {
-  .dashboard-container {
+  .dashboard-container .content-wrapper {
     padding: 1rem;
   }
 
@@ -342,21 +376,49 @@
   }
 }
 
-.create-app-icon{
+.create-app-content {
+  text-align: center;
+}
+
+.create-app-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 4rem;
   height: 4rem;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
   background-color: #dbeafe;
   border-radius: 9999px;
+  transition: all 0.2s ease;
+
+  svg {
+    color: #2563eb;
+    transition: color 0.2s ease;
+  }
 }
 
-.create-app-title{
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: 18px;
+.create-app-card:hover .create-app-icon {
+  background-color: #2563eb;
+
+  svg {
+    color: white;
+  }
+}
+
+.create-app-card:hover .create-app-title {
+  color: #2563eb;
+}
+
+.create-app-title {
+  font-size: 1.125rem;
   font-weight: 700;
-  align-items: center;
-  justify-content: center;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.create-app-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
 }

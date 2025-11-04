@@ -3,20 +3,22 @@
   <div class="sidebar">
     <!-- Navigation Tabs -->
     <div class="nav-tabs-horizontal">
-      <button
-        class="nav-tab"
-        [class.active]="activeTab === ReferencableType.FAQ"
-        (click)="onTabClick(ReferencableType.FAQ)">
-        <i class="bi bi-question-circle me-2"></i>
-        FAQs
-      </button>
-      <button
-        class="nav-tab"
-        [class.active]="activeTab === ReferencableType.ARTICLE"
-        (click)="onTabClick(ReferencableType.ARTICLE)">
-        <i class="bi bi-file-text me-2"></i>
-        Articles
-      </button>
+      <div>
+        <button
+          class="nav-tab"
+          [class.active]="activeTab === ReferencableType.FAQ"
+          (click)="onTabClick(ReferencableType.FAQ)">
+          <i class="bi bi-chat-square-text"></i>
+          FAQs
+        </button>
+        <button
+          class="nav-tab"
+          [class.active]="activeTab === ReferencableType.ARTICLE"
+          (click)="onTabClick(ReferencableType.ARTICLE)">
+          <i class="bi bi-file-text"></i>
+          Articles
+        </button>
+      </div>
     </div>
 
     <div class="category-section">

@@ -8,10 +8,7 @@
 <!--  (tabSelected)="onTabClick($event)"></app-header>-->
 
 <div class="module-detail-page">
-
   <div class="content-wrap">
-    <div class="back-link" (click)="backToModules()">← Back to Modules</div>
-
     <div class="layout">
       <!-- Left Summary Panel -->
       <aside class="summary" *ngIf="currentModule as cm">
@@ -22,30 +19,43 @@
               <circle cx="8.5" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
             </svg>
           </div>
-          <div class="title-row">
-            <h2 class="title">{{ cm.moduleName }}</h2>
-            <span class="status" [class.active]="cm.crawlStatus==='ACTIVE'">{{ cm.crawlStatus || 'Active' }}</span>
-          </div>
+          <h2 class="title">{{ cm.moduleName }}</h2>
+          <span class="status">
+            <i class="pi pi-check-circle"></i>
+            {{ cm.crawlStatus || 'Active' }}
+          </span>
         </div>
 
         <div class="summary-block">
-          <div class="label">Summary</div>
+          <div class="label">
+            <i class="pi pi-align-left"></i>
+            Summary
+          </div>
           <div class="value">{{ cm.moduleSummary || 'No description available' }}</div>
         </div>
 
         <div class="summary-block">
-          <div class="label">Last Crawled</div>
+          <div class="label">
+            <i class="pi pi-calendar"></i>
+            Last Crawled
+          </div>
           <div class="value">{{ cm.modifiedAt | date:'MMM d, y' }}</div>
         </div>
 
         <div class="summary-block">
-          <div class="label">Features</div>
-          <div class="value">{{ functionalities.length || 0 }} features crawled</div>
+          <div class="label">
+            <i class="pi pi-code"></i>
+            Features
+          </div>
+          <div class="value">{{ functionalities.length || 0 }} {{ functionalities.length === 1 ? 'feature' : 'features' }} crawled</div>
         </div>
 
         <div class="summary-block">
-          <div class="label">Articles</div>
-          <div class="value">{{ articlesGenerated || 0 }} articles</div>
+          <div class="label">
+            <i class="pi pi-file"></i>
+            Articles
+          </div>
+          <div class="value">{{ articlesGenerated || 0 }} {{ articlesGenerated === 1 ? 'article' : 'articles' }}</div>
         </div>
       </aside>
 
@@ -58,9 +68,8 @@
             class="inner-tab"
             [class.active]="t.active"
             (click)="onInnerTabClick(t.name)">
-            {{ t.name }}
-            <ng-container *ngIf="t.name==='Features'">({{ functionalities.length || 0 }})</ng-container>
-            <ng-container *ngIf="t.name==='Articles'">({{ articlesGenerated || 0 }})</ng-container>
+            <i class="pi" [ngClass]="t.name === 'Features' ? 'pi-code' : 'pi-file'"></i>
+            {{ t.name }} ({{ t.name === 'Features' ? (functionalities.length || 0) : (articlesGenerated || 0) }})
           </button>
         </div>
 
