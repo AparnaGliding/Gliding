@@ -87,7 +87,8 @@ export class ChatService {
         applicationId: req.accountId,
         userId: req.userId,
         chatId: req.chatId,
-        applicationModuleId: '1'
+        applicationModuleId: '1',
+        saveInHistory: 'true'
       }).toString();
       const url = `${this.baseUrl}?${params}`;
       const es = new EventSource(url, { withCredentials: false });

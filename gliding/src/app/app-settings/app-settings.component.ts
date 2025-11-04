@@ -5,6 +5,10 @@ import {HeaderComponent} from '../header/header.component';
 import {ApplicationListingModel, ApplicationModuleModel} from '../app-dashboard/app-dashboard.model';
 import {ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
+import { ChatService } from '../chat/chat.service';
+import { ChatRequest, ChatMessage } from '../chat/chat.model';
+import { Subscription } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-app-settings',
@@ -48,15 +52,23 @@ export class AppSettingsComponent implements OnInit {
 
   // Embed code sections
   showPreview = false;
-  
+
   // Preview modal
   showPreviewModal = false;
   previewMessages: any[] = [];
+  previewChatMessages: ChatMessage[] = [];
+
+  // Chat functionality properties
+  previewCurrentMessage: string = '';
+  previewIsSendingMessage = false;
+  private currentStreamSub?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private appDashboardService: AppDashboardService
+    private appDashboardService: AppDashboardService,
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -145,31 +157,192 @@ export class AppSettingsComponent implements OnInit {
         timestamp: new Date()
       }
     ];
+    this.previewChatMessages = [
+      {
+        text: this.chatEmbedSettings.greetingMessage,
+        isUser: false,
+        timestamp: new Date(),
+        isThoughtProcess: false,
+        isVerificationStep: false,
+        textChunks: [],
+        pendingImages: new Set<string>(),
+        supportingImages: []
+      }
+    ];
   }
 
   closePreviewModal(): void {
     this.showPreviewModal = false;
     this.previewMessages = [];
+    this.previewChatMessages = [];
+    this.previewCurrentMessage = '';
+    this.previewIsSendingMessage = false;
+    if (this.currentStreamSub) {
+      this.currentStreamSub.unsubscribe();
+    }
   }
 
   sendPreviewMessage(message: string): void {
-    if (!message.trim()) return;
+    if (!message.trim() || this.previewIsSendingMessage) return;
+    this.sendMessage(message);
+  }
 
-    // Add user message
+  async sendMessage(question?: string, domain?: string): Promise<void> {
+    if (!question?.trim() || this.previewIsSendingMessage) return;
+
+    const userMessage = question.trim();
+    this.previewCurrentMessage = '';
+    this.previewIsSendingMessage = true;
+
+    // Add user message to both arrays
     this.previewMessages.push({
-      text: message,
+      text: userMessage,
       isBot: false,
       timestamp: new Date()
     });
 
-    // Simulate bot response after a short delay
-    setTimeout(() => {
+    const userChatMessage: ChatMessage = {
+      text: userMessage,
+      isUser: true,
+      timestamp: new Date(),
+      isThoughtProcess: false,
+      isVerificationStep: false,
+      textChunks: [],
+      pendingImages: new Set<string>(),
+      supportingImages: []
+    };
+    this.previewChatMessages.push(userChatMessage);
+
+    // Create bot message placeholder
+    const botMessage: ChatMessage = {
+      text: '',
+      isUser: false,
+      timestamp: new Date(),
+      isThoughtProcess: false,
+      isVerificationStep: false,
+      textChunks: [],
+      pendingImages: new Set<string>(),
+      supportingImages: []
+    };
+    this.previewChatMessages.push(botMessage);
+
+    try {
+      // Create chat request for streamChat
+      const chatRequest: ChatRequest = {
+        question: userMessage,
+        domain: domain || this.applicationName || 'default',
+        accountId: '1',
+        userId: '1',
+        chatId: '30'
+      };
+
+      // Stream the response using streamChat - same logic as chat.component.ts
+      this.currentStreamSub = this.chatService.streamChat(chatRequest).subscribe({
+        next: async (chunk) => {
+          try {
+            const jsonChunk = JSON.parse(chunk);
+            if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false) {
+              botMessage.isThoughtProcess = true;
+              botMessage.isVerificationStep = false;
+              if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
+                jsonChunk.text.forEach((textItem: any) => {
+                  if (textItem.text) {
+                    if (botMessage.text && botMessage.text.length > 0) {
+                      botMessage.text += '\n';
+                    }
+                    botMessage.text = this.processMarkdownText(textItem.text);
+                  }
+                });
+              }
+              this.cdr.detectChanges();
+            } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false) {
+              botMessage.isThoughtProcess = false;
+              botMessage.isVerificationStep = true;
+              botMessage.chatId = jsonChunk.chatId;
+              botMessage.textChunks = [];
+              if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
+                jsonChunk.text.forEach((textItem: any) => {
+                  botMessage.textChunks!.push({
+                    imageUrl: textItem.imageUrl || '',
+                    text: this.processMarkdownText(textItem.text || ''),
+                    imageName: textItem.imageName || ''
+                  });
+                  if (textItem.imageUrl) {
+                    botMessage.pendingImages!.add(textItem.imageUrl);
+                  }
+                });
+              }
+            } else if (jsonChunk.isVerificationStep === true) {
+              let str = jsonChunk.supportingImages;
+              str = str.replace(/^\[|\]$/g, '').trim();
+              const arr = str ? [str] : [];
+              botMessage.supportingImages = arr;
+              botMessage.isVerificationStep = true;
+              botMessage.messageId = jsonChunk.messageId;
+              this.cdr.detectChanges();
+            }
+          } catch (error) {
+            console.error('Error parsing message:', error);
+          }
+        },
+        complete: () => {
+          this.previewIsSendingMessage = false;
+          // Update legacy preview messages for compatibility
+          if (botMessage.isVerificationStep && botMessage.textChunks && botMessage.textChunks.length > 0) {
+            const finalText = botMessage.textChunks.map(chunk => chunk.text).join('\n');
+            this.previewMessages.push({
+              text: finalText,
+              isBot: true,
+              timestamp: new Date()
+            });
+          } else if (botMessage.text) {
+            this.previewMessages.push({
+              text: botMessage.text,
+              isBot: true,
+              timestamp: new Date()
+            });
+          }
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error in stream chat:', error);
+          botMessage.text = 'Sorry, I encountered an error. Please try again.';
+          this.previewIsSendingMessage = false;
+          this.previewMessages.push({
+            text: botMessage.text,
+            isBot: true,
+            timestamp: new Date()
+          });
+          this.cdr.detectChanges();
+        }
+      });
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      botMessage.text = 'Sorry, I encountered an error. Please try again.';
+      this.previewIsSendingMessage = false;
       this.previewMessages.push({
-        text: "This is a preview response. In the actual widget, I would provide helpful answers based on your knowledge base.",
+        text: botMessage.text,
         isBot: true,
         timestamp: new Date()
       });
-    }, 1000);
+      this.cdr.detectChanges();
+    }
+  }
+
+  processMarkdownText(text: string): string {
+    // Simple markdown processing - you can enhance this as needed
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>');
+  }
+
+  onPreviewKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage(this.previewCurrentMessage);
+    }
   }
 
   applicationName = '';

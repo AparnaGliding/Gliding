@@ -428,30 +428,72 @@
 
             <!-- Messages Area -->
             <div class="widget-messages">
-              <div *ngFor="let message of previewMessages"
-                   class="message-item"
-                   [class.bot-message]="message.isBot"
-                   [class.user-message]="!message.isBot">
-                <div class="message-bubble">
-                  {{ message.text }}
+              <div *ngFor="let message of previewChatMessages" class="message-wrapper">
+                <!-- User Message -->
+                <div *ngIf="message.isUser" class="message-item user-message">
+                  <div class="message-bubble">
+                    {{ message.text }}
+                  </div>
+                  <div class="message-time">
+                    {{ message.timestamp | date:'short' }}
+                  </div>
                 </div>
-                <div class="message-time">
-                  {{ message.timestamp | date:'short' }}
+
+                <!-- Bot Message -->
+                <div *ngIf="!message.isUser" class="message-item bot-message">
+                  <!-- Thought Process -->
+                  <div *ngIf="message.isThoughtProcess && message.text" class="thought-process">
+                    <div class="thought-label">🤔 Thinking...</div>
+                    <div [innerHTML]="message.text"></div>
+                  </div>
+
+                  <!-- Verification Step Content -->
+                  <div *ngIf="message.isVerificationStep && message.textChunks && message.textChunks.length > 0">
+                    <div *ngFor="let chunk of message.textChunks" class="text-chunk">
+                      <!-- Image if available -->
+                      <div *ngIf="chunk.imageUrl" class="message-image">
+                        <img [src]="chunk.imageUrl" [alt]="chunk.imageName" class="step-image">
+                      </div>
+                      <!-- Text content -->
+                      <div class="message-bubble" [innerHTML]="chunk.text"></div>
+                    </div>
+                  </div>
+
+                  <!-- Simple text message (fallback) -->
+                  <div *ngIf="!message.isThoughtProcess && !message.isVerificationStep && message.text" class="message-bubble">
+                    {{ message.text }}
+                  </div>
+
+                  <div class="message-time">
+                    {{ message.timestamp | date:'short' }}
+                  </div>
                 </div>
+              </div>
+
+              <!-- Typing Indicator -->
+              <div *ngIf="previewIsSendingMessage" class="typing-indicator">
+                <div class="typing-dots">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <span>AI is thinking...</span>
               </div>
             </div>
 
             <!-- Input Area -->
             <div class="widget-input-area">
               <input
-                #previewInput
                 type="text"
                 class="widget-input"
+                [(ngModel)]="previewCurrentMessage"
                 [placeholder]="chatEmbedSettings.inputPlaceholder"
-                (keydown.enter)="sendPreviewMessage(previewInput.value); previewInput.value = ''">
+                (keydown)="onPreviewKeyDown($event)"
+                [disabled]="previewIsSendingMessage">
               <button
                 class="widget-send-btn"
-                (click)="sendPreviewMessage(previewInput.value); previewInput.value = ''">
+                (click)="sendMessage(previewCurrentMessage)"
+                [disabled]="!previewCurrentMessage.trim() || previewIsSendingMessage">
                 <i class="pi pi-send"></i>
               </button>
             </div>

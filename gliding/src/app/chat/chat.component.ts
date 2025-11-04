@@ -267,6 +267,7 @@ export class ChatComponent implements OnInit {
       Array.isArray(message.textChunks) &&
       message.supportingImages
     ) {
+      console.log(message);
       message.textChunks.forEach((chunk) => {
         const imageIdentifier = chunk.imageUrl;
         if (imageIdentifier && message.pendingImages?.has(imageIdentifier)) {
@@ -300,6 +301,7 @@ export class ChatComponent implements OnInit {
   }
 
   async sendMessage(question?: string, domain?: string) {
+    console.log('bhwhq');
     const text = question || this.currentMessage.trim();
     this.userQuestion = this.currentMessage;
     const userMessage: ChatMessage = {
@@ -353,7 +355,7 @@ export class ChatComponent implements OnInit {
       next: async (chunk) => {
         try {
           const jsonChunk = JSON.parse(chunk);
-          if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false) {
+          if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
             botMessage.isThoughtProcess = true;
             botMessage.isVerificationStep = false;
             if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
@@ -369,7 +371,7 @@ export class ChatComponent implements OnInit {
             }
             // Force UI update
             this.cdr.detectChanges();
-        } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false) {
+        } else if (jsonChunk.isThoughtProcess === false && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
             botMessage.isThoughtProcess = false;
             botMessage.isVerificationStep = true;
             botMessage.chatId = jsonChunk.chatId;
@@ -388,14 +390,13 @@ export class ChatComponent implements OnInit {
                 }
               });
             }
-          } else if (jsonChunk.isVerificationStep === true) {
+          } else if (jsonChunk.isVerificationStep === true && jsonChunk.isFollowUpQuestion === false) {
             let str = jsonChunk.supportingImages;
             str = str.replace(/^\[|\]$/g, '').trim();
             const arr = str ? [str] : [];
             botMessage.supportingImages = arr;
             botMessage.isVerificationStep = true;
             botMessage.messageId = jsonChunk.messageId;
-            // Don't push again - botMessage is already in currentChatMessages
             this.replaceLoadingImagesWithActual(botMessage);
             this.cdr.detectChanges();
           } } catch (error) {
