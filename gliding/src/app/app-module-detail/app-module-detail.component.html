@@ -112,18 +112,18 @@
         <section *ngIf="innerActiveTab==='Articles'" class="articles">
           <h3>Articles</h3>
           <div *ngIf="articles?.length; else noArticles">
-            <div class="article-card" *ngFor="let a of articles">
-              <div class="left">
-                <div class="title">{{ a.question }}</div>
-                <div class="sub">
-                  <span class="badge">Guide</span>
-                  <span class="meta">Last edited {{ a.createdAt | date:'mediumDate' }}</span>
-                </div>
-              </div>
-              <div class="right">
-                <span class="status-pill">Published</span>
-              </div>
-            </div>
+<!--            <div class="article-card" *ngFor="let a of articles">-->
+<!--              <div class="left">-->
+<!--                <div class="title">{{ a.question }}</div>-->
+<!--                <div class="sub">-->
+<!--                  <span class="badge">Guide</span>-->
+<!--                  <span class="meta">Last edited {{ a.createdAt | date:'mediumDate' }}</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="right">-->
+<!--                <span class="status-pill">Published</span>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
           <ng-template #noArticles>
             <div class="empty">No articles yet.</div>

@@ -1,7 +1,12 @@
 .main-container {
-  background-color: #EFF6FF;
+  background-color: #f9fafb;
   height: calc(100vh - 128px);
   display: flex;
+}
+
+/* Message Wrapper */
+.message-wrapper {
+  padding: 0.5rem 1rem;
 }
 
 .left-container {
@@ -71,23 +76,66 @@
 }
 
 
-.user-message {
-  background-color: #FFFFFF;
-  color: black;
+/* Avatar Styles */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ai-avatar {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  color: white;
+}
+
+.user-avatar {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+/* Message Content Wrapper */
+.message-content-wrapper {
+  max-width: 48rem;
+  width: 100%;
+}
+
+/* Message Bubble */
+.message-bubble {
   border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  max-width: 70%;
-  justify-content: flex-end;
+  padding: 1rem 1.25rem;
+  width: 100%;
+}
+
+.user-message {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+
+  .message-text {
+    margin: 0;
+    line-height: 1.6;
+    color: white;
+  }
 }
 
 .bot-message {
-  background-color: #f8f9fa;
-  color: #333;
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  max-width: 70%;
-  border: 1px solid #e9ecef;
-  justify-content: flex-start;
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .message-text {
+    margin: 0;
+    line-height: 1.6;
+    color: #1f2937;
+  }
 }
 
 .step-image {
@@ -97,33 +145,43 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.3s ease;
+  margin-top: 0.5rem;
 }
 
-.thought-process {
-  font-style: italic;
-  color: #666;
-  background-color: #f8f9fa;
-  border-left: 3px solid #764ba2;
-  padding: 15px;
-  margin: 10px 0;
-  border-radius: 4px;
+.step-text {
   line-height: 1.6;
-  white-space: pre-line;
+  color: #374151;
 }
 
-.thought-process strong,
-.thought-process b {
-  font-weight: bold;
-  color: #333;
-  font-style: normal;
-}
+/* Thought Process Card */
+.thought-process-card {
+  width: 100%;
+  background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 100%);
+  border: 1px solid #e9d5ff;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
 
-.thought-process p {
-  margin: 8px 0;
-}
+  .thought-icon {
+    color: #a855f7;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
 
-.thought-process br {
-  line-height: 1.8;
+  .thought-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #7c3aed;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .thought-text {
+    font-size: 0.875rem;
+    color: #6b21a8;
+    font-style: italic;
+    line-height: 1.6;
+    margin: 0;
+  }
 }
 
 .context-panel {
@@ -243,13 +301,13 @@
 
   .typing-dots {
     display: flex;
-    gap: 4px;
+    gap: 6px;
 
     .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: #6c757d;
+      background-color: #9ca3af;
       animation: typing 1.4s infinite ease-in-out;
 
       &:nth-child(1) {
@@ -311,10 +369,40 @@
   }
 }
 
-/* Message meta styles */
-.message-meta {
+/* Message Timestamp */
+.message-timestamp {
   font-size: 0.75rem;
-  opacity: 0.7;
+  color: #6b7280;
+  margin-top: 0.25rem;
+  padding: 0 0.5rem;
+}
+
+/* Message Actions */
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e7ff;
+
+  .action-btn {
+    padding: 0.5rem 1rem;
+    background-color: #eff6ff;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+      background-color: #dbeafe;
+      border-color: #93c5fd;
+    }
+  }
 }
 
 /* Image loading improvements */

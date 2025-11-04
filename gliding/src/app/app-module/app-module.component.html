@@ -43,8 +43,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock w-4 h-4"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 Last Sync: {{ m.modifiedAt | date:'MMM d, y' }}</span>
             <span class="dot">•</span>
-              <div class="text-gray-400">|</div>
-            <span class="meta-item">0 dependencies</span>
+<!--              <div class="text-gray-400">|</div>-->
+<!--            <span class="meta-item">0 dependencies</span>-->
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <div class="th col-status">Status</div>
         <div class="th col-created">Created</div>
         <div class="th col-sync">Last Sync</div>
-        <div class="th col-deps">Dependencies</div>
+<!--        <div class="th col-deps">Dependencies</div>-->
       </div>
       <div class="tbody">
         <div class="tr" *ngFor="let m of modules" (click)="onOpenModule(m)">
@@ -86,7 +86,7 @@
           </div>
           <div class="td col-created">{{ m.createdAt | date:'MMM d, y' }}</div>
           <div class="td col-sync">{{ m.modifiedAt | date:'MMM d, y' }}</div>
-          <div class="td col-deps">0 dependencies</div>
+<!--          <div class="td col-deps">0 dependencies</div>-->
         </div>
       </div>
     </div>

@@ -351,20 +351,13 @@ export class ChatComponent implements OnInit {
     }
 
     this.hasUnsavedChatChanges = true;
-    const botMessage: ChatMessage = {
-      text: '',
-      isUser: false,
-      timestamp: new Date(),
-      textChunks: [],
-      pendingImages: new Set(),
-      isThoughtProcess: false,
-      isVerificationStep: false,
-    };
-    this.currentChatMessages.push(botMessage);
-    this.scrollToBottom();
 
+    // Don't add bot message yet, just show typing indicator
     this.isTyping = true;
     this.isSendingMessage = true;
+    this.scrollToBottom();
+
+    let botMessage: ChatMessage | null = null;
 
     // @ts-ignore
     const chatRequest: ChatRequest = {
@@ -379,16 +372,33 @@ export class ChatComponent implements OnInit {
       next: async (chunk) => {
         try {
           const jsonChunk = JSON.parse(chunk);
+
+          // Create bot message on first chunk if not exists
+          if (!botMessage) {
+            this.isSendingMessage = false; // Hide typing indicator
+            botMessage = {
+              text: '',
+              isUser: false,
+              timestamp: new Date(),
+              textChunks: [],
+              pendingImages: new Set(),
+              isThoughtProcess: false,
+              isVerificationStep: false,
+            };
+            this.currentChatMessages.push(botMessage);
+            this.cdr.detectChanges();
+          }
+
           if (jsonChunk.isThoughtProcess === true && jsonChunk.isVerificationStep === false && jsonChunk.isFollowUpQuestion === false) {
             botMessage.isThoughtProcess = true;
             botMessage.isVerificationStep = false;
             if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
               jsonChunk.text.forEach((textItem: any) => {
                 if (textItem.text) {
-                  if (botMessage.text.length > 0) {
-                    botMessage.text += '\n';
+                  if (botMessage!.text.length > 0) {
+                    botMessage!.text += '\n';
                   }
-                  botMessage.text = this.processMarkdownText(textItem.text);
+                  botMessage!.text = this.processMarkdownText(textItem.text);
                 }
               });
             }
@@ -401,13 +411,13 @@ export class ChatComponent implements OnInit {
             botMessage.textChunks = [];
             if (jsonChunk.text && Array.isArray(jsonChunk.text)) {
               jsonChunk.text.forEach((textItem: any) => {
-                botMessage.textChunks!.push({
+                botMessage!.textChunks!.push({
                   imageUrl: textItem.imageUrl || '',
                   text: this.processMarkdownText(textItem.text || ''),
                   imageName: textItem.imageName || ''
                 });
                 if (textItem.imageUrl) {
-                  botMessage.pendingImages.add(textItem.imageUrl);
+                  botMessage!.pendingImages.add(textItem.imageUrl);
                 } else {
                   console.log('textItem.imageUrl is falsy:', textItem.imageUrl);
                 }

@@ -46,105 +46,121 @@
   <div class="middle-container d-flex flex-column overflow-y-auto">
     <div class =  "flex-fill p-4">
     @if (selectedChatId || isNewChatActive) {
-      <div class="d-flex  flex-column gap-2 overflow-y-auto">
-        @for (message of currentChatMessages;  track message.id) {
-          <div class="d-flex  align-content-end gap-2 p-4 message-wrapper fs-6"
+      <div class="d-flex flex-column gap-3 overflow-y-auto">
+        @for (message of currentChatMessages; track message.id) {
+          <div class="d-flex gap-3 message-wrapper"
                [ngClass]="{'justify-content-end': message.isUser, 'justify-content-start': !message.isUser}">
-          <div [class.user-message]="message.isUser"
-               [class.bot-message]="!message.isUser"
-               [attr.data-message-id]="!message.isUser ? message.id : null">
-           @if(message.isUser) {
-            <div>
-              {{message.text}}
-              <div class="message-meta text-secondary small mt-1">
-                {{formatMessageTime(message.timestamp)}}
+
+            <!-- AI Avatar - Left side -->
+            @if (!message.isUser) {
+              <div class="flex-shrink-0">
+                <div class="avatar ai-avatar">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                  </svg>
+                </div>
               </div>
-            </div>} @else {
-             <div
-               *ngIf="message.isThoughtProcess && message.text"
-               class="thought-process"
-             >
-               <div class="thinking-indicator">
-                 <i class="pi pi-spin pi-spinner"></i>
-                 <span>Thinking...</span>
-               </div>
-               <div
-                 class="thought-content"
-                 [innerHTML]="message.text"
-               ></div>
-             </div>
+            }
 
-             <div>
-               @if(message.isVerificationStep &&
-               message.textChunks?.length) {
-                 <div>
-                   @for(chunk of message.textChunks; track $index){
-                     <div>
-                       <div
-                         class="step-text"
-                         [innerHTML]="chunk.text"
-                       ></div>@if (chunk.imageUrl){
-                         <div
-                           *ngIf="
-                                        message.pendingImages?.has(
-                                          chunk.imageUrl
-                                        )
-                                      "
-                           class="image-loading text-center py-3"
-                         >
-                           <i class="pi pi-spin pi-spinner text-primary"></i>
-                           <p class="text-secondary mt-2">Loading image...</p>
-                         </div>
+            <!-- Message Content -->
+            <div class="d-flex flex-column message-content-wrapper"
+                 [ngClass]="{'align-items-end': message.isUser, 'align-items-start': !message.isUser}">
 
-                         <img
-                           *ngIf="
-                                        !message.pendingImages?.has(
-                                          chunk.imageUrl
-                                        )
-                                      "
-                           [src]="chunk.imageUrl"
-                           class="step-image"
-                           (click)="openImageInNewTab(chunk.imageUrl)"
-                           style="cursor: pointer;"
-                         />
+              <!-- Thought Process - Only for AI messages -->
+              @if (!message.isUser && message.isThoughtProcess && message.text) {
+                <div class="thought-process-card">
+                  <div class="d-flex align-items-start gap-2">
+                    <svg class="thought-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <div class="flex-fill">
+                      <p class="thought-label">Thinking...</p>
+                      <div class="thought-text" [innerHTML]="message.text"></div>
+                    </div>
+                  </div>
+                </div>
+              }
 
-                       <div>
-                       </div>}
-                     </div>
+              <!-- Main Message -->
+              <div class="message-bubble"
+                   [class.user-message]="message.isUser"
+                   [class.bot-message]="!message.isUser"
+                   [attr.data-message-id]="!message.isUser ? message.id : null">
 
-                   }
-                 </div>
-               }
-             </div>
-             <div class="message-meta text-secondary small mt-2">
-               {{formatMessageTime(message.timestamp)}}
-             </div>
+                @if (message.isUser) {
+                  <p class="message-text">{{message.text}}</p>
+                } @else {
+                  <div>
+                    @if (message.isVerificationStep && message.textChunks?.length) {
+                      <div>
+                        @for (chunk of message.textChunks; track $index) {
+                          <div>
+                            <div class="step-text" [innerHTML]="chunk.text"></div>
+                            @if (chunk.imageUrl) {
+                              <div *ngIf="message.pendingImages?.has(chunk.imageUrl)"
+                                   class="image-loading text-center py-3">
+                                <i class="pi pi-spin pi-spinner text-primary"></i>
+                                <p class="text-secondary mt-2">Loading image...</p>
+                              </div>
+                              <img *ngIf="!message.pendingImages?.has(chunk.imageUrl)"
+                                   [src]="chunk.imageUrl"
+                                   class="step-image"
+                                   (click)="openImageInNewTab(chunk.imageUrl)"
+                                   style="cursor: pointer;" />
+                            }
+                          </div>
+                        }
+                      </div>
 
-             <!-- Add to Article Button for each bot message - only show when not sending -->
-             <div class="mt-2" *ngIf="!isSendingMessage">
-               <p-button
-                 label="Add to Article"
-                 icon="pi pi-plus"
-                 styleClass="p-button-outlined p-button-sm p-button-secondary"
-                 (onClick)="openAddToArticleModal(message)">
-               </p-button>
-             </div>
-           }
-          </div>
+                      <!-- Add to Article Button - only show for verification step messages -->
+                      @if (!isSendingMessage) {
+                        <div class="message-actions">
+                          <button class="action-btn" (click)="openAddToArticleModal(message)">
+                            Add to Article
+                          </button>
+                        </div>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Timestamp -->
+              <span class="message-timestamp">
+                {{formatMessageTime(message.timestamp)}}
+              </span>
+            </div>
+
+            <!-- User Avatar - Right side -->
+            @if (message.isUser) {
+              <div class="flex-shrink-0">
+                <div class="avatar user-avatar">
+                  <span>U</span>
+                </div>
+              </div>
+            }
           </div>
         }
 
         <!-- Typing indicator -->
         @if (isSendingMessage) {
-          <div class="d-flex align-content-start gap-2 p-4 message-wrapper fs-6">
-            <div class="bot-message">
+          <div class="d-flex gap-3 message-wrapper justify-content-start">
+            <!-- AI Avatar -->
+            <div class="flex-shrink-0">
+              <div class="avatar ai-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+              </div>
+            </div>
+            <!-- Typing Bubble -->
+            <div class="message-bubble bot-message">
               <div class="typing-indicator">
                 <div class="typing-dots">
                   <span class="dot"></span>
                   <span class="dot"></span>
                   <span class="dot"></span>
                 </div>
-                <span class="ms-2 text-secondary">typing...</span>
               </div>
             </div>
           </div>
