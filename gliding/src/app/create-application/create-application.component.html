@@ -1,0 +1,152 @@
+<div class="create-app-container">
+  <div class="create-app-wrapper">
+    <!-- Header -->
+    <div class="header-section">
+      <button class="back-btn" (click)="goBack()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Applications
+      </button>
+      <h1 class="main-title">Create New Application</h1>
+      <p class="subtitle">Set up documentation crawling for your application</p>
+    </div>
+
+    <!-- Form -->
+    <form (submit)="onSubmit($event)">
+      <div class="form-card">
+        <!-- Basic Info Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h2 class="section-title">Basic Information</h2>
+            <p class="section-description">Tell us about your application</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Application Name <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              [(ngModel)]="formData.name"
+              name="name"
+              placeholder="e.g., SaaS Platform Documentation"
+              required
+              class="form-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Description <span class="required">*</span>
+            </label>
+            <textarea
+              [(ngModel)]="formData.description"
+              name="description"
+              placeholder="Brief description of what this application does..."
+              rows="3"
+              required
+              class="form-textarea"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Source Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h2 class="section-title">Documentation Source</h2>
+            <p class="section-description">Where should we crawl from?</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">
+              Documentation URL <span class="required">*</span>
+            </label>
+            <input
+              type="url"
+              [(ngModel)]="formData.sourceUrl"
+              name="sourceUrl"
+              placeholder="https://docs.example.com"
+              required
+              class="form-input"
+            />
+            <p class="form-hint">
+              Enter the starting URL for your documentation site
+            </p>
+          </div>
+
+          <div class="tip-card">
+            <div class="tip-content">
+              <svg class="tip-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div>
+                <h4 class="tip-title">Tip</h4>
+                <p class="tip-text">
+                  Make sure the URL is publicly accessible. We'll automatically discover and crawl linked pages.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Authentication Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <svg class="title-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 15v2m-4-6V7a4 4 0 118 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Authentication
+            </h2>
+            <p class="section-description">Optional credentials if the documentation requires authentication</p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input
+                type="text"
+                [(ngModel)]="formData.username"
+                name="username"
+                placeholder="Username"
+                autocomplete="username"
+                class="form-input"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input
+                type="password"
+                [(ngModel)]="formData.password"
+                name="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                class="form-input"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="submit-section">
+        <button
+          type="submit"
+          [disabled]="!canSubmit()"
+          class="submit-btn"
+        >
+          Authenticate and Start Crawling
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

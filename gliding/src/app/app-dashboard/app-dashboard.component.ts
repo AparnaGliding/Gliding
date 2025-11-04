@@ -199,4 +199,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
     }
     return 'Module summaries will be available once processing is complete.';
   }
+
+  createNewApplication(): void {
+    this.router.navigate(['/apps/create']);
+  }
 }

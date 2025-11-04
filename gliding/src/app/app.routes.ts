@@ -20,6 +20,10 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'apps/create',
+    loadComponent: () => import('./create-application/create-application.component').then(m => m.CreateApplicationComponent)
+  },
+  {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent)
   },
