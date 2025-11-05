@@ -470,12 +470,10 @@ export class KnowledgeHubComponent implements OnInit {
         }
         this.modalLoading = false;
         this.closePublishModal();
-        alert('Article published successfully!');
       },
       error: (error) => {
         console.error('Error publishing article:', error);
         this.modalLoading = false;
-        alert('Failed to publish article. Please try again.');
       }
     });
   }

@@ -110,12 +110,12 @@
 .message-bubble {
   border-radius: 1rem;
   padding: 1rem 1.25rem;
-  width: 100%;
 }
 
 .user-message {
   background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
   color: white;
+  margin-left: 200px;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 
   .message-text {

@@ -166,12 +166,26 @@ export class AppModuleDetailComponent implements OnInit {
   }
 
   private loadModules(appId: number): void {
+    const crawlStatusLabels: Record<string, string> = {
+      PARTIAL_CRAWL_IN_PROGRESS: 'Partial Crawl Running',
+      PARTIAL_CRAWL_COMPLETED: 'Partial Crawl Completed',
+      DEEP_CRAWL_IN_PROGRESS: 'Deep Crawl Running',
+      DEEP_CRAWL_COMPLETED: 'Deep Crawl Completed',
+      DEEP_CRAWL_SCHEDULED: 'Deep Crawl Scheduled',
+      DEEP_CRAWL_NOT_TRIGGERED: 'Deep Crawl Not Triggered'
+    };
     this.appDashboardService.getApplicationModules(appId).subscribe({
       next: (mods) => {
         this.modules = (mods && mods.length) ? mods : this.getMockModules(appId);
         this.modulesFound = this.modules.length;
         const idNum = Number(this.moduleId);
         this.currentModule = this.modules.find(m => m.id === idNum) || this.modules[0] || null;
+        console.log(this.currentModule);
+        if (this.currentModule?.crawlStatus) {
+          const originalStatus = this.currentModule.crawlStatus;
+          this.currentModule.crawlStatus =
+            crawlStatusLabels[originalStatus]; }
+
 
         // Load functionalities for this module
         // if (this.currentModule) {
