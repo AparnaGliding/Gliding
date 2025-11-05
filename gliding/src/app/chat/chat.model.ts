@@ -28,6 +28,8 @@ export interface ChatMessage {
   messageId?: number;
   chatId?: number | undefined;
   userQuestion?: string;
+  followUpQuestions?: string[];
+  isFollowUpQuestion?: boolean;
 }
 
 

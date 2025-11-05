@@ -91,6 +91,28 @@
                   <p class="message-text">{{message.text}}</p>
                 } @else {
                   <div>
+                    <!-- Three-dot menu for bot messages with verification step -->
+                    @if (message.isVerificationStep && message.textChunks?.length && !isSendingMessage) {
+                      <div class="message-menu-wrapper">
+                        <button class="message-menu-btn" (click)="toggleMessageMenu(message.id!)">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="5" r="2" fill="currentColor"/>
+                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                            <circle cx="12" cy="19" r="2" fill="currentColor"/>
+                          </svg>
+                        </button>
+                        
+                        @if (openMenuMessageId === message.id) {
+                          <div class="message-dropdown-menu">
+                            <button class="message-dropdown-item" (click)="openAddToArticleModal(message); closeMessageMenu()">
+                              <i class="pi pi-file-plus me-2"></i>
+                              Add to Article
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    }
+
                     @if (message.isVerificationStep && message.textChunks?.length) {
                       <div>
                         @for (chunk of message.textChunks; track $index) {
@@ -112,12 +134,21 @@
                         }
                       </div>
 
-                      <!-- Add to Article Button - only show for verification step messages -->
-                      @if (!isSendingMessage) {
-                        <div class="message-actions">
-                          <button class="action-btn" (click)="openAddToArticleModal(message)">
-                            Add to Article
-                          </button>
+                      <!-- Follow-up Questions - show at the end of bot message -->
+                      @if (message.followUpQuestions && message.followUpQuestions.length > 0) {
+                        <div class="follow-up-questions">
+                          <div class="follow-up-header">
+                            <i class="pi pi-question-circle me-2"></i>
+                            <span>Related Questions</span>
+                          </div>
+                          <div class="follow-up-list">
+                            @for (question of message.followUpQuestions; track $index) {
+                              <button class="follow-up-btn" (click)="askFollowUpQuestion(question)">
+                                <i class="pi pi-arrow-right me-2"></i>
+                                {{question}}
+                              </button>
+                            }
+                          </div>
                         </div>
                       }
                     }

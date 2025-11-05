@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
@@ -90,6 +90,7 @@ export class AppModuleDetailComponent implements OnInit {
   isDropdownOpen: boolean = false;
   modulesFound: number = 0;
   articlesGenerated: number = 0;
+  openMenuId: number | null = null;
 
   selectApplication(app: ApplicationListingModel): void {
     this.isDropdownOpen = false;
@@ -271,5 +272,35 @@ export class AppModuleDetailComponent implements OnInit {
     else if (url.includes('/ama')) tab = 'AMA';
     this.activeTab = tab;
     this.navigationTabs.forEach(t => t.active = (t.name === tab));
+  }
+
+  toggleMenu(featureId: number): void {
+    console.log('toggleMenu called with featureId:', featureId);
+    console.log('Current openMenuId:', this.openMenuId);
+    
+    if (this.openMenuId === featureId) {
+      this.openMenuId = null;
+      console.log('Closing menu');
+    } else {
+      this.openMenuId = featureId;
+      console.log('Opening menu for feature:', featureId);
+    }
+  }
+
+  closeMenu(): void {
+    this.openMenuId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.menu-wrapper')) {
+      this.closeMenu();
+    }
+  }
+
+  handleDeepCrawl(featureId: number, level: number): void {
+    console.log(`Starting deep crawl for feature ${featureId} at level ${level}`);
+
   }
 }

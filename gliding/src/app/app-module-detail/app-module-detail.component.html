@@ -82,12 +82,34 @@
               <div class="body">
                 <div class="title-row">
                   <div class="name">{{ func.name }}</div>
-                  <div class="menu" aria-label="More options">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="5" r="2" fill="currentColor"/>
-                      <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                      <circle cx="12" cy="19" r="2" fill="currentColor"/>
-                    </svg>
+                  <div class="menu-wrapper">
+                    <button class="menu" aria-label="More options" (click)="toggleMenu(func.id)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="5" r="2" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                        <circle cx="12" cy="19" r="2" fill="currentColor"/>
+                      </svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="dropdown-menu" *ngIf="openMenuId === func.id" (click)="$event.stopPropagation()">
+                      <div class="dropdown-header">Deep Crawl</div>
+                      <button
+                        class="dropdown-item"
+                        (click)="handleDeepCrawl(func.id, 1); closeMenu()">
+                        Level 1 (Quick)
+                      </button>
+                      <button
+                        class="dropdown-item"
+                        (click)="handleDeepCrawl(func.id, 2); closeMenu()">
+                        Level 2 (Standard)
+                      </button>
+                      <button
+                        class="dropdown-item"
+                        (click)="handleDeepCrawl(func.id, 3); closeMenu()">
+                        Level 3 (Deep)
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div class="desc">{{ func.description || 'No description available' }}</div>

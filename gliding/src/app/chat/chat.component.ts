@@ -64,6 +64,7 @@ export class ChatComponent implements OnInit {
   selectedFolderId: number | null = null;
   modalLoading = false;
   selectedMessageForArticle: ChatMessage | null = null;
+  openMenuMessageId: string | null = null;
 
   constructor(private route: ActivatedRoute,
               private chatService: ChatService,
@@ -435,6 +436,14 @@ export class ChatComponent implements OnInit {
             console.log('verification -- true ' , [...botMessage.pendingImages]);
             this.replaceLoadingImagesWithActual(botMessage);
             this.cdr.detectChanges();
+          } else if (jsonChunk.isFollowUpQuestion === true) {
+            // Handle follow-up questions
+            botMessage.isFollowUpQuestion = true;
+            if (jsonChunk.followUpQuestions) {
+              const questionsString = jsonChunk.followUpQuestions;
+              botMessage.followUpQuestions = questionsString.split('|').map((q: string) => q.trim());
+            }
+            this.cdr.detectChanges();
           } } catch (error) {
           console.error('Error parsing message:', error);
         }
@@ -762,5 +771,30 @@ export class ChatComponent implements OnInit {
     if (!this.selectedFolderId) return '';
     const folder = this.folders.find(f => f.id === this.selectedFolderId);
     return folder ? folder.name : '';
+  }
+
+  toggleMessageMenu(messageId: string): void {
+    if (this.openMenuMessageId === messageId) {
+      this.openMenuMessageId = null;
+    } else {
+      this.openMenuMessageId = messageId;
+    }
+  }
+
+  closeMessageMenu(): void {
+    this.openMenuMessageId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.message-menu-wrapper')) {
+      this.closeMessageMenu();
+    }
+  }
+
+  askFollowUpQuestion(question: string): void {
+    this.currentMessage = question;
+    this.sendChatMessage();
   }
 }
