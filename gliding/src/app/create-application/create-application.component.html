@@ -1,5 +1,16 @@
 <div class="create-app-container">
   <div class="create-app-wrapper">
+    <!-- Toast Notification -->
+    <div
+      class="toast"
+      [class.success]="messageType==='success'"
+      [class.error]="messageType==='error'"
+      *ngIf="messageText as msg"
+      role="status"
+      aria-live="polite"
+    >
+      {{ msg }}
+    </div>
     <!-- Header -->
     <div class="header-section">
       <button class="back-btn" (click)="goBack()">
