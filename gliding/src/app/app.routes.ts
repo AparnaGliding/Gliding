@@ -64,6 +64,10 @@ export const routes: Routes = [
         loadComponent: () => import('./app-module-detail/app-module-detail.component').then(m => m.AppModuleDetailComponent)
       },
       {
+        path: 'modules/:id/articles/:articleId',
+        loadComponent: () => import('./article-detail/article-detail.component').then(m => m.ArticleDetailComponent)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
       }

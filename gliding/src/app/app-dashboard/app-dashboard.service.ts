@@ -75,4 +75,14 @@ export class AppDashboardService {
     );
   }
 
+  getArticleById(articleId: number): Observable<any> {
+    return this.http.get<any>(`/article/${articleId}`).pipe(
+      map((res: any) => res || {}),
+      catchError(error => {
+        console.error('Error fetching article by id:', error);
+        throw error;
+      })
+    );
+  }
+
 }

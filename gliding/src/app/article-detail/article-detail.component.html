@@ -1,0 +1,28 @@
+<div class="article-detail-page">
+  <div class="content-wrap">
+    <div class="header">
+      <h1>Solution Article: {{ title || 'Untitled' }}</h1>
+      <div class="actions">
+        <button class="btn">Save</button>
+        <button class="btn">Export</button>
+        <button class="btn">Share</button>
+      </div>
+    </div>
+
+    <div class="editor-panel">
+      <div class="editor">
+        <pre *ngIf="content; else loading">{{ content }}</pre>
+        <ng-template #loading>
+          <div class="placeholder" *ngIf="isLoading">Loading...</div>
+          <div class="placeholder" *ngIf="!isLoading">No content available for this article.</div>
+        </ng-template>
+      </div>
+      <aside class="assistant">
+        <div class="assistant-card">AI Assistant</div>
+        <button class="assistant-action">Improve Clarity</button>
+        <button class="assistant-action">Adjust Tone</button>
+        <button class="assistant-action">Add Troubleshooting</button>
+      </aside>
+    </div>
+  </div>
+</div>

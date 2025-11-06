@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, RouterModule } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import {ApplicationListingModel, ApplicationModuleModel, ArticleListResponseModel} from '../app-dashboard/app-dashboard.model';
 import { AppDashboardService } from '../app-dashboard/app-dashboard.service';
 
 @Component({
   selector: 'app-app-module-detail',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './app-module-detail.component.html',
   styleUrls: ['./app-module-detail.component.scss']
 })

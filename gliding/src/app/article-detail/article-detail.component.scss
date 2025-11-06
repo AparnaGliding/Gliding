@@ -1,0 +1,16 @@
+.article-detail-page { background: #f9fafb; min-height: 100vh; padding-top: 35px; }
+.content-wrap { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; color: #111827; }
+.back { border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: .5rem .75rem; color: #374151; cursor: pointer; display: inline-flex; align-items: center; gap: .5rem; }
+.actions { display: flex; gap: .5rem; }
+.btn { border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: .5rem .75rem; cursor: pointer; }
+
+.editor-panel { display: grid; grid-template-columns: 1fr 320px; gap: 1rem; align-items: start; }
+.editor { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.editor pre { margin: 0; white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; line-height: 1.6; }
+.placeholder { color: #6b7280; }
+
+.assistant { position: sticky; top: 1rem; display: flex; flex-direction: column; gap: .5rem; }
+.assistant-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: .75rem; font-weight: 600; }
+.assistant-action { border: 1px solid #e5e7eb; background: #fff; border-radius: 8px; padding: .5rem; text-align: left; cursor: pointer; }
