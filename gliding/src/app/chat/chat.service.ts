@@ -24,13 +24,13 @@ export class ChatService {
     return currentId.toString();
   }
 
-  getHistory(accountId: string, userId: number, offset: number = 0, limit: number = 50): Observable<ChatModel[]> {
+  getHistory(accountId: string, userId: number, offset: number = 0, limit: number = 50 , applicationModuleId:number ): Observable<ChatModel[]> {
     const params = new HttpParams()
       .set('applicationId', accountId.toString())
       .set('userId', userId.toString())
       .set('offset', offset.toString())
       .set('limit', limit.toString())
-       .set('applicationModuleId', 1);
+       .set('applicationModuleId', applicationModuleId);
 
     return this.http.get<ChatModel[]>('/chat/history', {params}).pipe(
       map((res: any) => {
@@ -87,7 +87,7 @@ export class ChatService {
         applicationId: req.accountId,
         userId: req.userId,
         chatId: req.chatId,
-        applicationModuleId: '1',
+        applicationModuleId: req.applicationModuleId.toString() || '0',
         saveInHistory: 'true'
       }).toString();
       const url = `${this.baseUrl}?${params}`;
