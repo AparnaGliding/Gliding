@@ -45,6 +45,7 @@ export class ChatComponent implements OnInit {
   loadingChatHistory = false;
   isCreatingNewChat = false;
   app: any;
+  selectedModuleId: number | null = null;
 
 
   chatHistory: ChatModel[];
@@ -77,9 +78,17 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.appId = params['id'];
+
       const appName = params['name'];
+      this.app = {
+        id: '1',
+        name: 'Terzo',
+        domain: 'Terzo_Cloud_Contracts_final'
+      };
       this.resolveAppAndLoad(appName);
     });
+    this.selectedModuleId = 0;
+
   }
 
   private resolveAppAndLoad(appName: string) {
@@ -89,18 +98,20 @@ export class ChatComponent implements OnInit {
         const match = apps.find(a => a.id === idNum) || apps.find(a => a.name === appName);
         this.app = {
           id: match?.id || idNum,
-          name: match?.name || appName,
+          name: match?.name || appName || 'Terzo',
           domain: (match as any)?.domain || ''
         };
         this.loadChatHistory();
         this.loadModules();
         this.loadArticles();
+        // this.loadChatMessages(this.maxChatId);
         this.isNewChatActive = true;
       },
       error: () => {
         const idNum = parseInt(this.appId);
         this.app = { id: idNum, name: appName, domain: '' };
         this.loadChatHistory();
+
         this.loadModules();
         this.loadArticles();
         this.isNewChatActive = true;
@@ -110,7 +121,7 @@ export class ChatComponent implements OnInit {
 
   loadChatHistory() {
     this.loadingChatHistory = true;
-    this.chatService.getHistory(this.appId, this.userId, 0, 50).subscribe({
+    this.chatService.getHistory(this.appId, this.userId, 0, 50 , this.selectedModuleId).subscribe({
       next: (chatHistory) => {
         this.chatHistory = chatHistory.map(chat => {
           const modifiedAt = new Date(chat.modifiedAt); // convert string → Date
@@ -135,6 +146,7 @@ export class ChatComponent implements OnInit {
         this.chatService.setNextChatId(this.maxChatId + 1);
 
         this.loadingChatHistory = false;
+        this.loadChatMessages(this.maxChatId);
       },
       error: (error) => {
         console.error('Error loading chat history:', error);
@@ -180,7 +192,7 @@ export class ChatComponent implements OnInit {
     this.isCreatingNewChat = true;
 
     // Generate a temporary chat ID for the new conversation
-    const tempChatId = this.chatService.getNextChatId();
+    const tempChatId = '56789';
 
     // Create a temporary chat entry in history
     const newChatEntry = {
@@ -366,7 +378,8 @@ export class ChatComponent implements OnInit {
       domain: this.app.domain,
       accountId: this.app?.id,
       userId: '1',
-      chatId: this.selectedChatId || null
+      chatId: this.selectedChatId || null,
+      applicationModuleId : this.selectedModuleId
 
     };
     const sub = this.chatService.streamChat(chatRequest).subscribe({
@@ -504,6 +517,9 @@ export class ChatComponent implements OnInit {
 
   onModuleChange(event: any) {
     this.selectedModule = event.target.value;
+    this.selectedModuleId = event.target.value;
+    console.log(this.selectedModule);
+    this.loadChatHistory();
   }
 
   getSelectedChatTitle(): string {

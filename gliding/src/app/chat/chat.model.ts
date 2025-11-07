@@ -46,6 +46,7 @@ export interface ChatRequest {
   accountId: string;
   userId: string;
   chatId: string;
+  applicationModuleId: number;
 }
 
 export interface ApplicationModuleModel {

@@ -237,7 +237,8 @@ export class AppSettingsComponent implements OnInit {
         domain: 'Terzo_Cloud_Contracts_final' ,
         accountId: '1',
         userId: '1',
-        chatId: '30'
+        chatId: '30',
+        applicationModuleId: 0
       };
 
       // Stream the response using streamChat - same logic as chat.component.ts

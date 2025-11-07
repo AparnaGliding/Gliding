@@ -101,7 +101,7 @@
                             <circle cx="12" cy="19" r="2" fill="currentColor"/>
                           </svg>
                         </button>
-                        
+
                         @if (openMenuMessageId === message.id) {
                           <div class="message-dropdown-menu">
                             <button class="message-dropdown-item" (click)="openAddToArticleModal(message); closeMessageMenu()">
@@ -272,9 +272,9 @@
           class="form-select form-select-lg"
           [(ngModel)]="selectedModule"
           (change)="onModuleChange($event)">
-          <option [value]="app.name + ' (All Modules)'">{{app.name}} (All Modules)</option>
+          <option [value]="0">{{app.name}} (All Modules)</option>
           @for (module of modules; track module.id) {
-            <option [value]="module.moduleName">{{module.moduleName}}</option>
+            <option [value]="module.id">{{module.moduleName}}</option>
           }
         </select>
         <small class="text-secondary mt-2 d-block">Questions will search across all documentation</small>
