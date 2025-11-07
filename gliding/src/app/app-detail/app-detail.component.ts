@@ -389,7 +389,7 @@ export class AppDetailComponent implements OnInit, OnDestroy {
       this.startProgressiveModuleLoading(appId);
 
       // Load articles count
-      this.appDashboardService.getArticle(appId, 1, 0, 1000).subscribe({
+      this.appDashboardService.getArticle(appId, 0, 1, 0, 1000).subscribe({
         next: (articles) => {
           this.articlesGenerated = articles.length;
         },

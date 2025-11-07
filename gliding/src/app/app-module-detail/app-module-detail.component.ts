@@ -222,7 +222,8 @@ export class AppModuleDetailComponent implements OnInit {
   private loadArticles(appId: number): void {
     // TODO: replace hardcoded userId with actual logged-in user when available
     const userId = 1;
-    this.appDashboardService.getArticle(appId, userId).subscribe({
+    const moduleId = Number(this.moduleId) || 0; // 0 => all modules (fallback)
+    this.appDashboardService.getArticle(appId, moduleId, userId).subscribe({
       next: (arts) => {
         this.articles = (arts && arts.length) ? arts : [];
         this.articlesGenerated = this.articles.length;
