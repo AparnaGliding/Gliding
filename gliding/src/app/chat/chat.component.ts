@@ -285,6 +285,7 @@ export class ChatComponent implements OnInit {
                   }
                 });
               }
+
               this.currentChatMessages.push(botMessage);
               this.replaceLoadingImagesWithActual(botMessage);
             } catch (error) {
