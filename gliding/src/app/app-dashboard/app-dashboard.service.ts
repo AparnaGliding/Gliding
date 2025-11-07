@@ -42,9 +42,10 @@ export class AppDashboardService {
 
 
 
-  getArticle(applicationId: number, userId: number, offset: number = 0, limit: number = 50): Observable<ArticleListResponseModel[]> {
+  getArticle(applicationId: number, applicationModuleId: number, userId: number, offset: number = 0, limit: number = 50): Observable<ArticleListResponseModel[]> {
     const params = new HttpParams()
       .set('applicationId', applicationId.toString())
+      .set('applicationModuleId', applicationModuleId.toString())
       .set('userId', userId.toString())
       .set('offset', offset.toString())
       .set('limit', limit.toString());

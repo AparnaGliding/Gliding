@@ -130,9 +130,10 @@ export class ChatService {
     );
   }
 
-  getArticles(applicationId: number, userId: number, offset: number, limit: number): Observable<ArticleListResponseModel[]> {
+  getArticles(applicationId: number, applicationModuleId: number, userId: number, offset: number, limit: number): Observable<ArticleListResponseModel[]> {
     const params = new HttpParams()
       .set('applicationId', applicationId.toString())
+      .set('applicationModuleId', applicationModuleId.toString())
       .set('userId', userId.toString())
       .set('offset', offset.toString())
       .set('limit', limit.toString());

@@ -52,6 +52,7 @@ export class ChatComponent implements OnInit {
   modules: ApplicationModuleModel[] = [];
   articles: ArticleListResponseModel[] = [];
   selectedModule: string = '';
+  selectedModuleId: number | null = null;
   private hasUnsavedChatChanges = false;
   private isTyping = false;
   private currentStreamSub?: Subscription;
@@ -497,6 +498,7 @@ export class ChatComponent implements OnInit {
       next: (modules) => {
         this.modules = modules.filter(m => m.moduleName !== 'Product Overview');
         this.selectedModule = `${this.app.name} (All Modules)`;
+        this.selectedModuleId = 0; // 0 implies all modules
       },
       error: (err) => {
         console.error('Error loading modules:', err);
@@ -504,8 +506,18 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  private getCurrentSelectedModuleId(): number {
+    // 0 indicates all modules
+    if (!this.selectedModule || this.selectedModule.endsWith('(All Modules)')) {
+      return 0;
+    }
+    const mod = this.modules.find(m => m.moduleName === this.selectedModule);
+    return mod?.id ?? 0;
+  }
+
   loadArticles() {
-    this.chatService.getArticles(parseInt(this.appId), this.userId, 0, 5).subscribe({
+    const moduleId = this.getCurrentSelectedModuleId();
+    this.chatService.getArticles(parseInt(this.appId), moduleId, this.userId, 0, 5).subscribe({
       next: (articles) => {
         this.articles = articles;
       },
@@ -520,6 +532,7 @@ export class ChatComponent implements OnInit {
     this.selectedModuleId = event.target.value;
     console.log(this.selectedModule);
     this.loadChatHistory();
+    this.loadArticles();
   }
 
   getSelectedChatTitle(): string {

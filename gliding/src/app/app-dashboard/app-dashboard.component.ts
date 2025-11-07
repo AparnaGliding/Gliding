@@ -120,8 +120,8 @@ export class AppDashboardComponent implements OnInit, OnDestroy {
         }
       });
 
-      // Load articles
-      this.appDashboardService.getArticle(app.id, 1, 0, 1000).subscribe({
+      // Load articles (moduleId 0 => all modules)
+      this.appDashboardService.getArticle(app.id, 0, 1, 0, 1000).subscribe({
         next: (articles: ArticleListResponseModel[]) => {
           appWithData.articlesCount = articles.length;
           totalArticlesCount += articles.length;
