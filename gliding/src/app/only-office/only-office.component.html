@@ -1,0 +1,16 @@
+<!-- only-office.component.html -->
+<div class="onlyoffice-wrapper">
+  <!-- OnlyOffice Editor Container -->
+  <div id="onlyoffice-editor-container" class="onlyoffice-editor-container"></div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="editor-loading">
+    <div class="loading-spinner"></div>
+    <p>Loading editor...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="editorStatus === 'error'" class="editor-error">
+    <p>Failed to load document editor. Please try again later.</p>
+  </div>
+</div>

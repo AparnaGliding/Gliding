@@ -54,10 +54,6 @@ export class KnowledgeHubService {
     return this.http.post(`/article/${articleId}/publish`, {});
   }
 
-  getOnlyOfficeEditUrl(articleId: number): Observable<{editUrl: string}> {
-    return this.http.get<{editUrl: string}>(`/article/${articleId}/edit-url`);
-  }
-
   createCategory(category: FreshdeskCategoryRequest): Observable<boolean> {
 
     return this.http.post<boolean>('/freshdesk/create/category', category, {observe: 'response'}).pipe(

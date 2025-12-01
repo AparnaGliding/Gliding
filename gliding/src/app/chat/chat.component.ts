@@ -52,7 +52,6 @@ export class ChatComponent implements OnInit {
   modules: ApplicationModuleModel[] = [];
   articles: ArticleListResponseModel[] = [];
   selectedModule: string = '';
-  selectedModuleId: number | null = null;
   private hasUnsavedChatChanges = false;
   private isTyping = false;
   private currentStreamSub?: Subscription;

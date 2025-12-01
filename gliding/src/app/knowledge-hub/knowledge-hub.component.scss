@@ -232,8 +232,10 @@
 
 .main-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 2rem;
-  overflow-y: auto;
+  overflow: hidden;
   background-color: white;
   margin: 1rem;
   border-radius: 0.5rem;
@@ -490,4 +492,15 @@
   background-color: white;
   border-radius: 0.5rem;
   margin: 1rem;
+}
+
+/* OnlyOffice layout sizing */
+.onlyoffice-section {
+  flex: 1;
+  min-height: 700px;
+}
+
+.onlyoffice-section app-only-office {
+  display: block;
+  height: 100%;
 }

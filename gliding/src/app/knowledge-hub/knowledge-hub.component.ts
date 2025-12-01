@@ -12,11 +12,12 @@ import {
   ArticleContent
 } from './models/knowledge-hub.models';
 import { FreshdeskCategoryRequest, FreshdeskFolderRequest, ListCategoryModel, ListFolderModel } from './knowledge-hub.model';
+import {OnlyOfficeComponent} from '../only-office/only-office.component';
 
 @Component({
   selector: 'app-knowledge-hub',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, OnlyOfficeComponent],
   templateUrl: './knowledge-hub.component.html',
   styleUrl: './knowledge-hub.component.scss'
 })
@@ -29,11 +30,13 @@ export class KnowledgeHubComponent implements OnInit {
   loadingArticle = false;
   showWelcome = true;
 
-  // PDF viewer properties
+  // OnlyOffice integration state
   currentPdfUrl: string | null = null;
   safePdfUrl: SafeResourceUrl | null = null;
   showPdfPreview = false;
   isPdfFile = false;
+  showOnlyOffice = false;
+  isEditing = false;
   // Track which item is being published (works for both article and PDF)
   publishingArticleId: number | null = null;
 
@@ -193,13 +196,13 @@ export class KnowledgeHubComponent implements OnInit {
 
     const filename = file.name;
 
-    // Check if file is PDF
-    if (filename && filename.toLowerCase().endsWith('.pdf')) {
-      this.isPdfFile = true;
-      this.currentPdfUrl = `http://localhost:4200/assets/${filename}`;
-      this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.currentPdfUrl);
-      this.showPdfPreview = true;
+    // Check if file is a document to open in OnlyOffice (including PDFs)
+    if (filename && (filename.toLowerCase().endsWith('.pdf') || filename.toLowerCase().endsWith('.doc') || filename.toLowerCase().endsWith('.docx') || filename.toLowerCase().endsWith('.ppt') || filename.toLowerCase().endsWith('.pptx') || filename.toLowerCase().endsWith('.xls') || filename.toLowerCase().endsWith('.xlsx'))) {
+      this.isPdfFile = filename.toLowerCase().endsWith('.pdf');
+      this.showOnlyOffice = true;
+      this.isEditing = false; // open in view mode first
       this.loadingArticle = false;
+      this.showPdfPreview = false;
     } else {
       // Handle non-PDF files - load article content
       this.knowledgeHubService.getArticleById(file.id).subscribe({
@@ -217,19 +220,15 @@ export class KnowledgeHubComponent implements OnInit {
   }
 
   onEditArticle(): void {
-    const targetId = this.isPdfFile && this.selectedItem ? this.selectedItem.id : this.currentArticle?.id;
+    // If OnlyOffice is showing a document, toggle to edit mode inline
+    if (this.showOnlyOffice && this.selectedItem?.name) {
+      this.isEditing = true; // template will re-render component in edit mode
+      return;
+    }
+    const targetId = this.currentArticle?.id;
     if (!targetId) return;
-
-    this.knowledgeHubService.getOnlyOfficeEditUrl(targetId).subscribe({
-      next: (response) => {
-        // Open OnlyOffice editor in a new window/tab
-        window.open(response.editUrl, '_blank', 'width=1200,height=800');
-      },
-      error: (error) => {
-        console.error('Error getting edit URL:', error);
-        alert('Unable to open editor. Please try again.');
-      }
-    });
+    // For non-document articles, fallback behavior (no external edit URL)
+    alert('Editing is available for documents via OnlyOffice.');
   }
 
   onPublishArticle(): void {
@@ -246,6 +245,16 @@ export class KnowledgeHubComponent implements OnInit {
     this.safePdfUrl = null;
     this.showPdfPreview = false;
     this.isPdfFile = false;
+    this.showOnlyOffice = false;
+    this.isEditing = false;
+  }
+
+  getDocumentType(name: string): 'word' | 'cell' | 'slide' {
+    const n = name.toLowerCase();
+    if (n.endsWith('.xlsx') || n.endsWith('.xls') || n.endsWith('.ods')) return 'cell';
+    if (n.endsWith('.ppt') || n.endsWith('.pptx') || n.endsWith('.odp')) return 'slide';
+    // pdf and word-like docs open in word editor for viewing
+    return 'word';
   }
 
   downloadPdf(): void {

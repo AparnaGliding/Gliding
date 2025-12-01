@@ -83,10 +83,10 @@
 
   <div class="main-content">
     <!-- Content Header with Action Buttons -->
-    <div class="content-header" *ngIf="currentArticle || showPdfPreview">
+    <div class="content-header" *ngIf="currentArticle || showPdfPreview || showOnlyOffice">
       <div class="header-title">
         <h4 class="mb-0" *ngIf="currentArticle">{{ currentArticle.title }}</h4>
-        <h4 class="mb-0" *ngIf="showPdfPreview && selectedItem">{{ selectedItem.name }}</h4>
+        <h4 class="mb-0" *ngIf="(showPdfPreview || showOnlyOffice) && selectedItem">{{ selectedItem.name }}</h4>
       </div>
 
       <div class="header-actions">
@@ -145,6 +145,15 @@
 
       <div class="article-body" [innerHTML]="currentArticle.content">
       </div>
+    </div>
+
+    <!-- OnlyOffice Editor for documents -->
+    <div class="onlyoffice-section" *ngIf="showOnlyOffice && selectedItem">
+      <app-only-office
+        [fileName]="selectedItem.name"
+        [readOnly]="!isEditing"
+        [documentType]="getDocumentType(selectedItem.name)">
+      </app-only-office>
     </div>
 
     <div class="pdf-preview" *ngIf="showPdfPreview && safePdfUrl">
