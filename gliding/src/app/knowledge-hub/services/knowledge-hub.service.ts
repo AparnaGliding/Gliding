@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {map, Observable, throwError} from 'rxjs';
-import { CategoryListResponseModel, DirectoryItemResponseModel, ReferencableType, ArticleContent } from '../models/knowledge-hub.models';
+import {
+  CategoryListResponseModel,
+  DirectoryItemResponseModel,
+  ReferencableType,
+  ArticleContent,
+  FAQ
+} from '../models/knowledge-hub.models';
 import {
   FreshdeskCategoryRequest,
   FreshdeskFolderRequest,
@@ -48,6 +54,20 @@ export class KnowledgeHubService {
 
   getArticleById(articleId: number): Observable<ArticleContent> {
     return this.http.get<ArticleContent>(`/article/${articleId}`);
+  }
+
+  getFaqs(
+    applicationId: number,
+    moduleId: number | null = null,
+    limit: number = 100,
+    offset: number = 0
+  ): Observable<FAQ[]> {
+    const params = new HttpParams()
+      .set('applicationId', applicationId.toString())
+      .set('moduleId', moduleId.toString())
+      .set('limit', limit.toString())
+      .set('offset', offset.toString());
+    return this.http.get<FAQ[]>(`/faq`, { params });
   }
 
   publishArticle(articleId: number): Observable<any> {

@@ -9,7 +9,8 @@ import {
   ReferencableType,
   DirectoryItemType,
   TreeNode,
-  ArticleContent
+  ArticleContent,
+  FAQ
 } from './models/knowledge-hub.models';
 import { FreshdeskCategoryRequest, FreshdeskFolderRequest, ListCategoryModel, ListFolderModel } from './knowledge-hub.model';
 import {OnlyOfficeComponent} from '../only-office/only-office.component';
@@ -29,6 +30,7 @@ export class KnowledgeHubComponent implements OnInit {
   currentArticle: ArticleContent | null = null;
   loadingArticle = false;
   showWelcome = true;
+  faqs: FAQ[] = [];
 
   // OnlyOffice integration state
   currentPdfUrl: string | null = null;
@@ -39,6 +41,10 @@ export class KnowledgeHubComponent implements OnInit {
   isEditing = false;
   // Track which item is being published (works for both article and PDF)
   publishingArticleId: number | null = null;
+  // Track which category's FAQs are currently displayed
+  faqsCategoryId: number | null = null;
+  // Currently selected FAQ for right-side display
+  selectedFaq: FAQ | null = null;
 
   // Expose enum to template
   ReferencableType = ReferencableType;
@@ -67,6 +73,7 @@ export class KnowledgeHubComponent implements OnInit {
 
   onTabClick(tab: ReferencableType): void {
     this.activeTab = tab;
+    this.selectedFaq = null;
     this.loadCategories();
   }
 
@@ -84,7 +91,7 @@ export class KnowledgeHubComponent implements OnInit {
           loading: false
         }));
 
-        // Auto-expand all categories
+        // Always load items for categories
         this.treeNodes.forEach(category => {
           this.loadCategoryItems(category);
         });
@@ -97,14 +104,78 @@ export class KnowledgeHubComponent implements OnInit {
     });
   }
 
+  onFaqClick(faq: FAQ, event?: MouseEvent): void {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    this.selectedFaq = faq;
+    this.showWelcome = false;
+    this.loadingArticle = false;
+  }
+
   onNodeClick(node: TreeNode): void {
     if (node.type === 'category') {
+      // In both tabs, expand/toggle to show items under the category
       this.toggleCategory(node);
     } else if (node.type === 'folder') {
+      // In both tabs, allow navigating folders
       this.toggleFolder(node);
     } else if (node.type === 'file') {
-      this.selectFile(node);
+      if (this.activeTab === ReferencableType.FAQ) {
+        // In FAQ tab, clicking a file loads FAQs inline but keeps right panel as-is
+        this.selectedItem = node;
+        this.currentArticle = null;
+        this.showOnlyOffice = false;
+        this.faqs = [];
+        this.loadFaqsForModule(node.id);
+      } else {
+        // In Articles tab, open the file/article
+        this.selectFile(node);
+      }
     }
+  }
+
+  private loadFaqsForCategory(categoryId: number): void {
+    this.showWelcome = false;
+    this.loadingArticle = true;
+    this.currentArticle = null;
+    this.showOnlyOffice = false;
+    this.faqs = [];
+    this.faqsCategoryId = categoryId;
+    this.selectedFaq = null;
+
+    const applicationId = 1; // align with backend appId usage
+    this.knowledgeHubService.getFaqs(applicationId, categoryId).subscribe({
+      next: (faqs) => {
+        this.faqs = faqs || [];
+        // still keep welcome; right panel changes only when a FAQ is selected
+      },
+      error: (error) => {
+        console.error('Error loading FAQs:', error);
+        // keep state untouched on error
+      }
+    });
+  }
+
+  private loadFaqsForModule(moduleId: number): void {
+    // Keep welcome content visible; only change after a specific FAQ is clicked
+    this.currentArticle = null;
+    this.showOnlyOffice = false;
+    this.faqs = [];
+    this.selectedFaq = null;
+
+    const applicationId = 1;
+    this.knowledgeHubService.getFaqs(applicationId, moduleId).subscribe({
+      next: (faqs) => {
+        this.faqs = faqs || [];
+        this.loadingArticle = false;
+      },
+      error: (error) => {
+        console.error('Error loading FAQs:', error);
+        this.loadingArticle = false;
+      }
+    });
   }
 
   private loadCategoryItems(category: TreeNode): void {

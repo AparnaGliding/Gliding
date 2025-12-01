@@ -55,3 +55,15 @@ export interface ArticleContent {
   modifiedAt: Date;
   author?: string;
 }
+
+
+export interface FAQ {
+  id: number;
+  question: string;
+  answer: string;
+  applicationModuleId: number | null;
+  createdAt: Date;
+  modifiedAt: Date;
+  version: number;
+  userId: number;
+}
