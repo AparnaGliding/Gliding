@@ -220,9 +220,10 @@ export class KnowledgeHubComponent implements OnInit {
   }
 
   onEditArticle(): void {
-    // If OnlyOffice is showing a document, toggle to edit mode inline
     if (this.showOnlyOffice && this.selectedItem?.name) {
-      this.isEditing = true; // template will re-render component in edit mode
+      // Toggle inline edit mode. Note: for PDFs this enables OnlyOffice PDF editor (annotations/forms),
+      // not direct text edits of existing content unless backend converts to DOCX in config.
+      this.isEditing = true;
       return;
     }
     const targetId = this.currentArticle?.id;

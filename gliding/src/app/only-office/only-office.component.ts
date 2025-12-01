@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {NgIf} from '@angular/common';
 declare const DocsAPI: any; // Declare OnlyOffice API
@@ -12,7 +12,7 @@ declare const DocsAPI: any; // Declare OnlyOffice API
   templateUrl: './only-office.component.html',
   styleUrl: './only-office.component.css'
 })
-export class OnlyOfficeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OnlyOfficeComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() documentId: string = "jj";
   @Input() fileName: string = "assistq-response-1759302620211.docx";
   @Input() readOnly: boolean = false;
@@ -72,6 +72,24 @@ export class OnlyOfficeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.destroyEditor();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const fileChanged = !!changes['fileName'] && !changes['fileName'].firstChange;
+    const modeChanged = !!changes['readOnly'] && !changes['readOnly'].firstChange;
+    // Reinitialize editor if file or mode changed and we already initialized once
+    if ((fileChanged || modeChanged)) {
+      // If API not loaded yet, defer to ngAfterViewInit
+      const proceed = () => {
+        this.destroyEditor();
+        this.loadEditor();
+      };
+      if (typeof DocsAPI === 'undefined') {
+        this.ensureOnlyOfficeAPILoaded().then(proceed).catch(() => {/* swallow */});
+      } else {
+        proceed();
+      }
+    }
   }
 
   // Public methods that parent components can access
@@ -149,7 +167,8 @@ export class OnlyOfficeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Get document configuration from backend
     const encoded = encodeURIComponent(this.fileName);
-    this.http.get<any>(`/documents/config/${encoded}`)
+    const mode = this.readOnly ? 'view' : 'edit';
+    this.http.get<any>(`/documents/config/${encoded}?mode=${mode}`)
       .subscribe({
         next: (config) => {
           // Force document URL to use provided download API if available
@@ -189,6 +208,26 @@ export class OnlyOfficeComponent implements OnInit, OnDestroy, AfterViewInit {
       config.editorConfig = {
         ...config.editorConfig,
         mode: 'view'
+      };
+      config.document = {
+        ...config.document,
+        permissions: {
+          ...config.document?.permissions,
+          edit: false
+        }
+      };
+    } else {
+      // Ensure explicit edit mode when not read-only
+      config.editorConfig = {
+        ...config.editorConfig,
+        mode: 'edit'
+      };
+      config.document = {
+        ...config.document,
+        permissions: {
+          ...config.document?.permissions,
+          edit: true
+        }
       };
     }
 

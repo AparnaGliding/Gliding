@@ -54,6 +54,13 @@ export class KnowledgeHubService {
     return this.http.post(`/article/${articleId}/publish`, {});
   }
 
+  convertPdfToDocx(fileName: string): Observable<{ fileName: string }> {
+    return this.http.post<{ fileName: string }>(`/documents/convert`, {
+      fileName,
+      targetType: 'docx'
+    });
+  }
+
   createCategory(category: FreshdeskCategoryRequest): Observable<boolean> {
 
     return this.http.post<boolean>('/freshdesk/create/category', category, {observe: 'response'}).pipe(
