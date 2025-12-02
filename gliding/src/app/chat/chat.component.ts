@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit {
   loadingChatHistory = false;
   isCreatingNewChat = false;
   app: any;
-  selectedModuleId: number | null = null;
+  // selectedModuleId: number | null = null;
 
 
   chatHistory: ChatModel[];

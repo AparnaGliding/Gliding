@@ -19,27 +19,42 @@ import {catchError} from 'rxjs/operators';
   styleUrl: './app-settings.component.scss'
 })
 export class AppSettingsComponent implements OnInit {
-  activeTab: string = 'Chat Embed';
+  activeTab: string = 'Appearance';
 
-  authStatus = {
-    connected: true,
-    type: 'OAuth 2.0',
-    firstAuth: 'Oct 15, 2025',
-    lastUpdated: '2 hours ago',
-    tokenExpiry: '30 days',
-    scope: 'Read/Write'
-  };
-
-  // Chat Embed Settings
-  chatEmbedSettings = {
-    primaryColor: '#0066FF',
-    chatTitle: 'AssistQ',
+  // Appearance Settings
+  appearanceSettings = {
+    id: 1,
+    mode: 'DARK',
+    title: 'Assistq',
+    headerColor: '#63003d',
+    buttonColor: '#63003d',
+    textColor: '#63003d',
     greetingMessage: 'Hi! Ask me anything about our product.',
-    inputPlaceholder: 'Ask a question...'
+    inputPlaceholder: 'Ask a question...',
+    position: 'BOTTOM_LEFT',
+    offsetX: 20,
+    offsetY: 20,
+    applicationId: 1
   };
 
-  // Response Behavior Settings
-  responseBehavior = {
+  // Original settings for discard functionality
+  originalAppearanceSettings = {
+    id: 1,
+    mode: 'DARK',
+    title: 'Assistq',
+    headerColor: '#63003d',
+    buttonColor: '#63003d',
+    textColor: '#63003d',
+    greetingMessage: 'Hi! Ask me anything about our product.',
+    inputPlaceholder: 'Ask a question...',
+    position: 'BOTTOM_LEFT',
+    offsetX: 20,
+    offsetY: 20,
+    applicationId: 1
+  };
+
+  // AI Behaviour Settings
+  aiBehaviour = {
     tone: 'Friendly',
     responseLength: 'Moderate',
     formalityLevel: 'Balanced',
@@ -79,7 +94,10 @@ export class AppSettingsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.applicationName = params['name'];
     });
-    this.setTab('Chat Embed');
+    this.setTab('Appearance');
+
+    // Load widget configuration from API
+    this.loadWidgetConfiguration();
 
     // Load applications for header dropdown
     this.appDashboardService.getApplications(1).subscribe({
@@ -96,17 +114,8 @@ export class AppSettingsComponent implements OnInit {
     this.syncActiveTabFromUrl();
   }
 
-  onSaveSetting(settingName: string, value: any): void {
-    console.log(`Saving setting ${settingName}:`, value);
-    // TODO: Implement save functionality
-  }
 
-  onResetSettings(): void {
-    console.log('Resetting settings to default');
-    // TODO: Implement reset functionality
-  }
-
-  setTab(tab: 'General' | 'Chat Embed' | 'API') {
+  setTab(tab: 'Appearance' | 'AI Behaviour' | 'Embed Code') {
     this.activeTab = tab;
   }
 
@@ -156,14 +165,14 @@ export class AppSettingsComponent implements OnInit {
   initializePreviewMessages(): void {
     this.previewMessages = [
       {
-        text: this.chatEmbedSettings.greetingMessage,
+        text: this.appearanceSettings.greetingMessage,
         isBot: true,
         timestamp: new Date()
       }
     ];
     this.previewChatMessages = [
       {
-        text: this.chatEmbedSettings.greetingMessage,
+        text: this.appearanceSettings.greetingMessage,
         isUser: false,
         timestamp: new Date(),
         isThoughtProcess: false,
@@ -400,6 +409,77 @@ export class AppSettingsComponent implements OnInit {
         return throwError(() => new Error(`Screenshot not found: ${filename}`));
       })
     );
+  }
+
+  // Load widget configuration from API
+  loadWidgetConfiguration(): void {
+    const widgetId = 1; // Hardcoded ID as requested
+
+    this.http.get<any>(`/widget/${widgetId}`).subscribe({
+      next: (response) => {
+        console.log('Widget configuration loaded:', response);
+        // Update appearance settings with API response
+        this.appearanceSettings = {
+          id: response.id,
+          mode: response.mode,
+          title: response.title,
+          headerColor: response.headerColor,
+          buttonColor: response.buttonColor,
+          textColor: response.textColor,
+          greetingMessage: response.greetingMessage,
+          inputPlaceholder: response.inputPlaceholder,
+          position: response.position,
+          offsetX: response.offsetX,
+          offsetY: response.offsetY,
+          applicationId: response.applicationId
+        };
+        // Update original settings as well
+        this.originalAppearanceSettings = { ...this.appearanceSettings };
+      },
+      error: (error) => {
+        console.error('Failed to load widget configuration:', error);
+        // Keep default values if API call fails
+      }
+    });
+  }
+
+  // API call for widget configuration
+  saveWidgetConfiguration(): void {
+    const widgetId = 1; // Hardcoded ID as requested
+
+    const configData = {
+      id: this.appearanceSettings.id,
+      mode: this.appearanceSettings.mode,
+      title: this.appearanceSettings.title,
+      headerColor: this.appearanceSettings.headerColor,
+      backgroundColor: this.appearanceSettings.headerColor, // Using headerColor as backgroundColor
+      buttonColor: this.appearanceSettings.buttonColor,
+      textColor: this.appearanceSettings.textColor,
+      greetingMessage: this.appearanceSettings.greetingMessage,
+      inputPlaceholder: this.appearanceSettings.inputPlaceholder,
+      position: this.appearanceSettings.position,
+      offsetX: this.appearanceSettings.offsetX,
+      offsetY: this.appearanceSettings.offsetY,
+      applicationId: this.appearanceSettings.applicationId
+    };
+
+    this.http.post(`/widget/${widgetId}`, configData).subscribe({
+      next: (response) => {
+        console.log('Widget configuration updated successfully:', response);
+        // Update original settings to current values after successful save
+        this.originalAppearanceSettings = { ...this.appearanceSettings };
+        // You could add a toast notification here
+      },
+      error: (error) => {
+        console.error('Failed to update widget configuration:', error);
+        // You could add error handling here
+      }
+    });
+  }
+
+  // Discard changes and reset to original values
+  discardChanges(): void {
+    this.appearanceSettings = { ...this.originalAppearanceSettings };
   }
 
   onTabClick(tabName: string): void {

@@ -10,6 +10,10 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'chat',
+    loadComponent: () => import('./chat-embed/chat-embed.component').then(m => m.ChatEmbedComponent),
+  },
+  {
     path: 'apps',
     loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
     children : [

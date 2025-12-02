@@ -8,14 +8,22 @@
 
   <!-- Tabs -->
   <div class="settings-tabs">
-    <button class="tab-btn" [class.active]="activeTab === 'Chat Embed'">
-      <i class="pi pi-comments"></i>
-      <span>Chat Embed</span>
+    <button class="tab-btn" [class.active]="activeTab === 'Appearance'" (click)="setTab('Appearance')">
+      <i class="pi pi-palette"></i>
+      <span>Appearance</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'AI Behaviour'" (click)="setTab('AI Behaviour')">
+      <i class="pi pi-cog"></i>
+      <span>AI Behaviour</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'Embed Code'" (click)="setTab('Embed Code')">
+      <i class="pi pi-code"></i>
+      <span>Embed Code</span>
     </button>
   </div>
 
-  <!-- Tab: Chat Embed -->
-  <div  class="settings-content">
+  <!-- Tab: Appearance -->
+  <div *ngIf="activeTab === 'Appearance'" class="settings-content">
     <!-- Header Card -->
     <div class="embed-header-card">
       <div class="embed-header-icon">
@@ -34,59 +42,384 @@
       </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="embed-main-grid">
-      <!-- Left Column: Appearance Settings -->
-      <div class="embed-section">
+    <!-- Appearance Settings with Preview -->
+    <div class="appearance-main-grid">
+      <!-- Left Column: Form Settings -->
+      <div class="appearance-form-section">
         <div class="section-header">
           <i class="pi pi-palette"></i>
-          <h4>Appearance</h4>
+          <h4>Appearance Configuration</h4>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Primary Color</label>
-          <div class="color-input-group">
-            <input
-              type="color"
-              [(ngModel)]="chatEmbedSettings.primaryColor"
-              class="color-picker">
+        <div class="appearance-form-grid">
+          <div class="form-group">
+            <label class="form-label">Mode</label>
+            <select [(ngModel)]="appearanceSettings.mode" class="form-select">
+              <option value="LIGHT">Light</option>
+              <option value="DARK">Dark</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Title</label>
             <input
               type="text"
-              [(ngModel)]="chatEmbedSettings.primaryColor"
-              class="color-text-input"
-              placeholder="#0066FF">
+              [(ngModel)]="appearanceSettings.title"
+              class="form-input"
+              placeholder="Assistq">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Header Color</label>
+            <div class="color-input-group">
+              <input
+                type="color"
+                [(ngModel)]="appearanceSettings.headerColor"
+                class="color-picker">
+              <input
+                type="text"
+                [(ngModel)]="appearanceSettings.headerColor"
+                class="color-text-input"
+                placeholder="#63003d">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label class="form-label">Button Color</label>
+            <div class="color-input-group">
+              <input
+                type="color"
+                [(ngModel)]="appearanceSettings.buttonColor"
+                class="color-picker">
+              <input
+                type="text"
+                [(ngModel)]="appearanceSettings.buttonColor"
+                class="color-text-input"
+                placeholder="#63003d">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Text Color</label>
+            <div class="color-input-group">
+              <input
+                type="color"
+                [(ngModel)]="appearanceSettings.textColor"
+                class="color-picker">
+              <input
+                type="text"
+                [(ngModel)]="appearanceSettings.textColor"
+                class="color-text-input"
+                placeholder="#63003d">
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Greeting Message</label>
+            <textarea
+              [(ngModel)]="appearanceSettings.greetingMessage"
+              class="form-textarea"
+              rows="3"
+              placeholder="Hi! Ask me anything about our product."></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Input Placeholder</label>
+            <input
+              type="text"
+              [(ngModel)]="appearanceSettings.inputPlaceholder"
+              class="form-input"
+              placeholder="Ask a question...">
+          </div>
+
+          <!-- Position Settings -->
+          <div class="form-group">
+            <label class="form-label">Position</label>
+            <select [(ngModel)]="appearanceSettings.position" class="form-select">
+              <option value="BOTTOM_LEFT">Bottom Left</option>
+              <option value="BOTTOM_RIGHT">Bottom Right</option>
+              <option value="TOP_LEFT">Top Left</option>
+              <option value="TOP_RIGHT">Top Right</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Offset X</label>
+            <input
+              type="number"
+              [(ngModel)]="appearanceSettings.offsetX"
+              class="form-input"
+              placeholder="20">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Offset Y</label>
+            <input
+              type="number"
+              [(ngModel)]="appearanceSettings.offsetY"
+              class="form-input"
+              placeholder="20">
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Chat Title</label>
-          <input
-            type="text"
-            [(ngModel)]="chatEmbedSettings.chatTitle"
-            class="form-input"
-            placeholder="AssistQ">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Greeting Message</label>
-          <textarea
-            [(ngModel)]="chatEmbedSettings.greetingMessage"
-            class="form-textarea"
-            rows="3"
-            placeholder="Hi! Ask me anything about our product."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Input Placeholder</label>
-          <input
-            type="text"
-            [(ngModel)]="chatEmbedSettings.inputPlaceholder"
-            class="form-input"
-            placeholder="Ask a question...">
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="discard-btn" (click)="discardChanges()">
+            <i class="pi pi-times"></i>
+            Discard Changes
+          </button>
+          <button class="save-btn" (click)="saveWidgetConfiguration()">
+            <i class="pi pi-save"></i>
+            Save Configuration
+          </button>
         </div>
       </div>
 
-      <!-- Right Column: Embed Code -->
+      <!-- Right Column: Live Preview -->
+      <div class="appearance-preview-section">
+        <div class="section-header">
+          <i class="pi pi-eye"></i>
+          <h4>Live Preview</h4>
+        </div>
+
+        <div class="preview-container">
+          <!-- Chat Widget Preview - Matching chat-embed component -->
+          <div class="d-flex flex-column h-100 w-100 bg-white chat-widget-preview"
+               [class.dark-mode]="appearanceSettings.mode === 'DARK'">
+
+            <!-- Widget Header -->
+            <div class="d-flex justify-content-between px-4 py-3 text-white chat-header"
+                 [ngStyle]="{ 'background-color': appearanceSettings.headerColor }">
+              <div class="d-flex align-items-center gap-3">
+                <h3 class="m-0">{{ appearanceSettings.title }}</h3>
+              </div>
+              <button class="close-button bg-transparent border-0 text-white p-1 rounded" type="button">
+                <i class="pi pi-times" style="font-size: 1.2rem;"></i>
+              </button>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="chat-body-container"
+                 [ngClass]="appearanceSettings?.mode === 'DARK' ? 'chat-messages-dark' : 'chat-messages-light'">
+              <div class="flex-fill px-5 py-4 chat-messages d-flex flex-column gap-4 mt-5">
+
+                <!-- Bot greeting message -->
+                <div class="d-flex align-items-start gap-3 mb-2">
+                  <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white"
+                       [ngStyle]="{ 'background-color': appearanceSettings?.buttonColor }">
+                    <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant"
+                         style="filter: brightness(0) invert(1);" />
+                  </div>
+                  <div class="welcome-text px-3 py-2 rounded"
+                       [ngClass]="appearanceSettings?.mode === 'DARK' ? 'welcome-text-dark' : 'bg-white'">
+                    {{ appearanceSettings.greetingMessage }}
+                  </div>
+                </div>
+
+                <!-- Sample user message -->
+                <div class="d-flex gap-3 mb-4 justify-content-end">
+                  <div class="px-3 py-3 rounded-3 user-bubble text-white shadow-sm position-relative"
+                       [ngStyle]="{ 'background-color': appearanceSettings.headerColor }">
+                    <div class="m-0 fw-medium">Hello! How can I get started?</div>
+                  </div>
+                  <div class="user-avatar text-white d-flex align-items-center justify-content-center rounded-circle"
+                       [ngStyle]="{ 'background-color': appearanceSettings?.buttonColor }">
+                    U
+                  </div>
+                </div>
+
+                <!-- Sample bot response -->
+                <div class="d-flex gap-3 mb-4">
+                  <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white"
+                       [ngStyle]="{ 'background-color': appearanceSettings?.buttonColor }">
+                    <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant"
+                         style="filter: brightness(0) invert(1);" />
+                  </div>
+                  <div class="px-3 py-2 rounded bot-bubble"
+                       [ngClass]="appearanceSettings?.mode === 'DARK' ? 'bot-bubble-dark' : 'bg-white'">
+                    I'd be happy to help you get started! What specific area would you like to know more about?
+                  </div>
+                </div>
+              </div>
+
+              <!-- Input Area -->
+              <div class="px-5 py-3 border-top"
+                   [ngClass]="appearanceSettings?.mode === 'DARK' ? 'input-area-dark' : 'bg-white border-light'">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-pill px-3 py-2 flex-grow-1"
+                       [ngClass]="appearanceSettings?.mode === 'DARK' ? 'input-container-dark border' : 'border border-light bg-white'">
+                    <textarea
+                      [placeholder]="appearanceSettings.inputPlaceholder"
+                      rows="1"
+                      class="chat-input flex-fill border-0"
+                      [ngClass]="appearanceSettings?.mode === 'DARK' ? 'textarea-dark' : 'text-dark bg-white'"
+                      readonly
+                      tabindex="-1"></textarea>
+                  </div>
+
+                  <button class="refresh-button d-flex align-items-center justify-content-center">
+                    <i class="pi pi-refresh"></i>
+                  </button>
+
+                  <button class="send-button border-0 rounded d-flex align-items-center justify-content-center text-white"
+                          type="button"
+                          [ngStyle]="{ 'background-color': appearanceSettings?.buttonColor }">
+                    <i class="pi pi-send" style="font-size: 1.1rem;"></i>
+                  </button>
+                </div>
+                <div class="text-center powered-by">Powered by AssistQ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: AI Behaviour -->
+  <div *ngIf="activeTab === 'AI Behaviour'" class="settings-content">
+    <div class="embed-header-card">
+      <div class="embed-header-icon">
+        <i class="pi pi-cog"></i>
+      </div>
+      <div class="embed-header-content">
+        <h3 class="embed-title">AI Behaviour Configuration</h3>
+        <p class="embed-description">
+          Configure how your AI assistant responds to user queries. Customize the tone, response length, and formality level.
+        </p>
+      </div>
+    </div>
+
+    <div class="embed-section full-width">
+      <div class="section-header">
+        <i class="pi pi-cog"></i>
+        <h4>Response Behavior</h4>
+      </div>
+
+      <div class="behavior-grid">
+        <!-- Tone Selection -->
+        <div class="behavior-group">
+          <label class="behavior-label">Tone</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.tone === 'Professional'"
+              (click)="aiBehaviour.tone = 'Professional'">
+              <span class="btn-title">Professional</span>
+              <span class="btn-subtitle">Business-like</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.tone === 'Friendly'"
+              (click)="aiBehaviour.tone = 'Friendly'">
+              <span class="btn-title">Friendly</span>
+              <span class="btn-subtitle">Warm</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.tone === 'Casual'"
+              (click)="aiBehaviour.tone = 'Casual'">
+              <span class="btn-title">Casual</span>
+              <span class="btn-subtitle">Relaxed</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.tone === 'Technical'"
+              (click)="aiBehaviour.tone = 'Technical'">
+              <span class="btn-title">Technical</span>
+              <span class="btn-subtitle">Precise</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Response Length -->
+        <div class="behavior-group">
+          <label class="behavior-label">Response Length</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.responseLength === 'Brief'"
+              (click)="aiBehaviour.responseLength = 'Brief'">
+              <span class="btn-title">Brief</span>
+              <span class="btn-subtitle">1-2 sentences</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.responseLength === 'Moderate'"
+              (click)="aiBehaviour.responseLength = 'Moderate'">
+              <span class="btn-title">Moderate</span>
+              <span class="btn-subtitle">Balanced</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.responseLength === 'Detailed'"
+              (click)="aiBehaviour.responseLength = 'Detailed'">
+              <span class="btn-title">Detailed</span>
+              <span class="btn-subtitle">Comprehensive</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Formality Level -->
+        <div class="behavior-group">
+          <label class="behavior-label">Formality Level</label>
+          <div class="button-group">
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.formalityLevel === 'Formal'"
+              (click)="aiBehaviour.formalityLevel = 'Formal'">
+              <span class="btn-title">Formal</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.formalityLevel === 'Balanced'"
+              (click)="aiBehaviour.formalityLevel = 'Balanced'">
+              <span class="btn-title">Balanced</span>
+            </button>
+            <button
+              class="behavior-btn"
+              [class.active]="aiBehaviour.formalityLevel === 'Informal'"
+              (click)="aiBehaviour.formalityLevel = 'Informal'">
+              <span class="btn-title">Informal</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Instructions -->
+        <div class="behavior-group full-width">
+          <label class="behavior-label">Custom Instructions <span class="optional">(Optional)</span></label>
+          <textarea
+            [(ngModel)]="aiBehaviour.customInstructions"
+            class="form-textarea"
+            rows="4"
+            placeholder="Add specific instructions about how the AI should respond..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Embed Code -->
+  <div *ngIf="activeTab === 'Embed Code'" class="settings-content">
+    <div class="embed-header-card">
+      <div class="embed-header-icon">
+        <i class="pi pi-code"></i>
+      </div>
+      <div class="embed-header-content">
+        <h3 class="embed-title">Embed Code & Integration</h3>
+        <p class="embed-description">
+          Copy the embed code below and paste it into your website to integrate the chat widget.
+        </p>
+        <p class="embed-note">
+          <i class="pi pi-info-circle"></i>
+          Make sure to configure the appearance and AI behavior before embedding.
+        </p>
+      </div>
+    </div>
+
+    <div class="embed-main-grid">
+
+      <!-- Embed Code Section -->
       <div class="embed-section">
         <div class="section-header">
           <i class="pi pi-code"></i>
@@ -127,185 +460,29 @@
       </div>
     </div>
 
-    <!-- Response Behavior Section -->
-    <div class="embed-section full-width">
+    <!-- How to Embed Section -->
+    <div class="embed-section">
       <div class="section-header">
-        <i class="pi pi-cog"></i>
-        <h4>Response Behavior</h4>
+        <i class="pi pi-question-circle"></i>
+        <h4>How to Embed</h4>
       </div>
 
-      <div class="behavior-grid">
-        <!-- Tone Selection -->
-        <div class="behavior-group">
-          <label class="behavior-label">Tone</label>
-          <div class="button-group">
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.tone === 'Professional'"
-              (click)="responseBehavior.tone = 'Professional'">
-              <span class="btn-title">Professional</span>
-              <span class="btn-subtitle">Business-like</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.tone === 'Friendly'"
-              (click)="responseBehavior.tone = 'Friendly'">
-              <span class="btn-title">Friendly</span>
-              <span class="btn-subtitle">Warm</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.tone === 'Casual'"
-              (click)="responseBehavior.tone = 'Casual'">
-              <span class="btn-title">Casual</span>
-              <span class="btn-subtitle">Relaxed</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.tone === 'Technical'"
-              (click)="responseBehavior.tone = 'Technical'">
-              <span class="btn-title">Technical</span>
-              <span class="btn-subtitle">Precise</span>
-            </button>
-          </div>
+      <div class="how-to-steps">
+        <div class="step-item">
+          <span class="step-number">1</span>
+          <span class="step-text">Customize appearance and behavior above</span>
         </div>
-
-        <!-- Response Length -->
-        <div class="behavior-group">
-          <label class="behavior-label">Response Length</label>
-          <div class="button-group">
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.responseLength === 'Brief'"
-              (click)="responseBehavior.responseLength = 'Brief'">
-              <span class="btn-title">Brief</span>
-              <span class="btn-subtitle">1-2 sentences</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.responseLength === 'Moderate'"
-              (click)="responseBehavior.responseLength = 'Moderate'">
-              <span class="btn-title">Moderate</span>
-              <span class="btn-subtitle">Balanced</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.responseLength === 'Detailed'"
-              (click)="responseBehavior.responseLength = 'Detailed'">
-              <span class="btn-title">Detailed</span>
-              <span class="btn-subtitle">Comprehensive</span>
-            </button>
-          </div>
+        <div class="step-item">
+          <span class="step-number">2</span>
+          <span class="step-text">Copy the embed code (iframe or JavaScript)</span>
         </div>
-
-        <!-- Formality Level -->
-        <div class="behavior-group">
-          <label class="behavior-label">Formality Level</label>
-          <div class="button-group">
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.formalityLevel === 'Formal'"
-              (click)="responseBehavior.formalityLevel = 'Formal'">
-              <span class="btn-title">Formal</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.formalityLevel === 'Balanced'"
-              (click)="responseBehavior.formalityLevel = 'Balanced'">
-              <span class="btn-title">Balanced</span>
-            </button>
-            <button
-              class="behavior-btn"
-              [class.active]="responseBehavior.formalityLevel === 'Informal'"
-              (click)="responseBehavior.formalityLevel = 'Informal'">
-              <span class="btn-title">Informal</span>
-            </button>
-          </div>
+        <div class="step-item">
+          <span class="step-number">3</span>
+          <span class="step-text">Paste before the closing &lt;/body&gt; tag in your website</span>
         </div>
-
-        <!-- Custom Instructions -->
-        <div class="behavior-group full-width">
-          <label class="behavior-label">Custom Instructions <span class="optional">(Optional)</span></label>
-          <textarea
-            [(ngModel)]="responseBehavior.customInstructions"
-            class="form-textarea"
-            rows="4"
-            placeholder="Add specific instructions about how the AI should respond..."></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- How to Embed & Position Grid -->
-    <div class="embed-bottom-grid">
-      <!-- How to Embed Section -->
-      <div class="embed-section">
-        <div class="section-header">
-          <i class="pi pi-question-circle"></i>
-          <h4>How to Embed</h4>
-        </div>
-
-        <div class="how-to-steps">
-          <div class="step-item">
-            <span class="step-number">1</span>
-            <span class="step-text">Customize appearance and behavior above</span>
-          </div>
-          <div class="step-item">
-            <span class="step-number">2</span>
-            <span class="step-text">Copy the embed code (iframe or JavaScript)</span>
-          </div>
-          <div class="step-item">
-            <span class="step-number">3</span>
-            <span class="step-text">Paste before the closing &lt;/body&gt; tag in your website</span>
-          </div>
-          <div class="step-item">
-            <span class="step-number">4</span>
-            <span class="step-text">The widget will appear for your end-users</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Position Section -->
-      <div class="embed-section">
-        <div class="section-header">
-          <i class="pi pi-th-large"></i>
-          <h4>Position</h4>
-        </div>
-
-        <div class="position-grid">
-          <button
-            class="position-btn"
-            [class.active]="positionSettings.position === 'Bottom Right'"
-            (click)="positionSettings.position = 'Bottom Right'">
-            Bottom Right
-          </button>
-          <button
-            class="position-btn"
-            [class.active]="positionSettings.position === 'Bottom Left'"
-            (click)="positionSettings.position = 'Bottom Left'">
-            Bottom Left
-          </button>
-          <button
-            class="position-btn"
-            [class.active]="positionSettings.position === 'Top Right'"
-            (click)="positionSettings.position = 'Top Right'">
-            Top Right
-          </button>
-          <button
-            class="position-btn"
-            [class.active]="positionSettings.position === 'Top Left'"
-            (click)="positionSettings.position = 'Top Left'">
-            Top Left
-          </button>
-        </div>
-
-        <div class="position-option">
-          <label class="checkbox-label">
-            <input
-              type="checkbox"
-              [(ngModel)]="positionSettings.showPoweredBy"
-              class="checkbox-input">
-            <span class="checkbox-text">Show "Powered by Gliding"</span>
-          </label>
+        <div class="step-item">
+          <span class="step-number">4</span>
+          <span class="step-text">The widget will appear for your end-users</span>
         </div>
       </div>
     </div>
@@ -325,10 +502,10 @@
 
         <div class="preview-content">
           <!-- Chat Widget Preview -->
-          <div class="chat-widget-preview" [style.--primary-color]="chatEmbedSettings.primaryColor">
+          <div class="chat-widget-preview" [style.--primary-color]="appearanceSettings.headerColor">
             <!-- Widget Header -->
             <div class="widget-header">
-              <div class="widget-title">{{ chatEmbedSettings.chatTitle }}</div>
+              <div class="widget-title">{{ appearanceSettings.title }}</div>
 <!--              <div class="widget-status">-->
 <!--                <span class="status-dot"></span>-->
 <!--                Online-->
@@ -390,7 +567,7 @@
                 type="text"
                 class="widget-input"
                 [(ngModel)]="previewCurrentMessage"
-                [placeholder]="chatEmbedSettings.inputPlaceholder"
+                [placeholder]="appearanceSettings.inputPlaceholder"
                 (keydown)="onPreviewKeyDown($event)"
                 [disabled]="previewIsSendingMessage">
               <button
