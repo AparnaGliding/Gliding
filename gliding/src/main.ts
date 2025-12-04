@@ -1,21 +1,26 @@
-import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import {ErrorHandler, importProvidersFrom} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {ToastrModule} from 'ngx-toastr';
-import {AppRoutingModule} from './app/app.routes';
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
-import {CurrencyPipe, DatePipe} from '@angular/common';
-import {provideAnimations} from '@angular/platform-browser/animations';
-import {GlobalErrorHandler} from './app/shared/global-error-handler';
-import {AuthInterceptor} from './app/auth/auth.interceptor';
 import { appConfig } from './app/app.config';
-
+import { importProvidersFrom } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
+import { AppRoutingModule } from './app/app.routes';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { GlobalErrorHandler } from './app/shared/global-error-handler';
+import { AuthInterceptor } from './app/auth/auth.interceptor';
+import { ErrorHandler } from '@angular/core';
 
 bootstrapApplication(AppComponent, {
   providers: [
     ...appConfig.providers,
-    importProvidersFrom(BrowserModule, AppRoutingModule, FormsModule, ToastrModule.forRoot({
+    importProvidersFrom(
+      BrowserModule,
+      AppRoutingModule,
+      FormsModule,
+      ToastrModule.forRoot({
         timeOut: 2500,
         extendedTimeOut: 2500,
         closeButton: true,
@@ -25,7 +30,9 @@ bootstrapApplication(AppComponent, {
         easeTime: 200,
         maxOpened: 3,
         preventDuplicates: true
-      }), ReactiveFormsModule),
+      }),
+      ReactiveFormsModule
+    ),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: DatePipe, useClass: DatePipe },
     { provide: CurrencyPipe, useClass: CurrencyPipe },
@@ -33,5 +40,4 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations()
   ]
-})
-  .catch(err => console.log(err));
+}).catch(err => console.error(err));

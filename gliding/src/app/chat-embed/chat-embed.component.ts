@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, OnDestroy} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
 import {Button} from 'primeng/button';
@@ -27,6 +27,7 @@ import { AvatarModule } from 'primeng/avatar';
   styleUrl: './chat-embed.component.scss'
 })
 export class ChatEmbedComponent implements OnInit, OnDestroy {
+    @ViewChild('chatMessages') chatMessages!: ElementRef;
     constructor(private chatEmbedService: ChatEmbedService,
                 private cdr: ChangeDetectorRef,
     ) {}
@@ -173,6 +174,10 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
                         }
                     }
                 });
+
+                // Scroll to bottom after loading chat history
+                this.cdr.detectChanges();
+                this.scrollToBottom();
             },
             error: (error) => {
                 console.error('Error loading chat history:', error);
@@ -194,6 +199,19 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
       };
       this.currentChatMessages.push(userMessage);
       this.currentMessage = '';
+
+      // Trigger change detection and scroll to bottom
+      this.cdr.detectChanges();
+      this.scrollToBottom();
+
+      this.sendMessageInternal(question);
+  }
+
+  sendMessageInternal(question: string) {
+      if (this.isSendingMessage) {
+          return;
+      }
+
       this.isSendingMessage = true;
       this.isTyping = true;
 
@@ -366,10 +384,44 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
 
     askFollowUpQuestion(question: string): void {
         this.currentMessage = question;
-        this.sendMessage();
+
+        // Create and add user message immediately for instant UI feedback
+        const userMessage: ChatMessage = {
+            text: question,
+            isUser: true,
+            timestamp: new Date(),
+        };
+        this.currentChatMessages.push(userMessage);
+
+        // Trigger change detection and scroll to bottom
+        this.cdr.detectChanges();
+        this.scrollToBottom();
+
+        // Clear input and send message
+        this.currentMessage = '';
+        this.sendMessageInternal(question);
     }
 
+    hasThoughtProcessStarted(): boolean {
+        return this.currentChatMessages.some(message =>
+            !message.isUser && message.isThoughtProcess && message.text && message.text.length > 0
+        );
+    }
 
-
+    scrollToBottom() {
+        setTimeout(() => {
+            if (this.chatMessages) {
+                const element = this.chatMessages.nativeElement;
+                console.log('Scrolling to bottom:', {
+                    scrollHeight: element.scrollHeight,
+                    clientHeight: element.clientHeight,
+                    currentScrollTop: element.scrollTop
+                });
+                element.scrollTop = element.scrollHeight;
+            } else {
+                console.log('chatMessages ViewChild not found');
+            }
+        }, 100);
+    }
 
 }

@@ -12,7 +12,7 @@
     </div>
     <div class = "chat-body-container" [ngClass]="configuration?.mode === 'DARK' ? 'chat-messages-dark' : 'chat-messages-light'">
 
-    <div class="flex-fill px-3 py-4 chat-messages d-flex flex-column gap-4 mt-5" >
+    <div class="flex-fill px-3 pb-2 chat-messages d-flex flex-column gap-4 mt-5" #chatMessages>
         <div class="d-flex align-items-start gap-3 mb-3 animate-fade-in">
             <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white shadow-sm" [ngStyle]="{ 'background-color': configuration?.buttonColor }">
               <img src="assets/images/ai-icon.svg" width="18" height="18" alt="AI Assistant" style="filter: brightness(0) invert(1);" />
@@ -80,13 +80,13 @@
                         }
 
                         @if (message.followUpQuestions && message.followUpQuestions.length > 0) {
-                            <div class="mt-3 pt-3 border-top" [ngClass]="configuration?.mode === 'DARK' ? 'border-secondary' : 'border-light'">
+                            <div class="mt-3 pt-2 border-top" [ngClass]="configuration?.mode === 'DARK' ? 'border-secondary' : 'border-light'">
                                 <div class="d-flex align-items-center mb-2">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle me-2 p-1"
                                          [ngStyle]="{ 'background-color': configuration?.buttonColor + '20' }">
                                         <i class="pi pi-lightbulb fs-6" [ngStyle]="{ 'color': configuration?.buttonColor }"></i>
                                     </div>
-                                    <span class="fw-semibold small" [ngClass]="configuration?.mode === 'DARK' ? 'text-light' : 'text-dark'">
+                                    <span class="fw-medium small" [ngClass]="configuration?.mode === 'DARK' ? 'text-light' : 'text-dark'">
                                         Related Questions
                                     </span>
                                 </div>
@@ -94,16 +94,17 @@
                                 <div class="d-flex flex-column gap-2">
                                     @for (question of message.followUpQuestions; track $index) {
                                         <button
-                                                class="w-100 text-start px-3 py-2 border-0 rounded-3 d-flex align-items-center shadow-sm follow-up-btn-custom position-relative overflow-hidden"
+                                                class="w-100 text-start px-2 py-2 border-0 rounded-2 d-flex align-items-center shadow-sm follow-up-btn-custom position-relative overflow-hidden"
                                                 [ngClass]="configuration?.mode === 'DARK' ? 'follow-up-btn-dark' : ''"
                                                 (click)="askFollowUpQuestion(question)"
                                         >
                                             <div class="d-flex align-items-center w-100">
-                                                <div class="rounded-circle p-1 me-2 flex-shrink-0"
+                                                <div class="rounded-circle me-2 flex-shrink-0 d-flex align-items-center justify-content-center"
+                                                     style="width: 16px; height: 16px; padding: 2px;"
                                                      [ngStyle]="{ 'background-color': configuration?.buttonColor + '15' }">
-                                                    <i class="pi pi-arrow-right fs-7" [ngStyle]="{ 'color': configuration?.buttonColor }"></i>
+                                                    <i class="pi pi-arrow-right" style="font-size: 8px;" [ngStyle]="{ 'color': configuration?.buttonColor }"></i>
                                                 </div>
-                                                <span class="fw-medium lh-sm small">{{question}}</span>
+                                                <span class="fw-normal lh-sm small">{{question}}</span>
                                             </div>
                                         </button>
                                     }
@@ -115,10 +116,28 @@
             }
         }
 
+        <!-- Typing indicator - only show when sending message but no thought process started -->
+        @if (isSendingMessage && !hasThoughtProcessStarted()) {
+            <div class="d-flex gap-3 mb-4">
+                <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white" [ngStyle]="{ 'background-color': configuration?.buttonColor }">
+                    <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant" style="filter: brightness(0) invert(1);" />
+                </div>
+                <div class="px-3 py-2 rounded bot-bubble" [ngClass]="configuration?.mode === 'DARK' ? 'bot-bubble-dark' : 'bg-white'">
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
     </div>
 
 
-    <div class="px-4 py-3 border-top position-sticky bottom-0 chat-footer shadow-lg" [ngClass]="configuration?.mode === 'DARK' ? 'input-area-dark' : 'bg-white border-light'">
+    <div class="px-4 py-3 border-top position-sticky bottom-0 shadow-lg chat-input-area" [ngClass]="configuration?.mode === 'DARK' ? 'input-area-dark' : 'bg-white border-light'">
         <div class="d-flex align-items-center gap-3">
           <div class="rounded-3 px-4 py-3 flex-grow-1 position-relative input-wrapper" [ngClass]="configuration?.mode === 'DARK' ? 'input-container-dark' : 'bg-light'">
             <textarea

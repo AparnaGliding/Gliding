@@ -46,14 +46,18 @@
 }
 
 .chat-messages {
+  flex: 1;
   overflow-y: auto;
-  margin-bottom: 4rem;
-
+  margin-bottom: 0;
+  min-height: 0;
+  padding-bottom: 100px;
 }
 .chat-body-container{
-  min-height: calc(100vh);
-  height: 100%;
-
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .chat-messages-light {
@@ -68,6 +72,16 @@
 
 .input-area-dark {
   background: #2d3748 !important;
+}
+
+/* Input area should stay at bottom */
+.chat-input-area {
+  flex-shrink: 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
 
 .input-container-dark {
@@ -220,7 +234,7 @@
   border: 1px solid #bae6fd;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
@@ -231,7 +245,7 @@
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
   border: 1px solid #334155 !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -256,7 +270,7 @@
   width: 24px;
   height: 24px;
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: rotate(90deg);
   }
@@ -265,13 +279,69 @@
 .thought-label {
   letter-spacing: 0.025em;
 }
+.message-bubble {
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+}
 
+.bot-message {
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .message-text {
+    margin: 0;
+    line-height: 1.6;
+    color: #1f2937;
+  }
+}
+.typing-indicator {
+  display: flex;
+  align-items: center;
+
+  .typing-dots {
+    display: flex;
+    gap: 6px;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #9ca3af;
+      animation: typing 1.4s infinite ease-in-out;
+
+      &:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
 
 .chat-input {
   resize: none;
   outline: none;
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 0.25;
   color: #374151;
   min-height: 20px;
   max-height: 100px;
@@ -434,19 +504,39 @@
 
 .follow-up-btn-custom {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-color: #bae6fd;
+  border: 1px solid #bae6fd;
   color: #0c4a6e;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  min-height: 32px;
+
+  &:hover {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    border-color: #7dd3fc;
+    transform: translateX(3px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateX(1px);
+  }
 }
 
-.follow-up-btn-custom:hover {
-  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-  border-color: #7dd3fc;
-  transform: translateX(4px);
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-}
+// Dark mode for follow-up buttons
+.follow-up-btn-dark {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+  border: 1px solid #475569 !important;
+  color: #e2e8f0 !important;
 
-.follow-up-btn-custom:active {
-  transform: translateX(2px);
+  &:hover {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%) !important;
+    border-color: #64748b !important;
+    transform: translateX(3px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateX(1px);
+  }
 }
 

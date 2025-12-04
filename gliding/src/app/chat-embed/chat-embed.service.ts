@@ -13,8 +13,8 @@ import {ChatRequest} from './model/chats.model';
 
 export class ChatEmbedService {
   private chatIdCounter = 0;
-  // public baseUrl = `http://localhost:8080/api/aq`;
-  public baseUrl = ``;
+  public baseUrl = `http://localhost:8080/api/aq`;
+  // public baseUrl = ``;
 
   constructor(private http: HttpClient) {
   }
@@ -109,13 +109,10 @@ streamChat(req: ChatRequest, token?: string): Observable<string> {
       externalUserId : req.externalUserId ,
       chatId: req.chatId,
       applicationModuleId: req.applicationModuleId.toString() || '0',
-      saveInHistory: 'true',
-      tone: 'PROFESSIONAL',
-      formalityLevel: 'BALANCED',
-      customInstructions: 'dont add images in a output'
+      saveInHistory: 'true'
     }).toString();
     // const url = `${this.baseUrl}/chat?${params}`;
-    const url = `http://localhost:8081/api/aq/chat?${params}`;
+    const url = `http://localhost:8080/api/aq/chat?${params}`;
 
     const es = new EventSource(url, { withCredentials: false });
     es.onmessage = (e: MessageEvent) => {
