@@ -1,3 +1,5 @@
+import {ListCategoryModel} from '../knowledge-hub.model';
+
 export enum ReferencableType {
   ARTICLE = 'ARTICLE',
   FAQ = 'FAQ'
@@ -66,4 +68,22 @@ export interface FAQ {
   modifiedAt: Date;
   version: number;
   userId: number;
+}
+
+export interface GenerateFaqModel {
+  applicationId: number;
+  moduleId: number;
+  count: number;
+  prompt: string;
+  categoryId: number;
+  createNewCategory: boolean;
+  categoryModel: CategoryModel;
+  userId: number;
+}
+
+export interface CategoryModel{
+  name: string;
+  description: string;
+  applicationId: number;
+  type: ReferencableType;
 }

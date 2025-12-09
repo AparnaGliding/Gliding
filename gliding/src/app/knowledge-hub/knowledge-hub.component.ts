@@ -62,6 +62,12 @@ export class KnowledgeHubComponent implements OnInit {
   newFolderName = '';
   modalLoading = false;
 
+  // Add FAQ modal state
+  showAddFaqModal = false;
+  faqPrompt = '';
+  faqCount = 1;
+  submittingFaq = false;
+
   constructor(
     private knowledgeHubService: KnowledgeHubService,
     private sanitizer: DomSanitizer
@@ -69,6 +75,59 @@ export class KnowledgeHubComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  // Add FAQ modal actions
+  openAddFaq(): void {
+    this.faqPrompt = '';
+    this.faqCount = 1;
+    this.submittingFaq = false;
+    this.showAddFaqModal = true;
+  }
+
+  closeAddFaq(): void {
+    this.showAddFaqModal = false;
+  }
+
+  submitGenerateFaq(): void {
+    const prompt = this.faqPrompt.trim();
+    if (!prompt) {
+      alert('Please enter a prompt');
+      return;
+    }
+    const moduleId = this.selectedItem?.id || 0;
+    const categoryId = (this.selectedItem?.categoryId) || 0;
+    const model = {
+      applicationId: 1,
+      moduleId: moduleId,
+      count: this.faqCount || 1,
+      prompt: prompt,
+      categoryId: categoryId,
+      createNewCategory: false,
+      categoryModel: {
+        name: 'Default',
+        description: '',
+        applicationId: 1,
+        type: ReferencableType.FAQ
+      },
+      userId: 1
+    };
+    this.submittingFaq = true;
+    // @ts-ignore
+    this.knowledgeHubService.generateFaq(model).subscribe({
+      next: () => {
+        this.submittingFaq = false;
+        this.showAddFaqModal = false;
+        if (this.activeTab === ReferencableType.FAQ && this.selectedItem?.id) {
+          this.loadFaqsForModule(this.selectedItem.id);
+        }
+      },
+      error: (err) => {
+        console.error('Error generating FAQ:', err);
+        this.submittingFaq = false;
+        alert('Failed to generate FAQs');
+      }
+    });
   }
 
   onTabClick(tab: ReferencableType): void {

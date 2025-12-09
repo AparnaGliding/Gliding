@@ -6,7 +6,7 @@ import {
   DirectoryItemResponseModel,
   ReferencableType,
   ArticleContent,
-  FAQ
+  FAQ, GenerateFaqModel
 } from '../models/knowledge-hub.models';
 import {
   FreshdeskCategoryRequest,
@@ -144,6 +144,25 @@ export class KnowledgeHubService {
         catchError(error => {
           console.error('Error publishing article:', error);
           return throwError(() => null);
+        })
+      );
+  }
+
+
+
+  generateFaq(faq: GenerateFaqModel): Observable<boolean> {
+    return this.http.post<boolean>('/faq', faq)
+      .pipe(
+        map((res: any) => {
+          // Backend may return boolean or an object with success flag
+          if (typeof res === 'boolean') return res;
+          if (res && typeof res.success === 'boolean') return !!res.success;
+          // Treat HTTP 200 with non-boolean body as success=false unless explicitly true
+          return false;
+        }),
+        catchError(error => {
+          console.error('Error generating faq:', error);
+          return throwError(() => error);
         })
       );
   }
