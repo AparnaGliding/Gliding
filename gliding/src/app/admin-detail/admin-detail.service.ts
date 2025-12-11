@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {catchError, map, Observable, throwError} from 'rxjs';
+import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {ArticleListResponseModel} from '../app-dashboard/app-dashboard.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {IntegrationConnectionRequest, UserModel} from './admin-detail.model';
@@ -11,6 +11,49 @@ import {IntegrationConnectionRequest, UserModel} from './admin-detail.model';
 export class AdminDetailService {
 
   constructor(private http: HttpClient) {
+  }
+
+  // Invite a new user to the account/application
+  inviteUser(payload: {
+    accountId: number;
+    applicationId: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    type: string;
+    status: string;
+  }): Observable<UserModel | null> {
+    return this.http.post<UserModel>('/account/user', payload).pipe(
+      map((res: any) => res || null),
+      catchError(error => {
+        console.error('Error inviting user:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
+  // Update existing user - send full UserModel payload
+  updateUser(user: UserModel): Observable<UserModel | null> {
+    return this.http.put<UserModel>(`/account/user`, user).pipe(
+      map((res: any) => res || null),
+      catchError(error => {
+        console.error('Error updating user:', error);
+        return throwError(() => null);
+      })
+    );
+  }
+
+  // Remove a user from the account/application
+  removeUser(userId: number): Observable<boolean> {
+    const params = new HttpParams().set('id', userId.toString());
+    return this.http.delete<void>(`/account/user`, { params, observe: 'response' }).pipe(
+      map(res => (res.status === 200 || res.status === 204)),
+      catchError(error => {
+        console.error('Error removing user:', error);
+        return of(false);
+      })
+    );
   }
 
   getUsers(accountId: number, applicationId: number, offset: number = 0, limit: number = 50): Observable<UserModel[]> {

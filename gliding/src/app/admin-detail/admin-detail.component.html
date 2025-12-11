@@ -253,31 +253,98 @@
     </div>
 
     <!-- Connect Dialog -->
-    <div class="modal-backdrop" *ngIf="showConnectDialog" (click)="closeConnectDialog()"></div>
-    <div class="modal" *ngIf="showConnectDialog">
-      <form (ngSubmit)="submitConnect()">
-        <div class="modal-header">
-          <h3>Connect {{ selectedIntegration }}</h3>
-          <button type="button" class="modal-close" (click)="closeConnectDialog()">×</button>
-        </div>
-        <div class="modal-body">
+  <!-- Invite User Modal -->
+  <!-- Invite User Modal -->
+  <div class="modal-backdrop" *ngIf="showInviteModal" (click)="closeInvite()"></div>
+  <div class="modal" *ngIf="showInviteModal">
+    <form (ngSubmit)="submitInvite()">
+      <div class="modal-header">
+        <h3>Invite User</h3>
+        <button type="button" class="modal-close" (click)="closeInvite()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="form-field">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="inviteForm.email" name="inviteEmail" required />
+        </label>
+
+        <div class="form-grid-2">
           <label class="form-field">
-            <span>Client ID</span>
-            <input type="text" [(ngModel)]="connectForm.clientId" name="clientId" required />
+            <span>First Name</span>
+            <input [(ngModel)]="inviteForm.firstName" name="inviteFirstName" />
           </label>
           <label class="form-field">
-            <span>Client Secret</span>
-            <input type="password" [(ngModel)]="connectForm.clientSecret" name="clientSecret" required />
+            <span>Last Name</span>
+            <input [(ngModel)]="inviteForm.lastName" name="inviteLastName" />
+          </label>
+        </div>
+
+        <label class="form-field">
+          <span>Full Name</span>
+          <input [(ngModel)]="inviteForm.fullName" name="inviteFullName" />
+        </label>
+
+        <div class="form-grid-2">
+          <label class="form-field">
+            <span>Role</span>
+            <select [(ngModel)]="inviteForm.type" name="inviteType">
+              <option value="ADMIN">ADMIN</option>
+              <option value="USER">USER</option>
+            </select>
           </label>
           <label class="form-field">
-            <span>URL</span>
-            <input type="url" [(ngModel)]="connectForm.url" name="url" required />
+            <span>Status</span>
+            <select [(ngModel)]="inviteForm.status" name="inviteStatus">
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+              <option value="BLOCKED">BLOCKED</option>
+              <option value="SUSPENDED">SUSPENDED</option>
+            </select>
           </label>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-secondary" (click)="closeConnectDialog()">Cancel</button>
-          <button type="submit" class="btn-primary">Connect</button>
-        </div>
-      </form>
-    </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeInvite()" [disabled]="submittingInvite">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="submittingInvite">Invite</button>
+      </div>
+    </form>
   </div>
+
+  <!-- Edit User Modal -->
+  <div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEdit()"></div>
+  <div class="modal" *ngIf="showEditModal">
+    <form (ngSubmit)="submitEdit()">
+      <div class="modal-header">
+        <h3>Edit User</h3>
+        <button type="button" class="modal-close" (click)="closeEdit()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="form-field">
+          <span>Role</span>
+          <select [(ngModel)]="editForm.type" name="editType">
+            <option value="ADMIN">ADMIN</option>
+            <option value="USER">USER</option>
+          </select>
+        </label>
+
+        <label class="form-field">
+          <span>Status</span>
+          <select [(ngModel)]="editForm.status" name="editStatus">
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+            <option value="BLOCKED">BLOCKED</option>
+            <option value="SUSPENDED">SUSPENDED</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="closeEdit()" [disabled]="submittingEdit">Cancel</button>
+        <button type="submit" class="btn-primary" [disabled]="submittingEdit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

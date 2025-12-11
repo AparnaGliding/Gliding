@@ -42,6 +42,90 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
     this.loadIntegrations();
   }
 
+  // ================= User management modals/state =================
+  showInviteModal: boolean = false;
+  submittingInvite: boolean = false;
+  inviteForm: { email: string; firstName: string; lastName: string; fullName: string; type: string; status: string } = {
+    email: '', firstName: '', lastName: '', fullName: '', type: 'USER', status: 'active'
+  };
+
+  showEditModal: boolean = false;
+  submittingEdit: boolean = false;
+  editForm: { id: number; type: string; status: string } = { id: 0, type: 'USER', status: 'active' };
+
+  closeInvite(): void { this.showInviteModal = false; }
+  closeEdit(): void { this.showEditModal = false; }
+
+  submitInvite(): void {
+    const f = this.inviteForm;
+    if (!f.email?.trim()) { alert('Email is required'); return; }
+    const payload = {
+      accountId: this.accountId,
+      applicationId: this.applicationId,
+      email: f.email.trim(),
+      firstName: f.firstName?.trim() || '',
+      lastName: f.lastName?.trim() || '',
+      fullName: f.fullName?.trim() || `${f.firstName || ''} ${f.lastName || ''}`.trim(),
+      type: f.type,
+      status: f.status
+    };
+    this.submittingInvite = true;
+    this.adminDetailService.inviteUser(payload).subscribe({
+      next: (user) => {
+        this.submittingInvite = false;
+        this.showInviteModal = false;
+        if (user) {
+          this.users = [
+            ...this.users,
+            { ...user, fullName: user.fullName || `${user.firstName} ${user.lastName}` }
+          ];
+        } else {
+          alert('Invite request sent');
+        }
+      },
+      error: (err) => {
+        console.error('Invite failed', err);
+        this.submittingInvite = false;
+        alert('Failed to invite user');
+      }
+    });
+  }
+
+  submitEdit(): void {
+    const e = this.editForm;
+    if (!e?.id) { this.showEditModal = false; return; }
+    this.submittingEdit = true;
+    const existing = this.users.find(u => (u as any).id === e.id) as any;
+    const fullUser = {
+      ...(existing || {}),
+      id: e.id,
+      type: e.type,
+      status: e.status,
+      // Ensure required fields exist in payload
+      email: existing?.email || '',
+      firstName: existing?.firstName || '',
+      lastName: existing?.lastName || '',
+      fullName: existing?.fullName || `${existing?.firstName || ''} ${existing?.lastName || ''}`.trim()
+    } as any;
+    this.adminDetailService.updateUser(fullUser).subscribe({
+      next: (updated) => {
+        this.submittingEdit = false;
+        this.showEditModal = false;
+        if (updated) {
+          this.users = this.users.map(u => (u as any).id === e.id ? { ...u, ...updated } as any : u);
+        } else {
+          // optimistic update
+          this.users = this.users.map(u => (u as any).id === e.id ? { ...u, type: e.type, status: e.status } as any : u);
+        }
+      },
+      error: (err) => {
+        console.error('Update failed', err);
+        this.submittingEdit = false;
+        alert('Failed to update user');
+      }
+    });
+  }
+
   ngOnDestroy(): void {
     // Cleanup if needed
   }
@@ -165,18 +249,40 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
   }
 
   onInviteUser(): void {
-    console.log('Invite user clicked');
-    // TODO: Implement invite user functionality
+    this.inviteForm = {
+      email: '',
+      firstName: '',
+      lastName: '',
+      fullName: '',
+      type: 'USER',
+      status: 'active'
+    };
+    this.showInviteModal = true;
   }
 
   onEditUser(user: UserModel): void {
-    console.log('Edit user:', user);
-    // TODO: Implement edit user functionality
+    this.editForm = {
+      id: (user as any).id,
+      type: user.type || 'USER',
+      status: (user as any).status || 'active'
+    } as any;
+    this.showEditModal = true;
   }
 
   onRemoveUser(user: UserModel): void {
-    console.log('Remove user:', user);
-    // TODO: Implement remove user functionality
+    if (!user || !(user as any).id) return;
+    const ok = confirm(`Remove user ${user.fullName || user.email}?`);
+    if (!ok) return;
+    this.adminDetailService.removeUser((user as any).id).subscribe({
+      next: () => {
+        // Treat any successful HTTP response as success and update UI
+        this.users = this.users.filter(u => (u as any).id !== (user as any).id);
+      },
+      error: (err) => {
+        console.error('Failed to remove user', err);
+        alert('Failed to remove user');
+      }
+    });
   }
 
   onRoleChange(user: UserModel, newRole: string): void {
