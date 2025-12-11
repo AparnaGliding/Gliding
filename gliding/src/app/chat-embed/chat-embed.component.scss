@@ -74,15 +74,37 @@
   background: #2d3748 !important;
 }
 
-/* Input area should stay at bottom */
 .chat-input-area {
   flex-shrink: 0;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 10;
+  z-index: 20;
 }
+.chat-input-area-centered {
+  margin-bottom: 300px;
+  
+  .w-75 {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    &:focus-within {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.4) !important;
+    }
+  }
+}
+.welcome-message {
+  margin-top: 600px;
+}
+
 
 .input-container-dark {
   background: #334155 !important;
@@ -381,7 +403,6 @@
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
   border: 1px solid #cbd5e1;
   border-radius: 50%;
   color: #64748b;
@@ -503,40 +524,43 @@
 }
 
 .follow-up-btn-custom {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 1px solid #bae6fd;
-  color: #0c4a6e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.2s ease;
   font-size: 16px;
   min-height: 32px;
 
   &:hover {
-    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-    border-color: #7dd3fc;
     transform: translateX(3px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0.8;
   }
 
   &:active {
     transform: translateX(1px);
+  }
+  
+  span {
+    color: inherit !important;
   }
 }
 
 // Dark mode for follow-up buttons
 .follow-up-btn-dark {
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
-  border: 1px solid #475569 !important;
-  color: #e2e8f0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
 
   &:hover {
-    background: linear-gradient(135deg, #334155 0%, #475569 100%) !important;
-    border-color: #64748b !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
     transform: translateX(3px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
 
   &:active {
     transform: translateX(1px);
+  }
+  
+  span {
+    color: inherit !important;
   }
 }
 

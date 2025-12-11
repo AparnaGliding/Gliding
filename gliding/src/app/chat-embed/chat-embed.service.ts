@@ -13,8 +13,8 @@ import {ChatRequest} from './model/chats.model';
 
 export class ChatEmbedService {
   private chatIdCounter = 0;
-  public baseUrl = `http://localhost:8080/api/aq`;
-  // public baseUrl = ``;
+  // public baseUrl = `http://localhost:8081/api/aq`;
+  public baseUrl = ``;
 
   constructor(private http: HttpClient) {
   }
@@ -22,6 +22,21 @@ export class ChatEmbedService {
   getConfigurationForWidget(widgetId: string): Observable<WidgetResponseModel> {
     const full_url = `${this.baseUrl}/widget/${widgetId}`;
     return this.http.get<WidgetResponseModel>(full_url).pipe(
+      map((res: any) => {
+        // res.userMessageColour = 'linear-gradient(98deg,#c7b2481a -29.77%,#c358d440 114.9%)';
+        // res.botMessageColour = 'linear-gradient(98deg,#c7b2481a -29.77%,#c358d440 114.9%)';
+        // res.headerNeeded = false;
+        // res.companyName = 'Terzo';
+
+
+        res.userMessageColour = 'linear-gradient(to bottom right,#9333ea,#7c3aed, #c026d3)';
+        res.botMessageColour = '#FFFFFF';
+        res.textAreaColour = '#FFFFFF';
+        res.borderColour = '#d8b4fe';
+        res.headerNeeded = true;
+        res.companyName = 'Terzo';
+        return res;
+      }),
       catchError(error => {
         return throwError(() => error);
       })
@@ -31,6 +46,7 @@ export class ChatEmbedService {
   getApplicationDetails(applicationId: string): Observable<ApplicationListingModel> {
     return this.http.get<ApplicationListingModel>(`${this.baseUrl}/application/${applicationId}`).pipe(
         map((res: any) => {
+          res.userMessageColour = '#8B5CF6';
           return res;
     }),
         catchError(error => {
@@ -111,8 +127,8 @@ streamChat(req: ChatRequest, token?: string): Observable<string> {
       applicationModuleId: req.applicationModuleId.toString() || '0',
       saveInHistory: 'true'
     }).toString();
-    // const url = `${this.baseUrl}/chat?${params}`;
-    const url = `http://localhost:8080/api/aq/chat?${params}`;
+    const url = `http://localhost:8081/api/aq/chat?${params}`;
+    // const url = `http://localhost:808/api/aq/chat?${params}`;
 
     const es = new EventSource(url, { withCredentials: false });
     es.onmessage = (e: MessageEvent) => {

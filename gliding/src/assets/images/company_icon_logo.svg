@@ -1,0 +1,27 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A45CFF"/>
+      <stop offset="100%" stop-color="#6A0DFF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer soft-circle container -->
+  <circle cx="60" cy="60" r="52" fill="url(#gradPurple)" opacity="0.12" />
+
+  <!-- Stylized A shape -->
+  <path d="
+    M60 20
+    L90 90
+    L75 90
+    L67 72
+    L53 72
+    L45 90
+    L30 90
+    Z
+  "
+        fill="url(#gradPurple)"/>
+
+  <!-- Subtle Q tail element -->
+  <path d="M78 78 L92 92" stroke="url(#gradPurple)" stroke-width="6" stroke-linecap="round"/>
+</svg>

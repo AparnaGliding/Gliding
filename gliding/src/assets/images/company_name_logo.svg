@@ -1,0 +1,25 @@
+<svg width="500" height="150" viewBox="0 0 270 80" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="assistqGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8a2be2" />
+      <stop offset="50%" stop-color="#b84dff" />
+      <stop offset="100%" stop-color="#e18bff" />
+    </linearGradient>
+  </defs>
+
+  <text x="10" y="55"
+        font-family="Poppins, Arial, sans-serif"
+        font-size="58"
+        font-weight="700"
+        fill="url(#assistqGradient)">
+    A
+  </text>
+
+  <text x="55" y="55"
+        font-family="Poppins, Arial, sans-serif"
+        font-size="48"
+        font-weight="600"
+        fill="url(#assistqGradient)">
+    ssistq
+  </text>
+</svg>

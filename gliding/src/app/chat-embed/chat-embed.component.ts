@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
 import {Button} from 'primeng/button';
@@ -6,7 +6,7 @@ import {ApplicationModuleModel, ChatMessage} from '../chat/chat.model';
 import {ChatRequest} from './model/chats.model';
 import {ChatEmbedService} from './chat-embed.service';
 import {Subscription} from 'rxjs';
-import {NgClass, NgStyle} from '@angular/common';
+import {NgClass, NgStyle, CommonModule} from '@angular/common';
 import {ApplicationListingModel, WidgetResponseModel} from './chat-embed.model';
 import { AvatarModule } from 'primeng/avatar';
 
@@ -21,6 +21,7 @@ import { AvatarModule } from 'primeng/avatar';
         FormsModule,
         NgClass,
         NgStyle,
+        CommonModule,
         AvatarModule,
     ],
   templateUrl: './chat-embed.component.html',
@@ -28,6 +29,9 @@ import { AvatarModule } from 'primeng/avatar';
 })
 export class ChatEmbedComponent implements OnInit, OnDestroy {
     @ViewChild('chatMessages') chatMessages!: ElementRef;
+    @Output() chatToggle = new EventEmitter<boolean>();
+
+    isExpanded: boolean = false;
     constructor(private chatEmbedService: ChatEmbedService,
                 private cdr: ChangeDetectorRef,
     ) {}
@@ -56,7 +60,7 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
     this.widgetId = urlParams.get('widgetId');
-    this.widgetId = '1';
+    this.widgetId = '2';
     this.externalUserId = urlParams.get('userId');
     this.externalUserId = '1';
       this.loadConfigurations(this.widgetId);
@@ -422,6 +426,46 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
                 console.log('chatMessages ViewChild not found');
             }
         }, 100);
+    }
+    isGradientColor(color: string): boolean {
+        return color && (color.includes(' to ') || color.includes('linear-gradient'));
+    }
+
+    getGradientStyle(color: string): string {
+        if (color.includes('linear-gradient')) {
+            return color;
+        }
+        if (color.includes(' to ')) {
+            const colors = color.split(' to ').map(c => c.trim());
+            return `linear-gradient(135deg, ${colors[0]} 0%, ${colors[1]} 100%)`;
+        }
+        return color;
+    }
+    getBackgroundStyle(color: string): any {
+        if (!color) { return {}; }
+        if (this.isGradientColor(color)) {
+            return { 'background': this.getGradientStyle(color) };
+        }
+        return { 'background-color': color };
+    }
+    getHeaderBackground(color: string): any {
+      if (!color) { return {}; }
+      if (this.isGradientColor(color)) {
+        return { 'background': this.getGradientStyle(color)  + ' !important'  };
+      }
+      return { 'background-color': color  + ' !important'  };
+    }
+
+    toggleExpand() {
+        this.isExpanded = !this.isExpanded;
+
+        // Send message to parent iframe
+        if (typeof window !== 'undefined' && window.parent) {
+            const messageType = this.isExpanded ? 'EXPAND_ASSISTQ_WIDGET' : 'COLLAPSE_ASSISTQ_WIDGET';
+            window.parent.postMessage({
+                type: messageType
+            }, '*');
+        }
     }
 
 }
