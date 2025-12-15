@@ -8,6 +8,12 @@ export interface UserSignUpModel {
   password: string;
 }
 
+export interface GoogleSignOnPayload {
+  token: string;
+  name: string;
+  email: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -50,4 +56,19 @@ export class AuthService {
     return this.http.post<any>('/auth/sign-up', userSignUpModel);
   }
 
+
+  loginWithGoogle(returnUrl?: string) {
+    const params = new URLSearchParams();
+    if (returnUrl) params.set('returnUrl', returnUrl);
+    const query = params.toString();
+    const endpoint = '/auth/google';
+    const target = query ? `${endpoint}?${query}` : endpoint;
+    window.location.assign(target);
+  }
+
+
+
+  googleSignOn(payload: { token: string; name: string; email: string }) {
+    return this.http.post<any>('/auth/google', payload);
+  }
 }
