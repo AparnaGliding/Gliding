@@ -136,7 +136,12 @@ export class LoginComponent implements OnInit, AfterViewInit{
     };
 
     this.authService.googleSignOn(payload).subscribe({
-      next: () => this.router.navigate(['/apps']),
+      next: () => {
+        try {
+          if (profile?.name) localStorage.setItem('userName', profile.name);
+        } catch {}
+        this.router.navigate(['/apps']);
+      },
       error: (err) => console.error('Google sign-in failed', err)
     });
   }

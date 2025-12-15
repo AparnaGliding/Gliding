@@ -55,10 +55,25 @@
         <i class="pi pi-cog"></i>
         <span>Admin</span>
       </a>
-      <a href="/login" class="nav-link">
-        <i class="pi pi-user"></i>
-        <span>Login</span>
-      </a>
+      <ng-container *ngIf="displayName; else loginLink">
+        <div class="nav-link user-menu-container" (click)="toggleUserMenu($event)" style="position: relative; cursor: pointer;">
+          <i class="pi pi-user"></i>
+          <span>{{ displayName }}</span>
+          <i class="pi pi-angle-down" style="margin-left: 4px;"></i>
+          <div class="user-menu" *ngIf="isUserMenuOpen" style="position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 8px; padding: 8px 0; min-width: 160px; z-index: 1000;">
+            <button class="dropdown-item" (click)="logout()" style="display:block; width:100%; text-align:left; padding:8px 12px; background: none; border: none; cursor: pointer;">
+              <i class="pi pi-sign-out" style="margin-right:8px;"></i>
+              Logout
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #loginLink>
+        <a href="/login" class="nav-link">
+          <i class="pi pi-user"></i>
+          <span>Login</span>
+        </a>
+      </ng-template>
     </nav>
   </div>
 

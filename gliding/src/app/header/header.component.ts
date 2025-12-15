@@ -7,7 +7,7 @@ import { ApplicationListingModel } from '../app-dashboard/app-dashboard.model';
   selector: 'app-header',
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
   @Input() showAppDropdown: boolean = false;
@@ -20,6 +20,7 @@ export class HeaderComponent {
   @Output() tabSelected = new EventEmitter<string>();
 
   isDropdownOpen: boolean = false;
+  isUserMenuOpen: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -43,11 +44,31 @@ export class HeaderComponent {
     // The parent component has the context needed for proper routing
   }
 
+  get displayName(): string {
+    return localStorage.getItem('userName') || '';
+  }
+
+  toggleUserMenu(event?: Event): void {
+    if (event) event.preventDefault();
+    this.isUserMenuOpen = !this.isUserMenuOpen;
+  }
+
+  logout(): void {
+    try {
+      localStorage.removeItem('userName');
+    } catch {}
+    this.isUserMenuOpen = false;
+    this.router.navigate(['/login']);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target.closest('.app-dropdown-container') && this.isDropdownOpen) {
       this.isDropdownOpen = false;
+    }
+    if (!target.closest('.user-menu-container') && this.isUserMenuOpen) {
+      this.isUserMenuOpen = false;
     }
   }
 }
