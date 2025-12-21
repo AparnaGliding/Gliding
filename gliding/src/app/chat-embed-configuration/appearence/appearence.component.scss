@@ -1,0 +1,30 @@
+.nav-container {
+  width: 160px !important;
+}
+.configuration-container {
+  width: 726px !important;
+}
+.preview-container {
+  width: 350px !important;
+}
+
+
+.nav-item {
+  width: 136px !important;
+  height: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.nav-item-active {
+  background-color: oklch(0.97 0.014 284.604);
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+.nav-list {
+  list-style: none;
+}
+.field-container{
+
+}
+
+

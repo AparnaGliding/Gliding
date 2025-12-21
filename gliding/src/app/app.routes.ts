@@ -73,7 +73,22 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent)
+        loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+        // loadComponent: () => import('./app-settings/app-settings.component').then(m => m.AppSettingsComponent),
+
+        children: [
+          {
+            path: '',
+            redirectTo: 'login',
+            pathMatch: 'full'
+          },
+          { path: 'chat-embed',
+          loadComponent: () => import('./chat-embed-configuration/chat-embed-configuration.component').then(m => m.ChatEmbedConfigurationComponent)
+          },
+          { path: 'demo',
+            loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+          }
+        ]
       }
     ]
   },

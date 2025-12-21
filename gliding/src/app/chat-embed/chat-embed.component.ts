@@ -60,7 +60,7 @@ export class ChatEmbedComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
     this.widgetId = urlParams.get('widgetId');
-    this.widgetId = '2';
+    this.widgetId = '1';
     this.externalUserId = urlParams.get('userId');
     this.externalUserId = '1';
       this.loadConfigurations(this.widgetId);

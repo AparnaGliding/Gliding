@@ -1,0 +1,158 @@
+.preview-wrapper {
+  width: 100%;
+  max-width: 400px;
+}
+
+.preview-header {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chat-preview-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.chat-header {
+  min-height: 50px;
+  background: #1B3D7A;
+}
+
+.company-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.company-name {
+  font-size: 14px;
+}
+
+.header-actions button {
+  transition: background-color 0.2s ease;
+}
+
+.header-actions button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.chat-messages-area {
+  background: #ffffff;
+}
+
+.welcome-section {
+  padding: 2rem 1rem;
+}
+
+.company-icon {
+  display: flex;
+  justify-content: center;
+}
+
+.bot-avatar {
+  background: #1B3D7A;
+}
+
+.user-avatar {
+  background: #6b7280;
+}
+
+.bot-message {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.user-message {
+  background: #3B82F6;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.chat-input-area {
+  background: #ffffff;
+}
+
+.input-wrapper {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.input-wrapper input {
+  font-size: 14px;
+}
+
+.input-wrapper input::placeholder {
+  color: #9ca3af;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.preview-footer {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.minimized-chat-icon {
+  background: #1B3D7A;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.minimized-chat-icon:hover {
+  transform: scale(1.05);
+}
+
+/* Dark mode styles */
+.chat-preview-container.dark-mode {
+  background: #1a1a1a;
+  border-color: #374151;
+}
+
+.chat-preview-container.dark-mode .chat-messages-area {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.chat-preview-container.dark-mode .chat-input-area {
+  background: #1a1a1a;
+  border-color: #374151;
+}
+
+.chat-preview-container.dark-mode .input-wrapper {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+.chat-preview-container.dark-mode .bot-message {
+  background: #374151;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .preview-wrapper {
+    max-width: 100%;
+  }
+
+  .chat-preview-container {
+    border-radius: 8px;
+  }
+
+  .company-name {
+    font-size: 13px;
+  }
+
+  .bot-message,
+  .user-message {
+    font-size: 13px;
+  }
+}

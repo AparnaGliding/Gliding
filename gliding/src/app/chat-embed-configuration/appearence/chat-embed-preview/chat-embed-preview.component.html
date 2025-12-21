@@ -1,0 +1,123 @@
+<div class="preview-wrapper">
+  <div class="preview-header mb-3">
+    <h6 class="mb-0">Preview</h6>
+  </div>
+
+  <div class="chat-preview-container"
+       [ngClass]="{'dark-mode': mode === 'Dark'}"
+       [ngStyle]="getBackgroundStyle(contentAreaColor)">
+
+    <!-- Header -->
+    <div *ngIf="showHeader"
+         class="chat-header d-flex justify-content-between align-items-center px-3 py-2"
+         [ngStyle]="getBackgroundStyle(headerColor)"
+         [style.border-bottom]="borderColor ? '1px solid ' + getColorValue(borderColor) : 'none'">
+      <div class="d-flex align-items-center gap-2">
+        <img src="assets/images/company_name_logo.svg" width="100" height="30" alt="Company Logo" class="company-logo">
+      </div>
+      <div class="header-actions d-flex gap-1">
+        <button class="btn btn-sm p-1 text-white" style="background: transparent; border: none;">
+          <i class="pi pi-arrow-up-right-and-arrow-down-left-from-center" style="font-size: 11px;"></i>
+        </button>
+        <button class="btn btn-sm p-1 text-white" style="background: transparent; border: none;">
+          <i class="pi pi-times" style="font-size: 12px;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Messages Area -->
+    <div class="chat-messages-area p-3"
+         [ngStyle]="getBackgroundStyle(contentAreaColor)"
+         style="min-height: 250px; max-height: 350px; overflow-y: auto;">
+
+      <!-- Welcome Message when no messages -->
+      <div class="welcome-section text-center" *ngIf="sampleMessages.length === 0">
+        <div class="company-icon mb-3">
+          <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">
+        </div>
+        <h4 class="fw-normal mb-4" [style.color]="mode === 'Dark' ? '#ffffff' : '#1e293b'">
+          Hi! How can I help you today?
+        </h4>
+      </div>
+
+      <!-- Sample Messages -->
+      <div class="messages-list">
+        <!-- Bot Message -->
+        <div class="d-flex gap-2 mb-4">
+          <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle"
+               style="width: 32px; height: 32px; min-width: 32px;"
+               [ngStyle]="getBackgroundStyle(headerColor)">
+            <img src="assets/images/ai-icon.svg" width="16" height="16" alt="AI Assistant" style="filter: brightness(0) invert(1);" />
+          </div>
+          <div class="bot-message px-3 py-2 rounded"
+               [ngStyle]="getBackgroundStyle(botMessageBackground)"
+               [style.color]="mode === 'Dark' ? '#ffffff' : '#1e293b'"
+               style="max-width: 80%;">
+            I'd be happy to help you with your order. Could you please provide your order number?
+          </div>
+        </div>
+
+        <!-- User Message -->
+        <div class="d-flex gap-1 mb-4 justify-content-end">
+          <div class="user-message px-3 py-3 rounded-3 text-white position-relative"
+               [ngStyle]="getBackgroundStyle(userMessageBackground)"
+               style="max-width: 80%;">
+            <div class="m-0 fw-medium">I need help with my order</div>
+          </div>
+          <div class="user-avatar d-flex align-items-center justify-content-center rounded-circle text-white"
+               [ngStyle]="getBackgroundStyle(headerColor)"
+               style="width: 32px; height: 32px; min-width: 32px;">
+            <span class="small fw-bold">U</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area px-3 py-2 d-flex justify-content-center align-items-center">
+      <div class="d-flex align-items-center justify-content-center rounded-circle me-2"
+           style="width: 40px; height: 40px; background-color: rgba(255,255,255,0.2);">
+        <img src="assets/images/company_icon_logo.svg" width="20" height="20" alt="Company Logo" />
+      </div>
+      <div class="d-flex align-items-center gap-2 rounded-pill px-3 py-2 flex-grow-1"
+           [ngStyle]="getBackgroundStyle(textAreaColor)"
+           [style.border]="borderColor ? '1px solid ' + getColorValue(borderColor) : '1px solid rgba(255, 255, 255, 0.2)'"
+           style="backdrop-filter: blur(10px);">
+        <div class="flex-grow-1">
+          <input type="text"
+                 class="form-control border-0 bg-transparent w-100"
+                 placeholder="Ask a question..."
+                 [style.color]="mode === 'Dark' ? '#ffffff' : '#1e293b'"
+                 style="box-shadow: none; outline: none; font-size: 14px;">
+        </div>
+
+        <button class="btn border-0 bg-transparent d-flex align-items-center justify-content-center"
+                [style.color]="mode === 'Dark' ? '#ffffff' : '#1e293b'"
+                title="New Chat">
+          <i class="pi pi-refresh" style="font-size: 16px;"></i>
+        </button>
+
+        <button class="btn border-0 rounded-circle d-flex align-items-center justify-content-center"
+                [ngStyle]="getBackgroundStyle(headerColor)"
+                style="width: 32px; height: 32px;"
+                title="Send Message">
+          <i class="pi pi-send text-white" style="font-size: 14px;"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-footer mt-3 text-center">
+    <small class="text-muted">Minimize View</small>
+    <div class="minimized-chat-icon mt-2 d-flex align-items-center justify-content-center rounded-circle mx-auto"
+         [ngStyle]="getBackgroundStyle(headerColor)"
+         style="width: 50px; height: 50px; cursor: pointer; transition: transform 0.2s ease;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H6L10 22L14 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z"/>
+        <circle cx="8" cy="9" r="1" fill="white"/>
+        <circle cx="12" cy="9" r="1" fill="white"/>
+        <circle cx="16" cy="9" r="1" fill="white"/>
+      </svg>
+    </div>
+  </div>
+</div>

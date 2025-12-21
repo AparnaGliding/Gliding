@@ -1,0 +1,24 @@
+@use "../../utilities/variables";
+
+.settings-navbar {
+  --p-tabs-tab-font-weight: 400;
+  --p-tabs-tab-active-color: rgb(59, 130, 246);
+  --p-tabs-tab-color: rgba(0, 0, 0, 0.94);
+
+}
+.settings-navbar{
+  .p-tablist-content{
+    font-size: 0.875rem;
+    font-family:  Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+  }
+  .p-tablist-active-bar {
+    background-color:  variables.$active-tab-blue;
+  }
+}
+
+.settings-navbar{
+  p-tablist{
+    background: transparent !important;
+    padding: 10px 20px;
+  }
+}

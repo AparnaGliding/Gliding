@@ -1,0 +1,20 @@
+<div class = "appearance-container d-flex">
+ <div class = "nav-container me-5">
+   <ul class = "nav-list">
+     @for(item of items ; track item){
+       <li [class.active-blue-color]="item === activeItem"  [class.nav-item-active]="item === activeItem"  class = "p-2"(click)="setActive(item)">
+     {{ item }} </li>
+   }
+   </ul>
+ </div>
+
+  <div class = "configuration-container me-3">
+    <p-card>
+    @for(section of section; track section){
+    <app-configuration-card
+    [widgetConfig]="widgetConfig" [section] = section></app-configuration-card>}
+    </p-card>
+  </div>
+  <div class = "preview-container">test3</div>
+
+</div>

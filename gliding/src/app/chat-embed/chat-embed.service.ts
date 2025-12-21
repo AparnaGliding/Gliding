@@ -29,11 +29,11 @@ export class ChatEmbedService {
         // res.companyName = 'Terzo';
 
 
-        res.userMessageColour = 'linear-gradient(to bottom right,#9333ea,#7c3aed, #c026d3)';
-        res.botMessageColour = '#FFFFFF';
-        res.textAreaColour = '#FFFFFF';
-        res.borderColour = '#d8b4fe';
-        res.headerNeeded = true;
+        // res.userMessageColour = 'linear-gradient(to bottom right,#9333ea,#7c3aed, #c026d3)';
+        // res.botMessageColour = '#FFFFFF';
+        // res.textAreaColour = '#FFFFFF';
+        // res.borderColour = '#d8b4fe';
+        // res.headerNeeded = false;
         res.companyName = 'Terzo';
         return res;
       }),

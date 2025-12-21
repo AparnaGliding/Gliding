@@ -13,6 +13,10 @@ body .default-background-colour{
   background-color: variables.$default-background-colour;
 }
 
+.icon-color{
+  background-color: variables.$icon-blue;
+}
+
 .font-weight-normal {
   font-weight: 400;
 }
@@ -35,5 +39,12 @@ body .default-background-colour{
 .default-border {
   border: 1px solid #e5e7eb;
 }
+
+.active-blue-color{
+  color: variables.$active-tab-blue
+
+}
+
+
 
 
