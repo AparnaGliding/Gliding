@@ -52,8 +52,8 @@
                     <p-color-picker [(ngModel)]="widgetConfig[field.id].to"></p-color-picker>
                 </div>
             }
-                @if(temp == 'Custom(CSS)'){
-                    <input  class = "flex-fill" type="text" pInputText />
+                @if(widgetConfig[field.id].type == 'Custom(CSS)'){
+                    <input type="text" pInputText [(ngModel)]="widgetConfig[field.id].custom"/>
                 }
             </div>
         </div>
@@ -106,9 +106,6 @@
         }
 
         @if(field.type === 'layout'){
-            <div class="field-label mb-3">
-                {{ field.label }}
-            </div>
             <div class="mb-4">
                 <div class="row mb-3">
                     <div class="col-6">
@@ -124,8 +121,6 @@
                                placeholder="60" />
                     </div>
                 </div>
-
-                <!-- Position Offset Label -->
                 <div class="mb-2">
                     <strong>Position Offset (px)</strong>
                 </div>
@@ -134,12 +129,12 @@
                 <div class="row mb-3">
                     <div class="col-6">
                         <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].minimized_view.topOffset"
+                               [(ngModel)]="widgetConfig[field.id].topOffset"
                                placeholder="Top" />
                     </div>
                     <div class="col-6">
                         <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].minimized_view.rightOffset"
+                               [(ngModel)]="widgetConfig[field.id].rightOffset"
                                placeholder="20" />
                     </div>
                 </div>
@@ -147,66 +142,13 @@
                 <div class="row">
                     <div class="col-6">
                         <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].minimized_view.bottomOffset"
+                               [(ngModel)]="widgetConfig[field.id].bottomOffset"
                                placeholder="20" />
                     </div>
                     <div class="col-6">
                         <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].minimized_view.leftOffset"
+                               [(ngModel)]="widgetConfig[field.id].leftOffset"
                                placeholder="Left" />
-                    </div>
-                </div>
-            </div>
-
-            <!-- Maximized View Configuration -->
-            <div class="mb-3">
-                <h6 class="mb-3">Maximized View</h6>
-
-                <!-- Width and Height Row -->
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label class="form-label">Width (px)</label>
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.width"
-                               placeholder="420" />
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Height (px)</label>
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.height"
-                               placeholder="600" />
-                    </div>
-                </div>
-
-                <!-- Position Offset Label -->
-                <div class="mb-2">
-                    <strong>Position Offset (px)</strong>
-                </div>
-
-                <!-- Position Offset Row -->
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.topOffset"
-                               placeholder="50" />
-                    </div>
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.rightOffset"
-                               placeholder="30" />
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.bottomOffset"
-                               placeholder="0" />
-                    </div>
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].maximized_view.leftOffset"
-                               placeholder="0" />
                     </div>
                 </div>
             </div>
