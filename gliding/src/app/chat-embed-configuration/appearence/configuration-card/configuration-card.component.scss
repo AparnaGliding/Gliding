@@ -27,3 +27,15 @@
     height: 40px;
   }
 }
+
+.configuration-footer {
+  z-index: 1050;
+  left: 0;
+  right: 0;
+  
+  &.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+  }
+}
+

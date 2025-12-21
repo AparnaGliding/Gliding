@@ -1,3 +1,5 @@
+@use "../../utilities/variables";
+
 .header-card {
   .p-card-body {
     background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 50%, #fce7f3 100%);
@@ -29,6 +31,20 @@
         border-radius: 4px;
       }
   }}
+
+  .configuration-toggle{
+    .p-toggleswitch .p-toggleswitch-slider{
+      background: variables.$icon-blue;
+    }
+  }
+}
+
+// Scoped radio button styling for chat-embed-configuration only
+app-chat-embed-configuration {
+  .p-radiobutton.p-radiobutton-checked .p-radiobutton-box {
+    background: #ef4444;
+    border-color: #ef4444;
+  }
 }
 
 

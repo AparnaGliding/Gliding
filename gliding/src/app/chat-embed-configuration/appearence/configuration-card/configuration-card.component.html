@@ -8,7 +8,7 @@
     @for (field of section.fields; track field) {
 
       @if (field.type === 'toggle') {
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3 configuration-toggle">
           <div class="field-label">
             {{ field.label }}
           </div>
@@ -38,6 +38,7 @@
             <div class="d-flex align-items-center gap-2 mb-3">
               <input
                 type="text"
+                class="form-control"
                 pInputText
                 [(ngModel)]="widgetConfig[field.id].value"
                 placeholder="#ffffff"
@@ -45,7 +46,6 @@
               <div class="color-picker-wrapper">
                 <p-color-picker
                   [(ngModel)]="widgetConfig[field.id].value"
-
                 ></p-color-picker>
               </div>
             </div>
@@ -112,7 +112,7 @@
                         {{ field.label }}
                     </div>
                 }
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2 radio-button-configuration">
                     <p-radio-button
                             name="colorPicker"
                             [value]="option"
@@ -141,6 +141,8 @@
                             <p-radio-button
                                     name="colorPicker"
                                     [value]="option"
+                                    [name]="'branding_' + field.id"
+                                    [(ngModel)]="widgetConfig[field.id]"
                             >
                             </p-radio-button>
                             <span>{{ option }}</span>
@@ -148,56 +150,112 @@
                     }
                 </div>
 
-        }
 
-        @if(field.type === 'layout'){
-            <div class="mb-4">
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <label class="form-label">Width (px)</label>
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].width"
-                               placeholder="60" />
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Height (px)</label>
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].height"
-                               placeholder="60" />
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <strong>Position Offset (px)</strong>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].topOffset"
-                               placeholder="Top" />
-                    </div>
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].rightOffset"
-                               placeholder="20" />
-                    </div>
-                </div>
+                        @if(widgetConfig[field.id] === 'text'){
+                            <div class="mb-3">
+                                <input
+                                        type="text"
+                                        class="form-control"
+                                        pInputText
+                                        placeholder="Enter text"
+                                />
+                            </div>
+                        }
 
-                <div class="row">
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].bottomOffset"
-                               placeholder="20" />
-                    </div>
-                    <div class="col-6">
-                        <input type="number" class="form-control" pInputText
-                               [(ngModel)]="widgetConfig[field.id].leftOffset"
-                               placeholder="Left" />
-                    </div>
+                        @if (widgetConfig[field.id] === 'svg') {
+                            <div class="mb-3">
+                    <textarea
+                            class="form-control"
+                            pInputTextarea
+                            placeholder="Enter description"
+                            rows="4"
+                    ></textarea>
+                            </div>
+                    }
+
+            @if (widgetConfig[field.id] === 'image') {
+                <div class="mb-3">
+                    <textarea
+                            class="form-control"
+                            pInputTextarea
+                            placeholder="Enter description"
+                            rows="4"
+                    ></textarea>
                 </div>
-            </div>
-        }
+            }
+
+
+
+
     }
 
-  </p-card>
+    @if(field.type === 'layout'){
+        <div class="mb-4">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <label class="form-label">Width (px)</label>
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].width"
+                           placeholder="60" />
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Height (px)</label>
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].height"
+                           placeholder="60" />
+                </div>
+            </div>
+            <div class="mb-2">
+                <strong>Position Offset (px)</strong>
+            </div>
+            <div class="row mb-3">
+                <div class="col-6">
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].topOffset"
+                           placeholder="Top" />
+                </div>
+                <div class="col-6">
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].rightOffset"
+                           placeholder="20" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].bottomOffset"
+                           placeholder="20" />
+                </div>
+                <div class="col-6">
+                    <input type="number" class="form-control" pInputText
+                           [(ngModel)]="widgetConfig[field.id].leftOffset"
+                           placeholder="Left" />
+                </div>
+            </div>
+        </div>
+    }
+}
+
+</p-card>
+
+<div class="configuration-footer fixed-bottom bg-white border-top p-3 shadow-sm">
+    <div class="d-flex justify-content-end gap-3">
+        <button
+                type="button"
+                class="btn btn-outline-secondary px-4"
+
+        >
+            Discard Changes
+        </button>
+        <button
+                type="button"
+                class="btn btn-primary px-4"
+
+        >
+            Save Changes
+        </button>
+    </div>
+</div>
 
 </div>

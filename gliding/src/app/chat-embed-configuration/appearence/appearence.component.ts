@@ -47,37 +47,37 @@ export class AppearenceComponent {
           id: 'backgroundColor',
           type: 'color-picker',
           label: 'Content Area Color',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
           id: 'inputAreaColour',
           type: 'color-picker',
           label: 'Text Area Color',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
           id: 'userMessageColour',
           type: 'color-picker',
           label: 'User Message Background',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
           id: 'botMessageColour',
           type: 'color-picker',
           label: 'Bot Message Background',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
           id: 'borderColour',
           type: 'color-picker',
           label: 'Border Color',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
           id: 'textColor',
           type: 'color-picker',
           label: 'Text Color',
-          options: ['solid', 'gradient', 'custom']
+          options: ['solid', 'gradient', 'Custom(CSS)']
         }
       ]
     },
@@ -99,7 +99,7 @@ export class AppearenceComponent {
       collapsed: false,
       fields: [
         {
-          id: 'logo',
+          id: 'logoType',
           type: 'branding',
           label: '',
           options: ['none' , 'svg' , 'Image URL']
@@ -112,7 +112,7 @@ export class AppearenceComponent {
       collapsed: false,
       fields: [
         {
-          id: 'logo',
+          id: 'companyNameType',
           type: 'branding',
           label: '',
           options: ['text' , 'svg']
