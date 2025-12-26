@@ -25,7 +25,7 @@ import {WidgetConfiguration} from "./appearance-cofig.model";
 })
 export class ChatEmbedConfigurationComponent implements OnInit {
   activeTab = '0';
-  widgetId = 1;
+  widgetId = 3;
   widgetConfig: WidgetConfiguration;
 
   constructor(private chatEmbedConfigurationService: ChatEmbedConfigurationService ) { }
@@ -42,5 +42,25 @@ export class ChatEmbedConfigurationComponent implements OnInit {
             console.error('Failed to load widget config', err);
           }
         });
+  }
+
+  onSaveConfiguration(widgetConfig: WidgetConfiguration) {
+    this.chatEmbedConfigurationService
+        .saveWidgetConfiguration(this.widgetId, widgetConfig)
+        .subscribe({
+          next: (response) => {
+            console.log('Widget configuration saved successfully:', response);
+            // Optionally show success message to user
+          },
+          error: (err) => {
+            console.error('Failed to save widget configuration:', err);
+            // Optionally show error message to user
+          }
+        });
+  }
+
+  onDiscardConfiguration() {
+    // Reload the original configuration to discard changes
+    this.ngOnInit();
   }
 }

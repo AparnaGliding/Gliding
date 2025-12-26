@@ -1,7 +1,8 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Card} from 'primeng/card';
 import {FormsModule} from '@angular/forms';
 import {ConfigurationCardComponent} from './configuration-card/configuration-card.component';
+import {ChatEmbedPreviewComponent} from './chat-embed-preview/chat-embed-preview.component';
 import {CardSection, WidgetConfiguration} from '../appearance-cofig.model';
 
 @Component({
@@ -9,7 +10,8 @@ import {CardSection, WidgetConfiguration} from '../appearance-cofig.model';
   imports: [
     Card,
     FormsModule,
-    ConfigurationCardComponent
+    ConfigurationCardComponent,
+    ChatEmbedPreviewComponent
   ],
   templateUrl: './appearence.component.html',
   styleUrl: './appearence.component.scss'
@@ -18,6 +20,20 @@ export class AppearenceComponent {
   items = ['Appearance', 'Branding', 'Layout', 'Content'];
   activeItem = 'Appearance';
   @Input() widgetConfig: WidgetConfiguration;
+  @Output() saveConfiguration = new EventEmitter<WidgetConfiguration>();
+  @Output() discardConfiguration = new EventEmitter<void>();
+
+  onSaveChanges(widgetConfig: WidgetConfiguration) {
+    this.saveConfiguration.emit(widgetConfig);
+  }
+
+  onDiscardChanges() {
+    this.discardConfiguration.emit();
+  }
+
+  setActive(item: string) {
+    this.activeItem = item;
+  }
 
   section: CardSection[] = [
     {
@@ -90,7 +106,7 @@ export class AppearenceComponent {
           id: 'mode',
           type: 'radio',
           label: '',
-          options: ['Light' , 'Dark' , 'Auto']
+          options: ['LIGHT' , 'DARK' , 'AUTO']
         }]
     },
     {
@@ -144,11 +160,4 @@ export class AppearenceComponent {
       ]
     }
   ];
-
-
-  setActive(item: string) {
-    this.activeItem = item;
-  }
-
-
 }

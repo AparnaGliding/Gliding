@@ -1,5 +1,12 @@
+<i class="pi pi-comment"></i>
+
+
+
 <div class="d-flex flex-column h-100 w-100" style="min-height: 100vh;">
-    <div *ngIf="configuration?.headerNeeded !== false" class="d-flex fixed-top gradient-border justify-content-between px-4 py-3 chat-header"  [ngStyle]="getBackgroundStyle(configuration.headerColor)" [style.color]="configuration?.textColor || 'white'" [style.border-bottom]="configuration?.borderColour ? '2px solid ' + configuration.borderColour : 'none'">
+    <div *ngIf="configuration?.headerNeeded !== false" class="d-flex fixed-top gradient-border justify-content-between px-4 py-3 chat-header"
+         [ngStyle]="configuration?.mode === 'AUTO' ? getBackgroundStyle(configuration.headerColor) : (configuration?.mode === 'DARK' ? {'background-color': '#1f2937'} : {'background-color': '#3b82f6'})"
+         [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : 'white'"
+         [style.border-bottom]="configuration?.mode === 'AUTO' && configuration?.borderColour ? '2px solid ' + configuration.borderColour : 'none'">
         <div class="d-flex align-items-center gap-3">
             @if (currentChatMessages.length > 0) {
                 <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">
@@ -8,15 +15,16 @@
             }
         </div>
         <div class="d-flex align-items-center gap-2">
-            <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleExpand()" [style.color]="configuration?.textColor || 'white'" [title]="isExpanded ? 'Minimize' : 'Maximize'">
+            <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleExpand()" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : 'white'" [title]="isExpanded ? 'Minimize' : 'Maximize'">
                 <i [class]="isExpanded ? 'pi pi-arrow-down-left-and-arrow-up-right-to-center' : 'pi pi-arrow-up-right-and-arrow-down-left-from-center'" style="font-size: 1.1rem;"></i>
             </button>
-            <button class="close-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleChat()" [style.color]="configuration?.textColor || 'white'">
+            <button class="close-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleChat()" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : 'white'">
                 <i class="pi pi-times" style="font-size: 1.2rem;"></i>
             </button>
         </div>
     </div>
-    <div class="chat-body-container flex-grow-1 d-flex flex-column" style="min-height: 0;" [style.margin-top]="configuration?.headerNeeded === false ? '0' : ''" [ngStyle]="configuration?.backgroundColour ? getBackgroundStyle(configuration.backgroundColour) : (configuration?.backgroundColor ? getBackgroundStyle(configuration.backgroundColor) : (configuration?.mode === 'DARK' ? {'background-color': '#1a1a1a'} : {'background-color': 'white'}))">
+    <div class="chat-body-container flex-grow-1 d-flex flex-column" style="min-height: 0;" [style.margin-top]="configuration?.headerNeeded === false ? '0' : ''"
+         [ngStyle]="configuration?.mode === 'AUTO' ? (configuration?.backgroundColour ? getBackgroundStyle(configuration.backgroundColour) : (configuration?.backgroundColor ? getBackgroundStyle(configuration.backgroundColor) : {'background-color': 'white'})) : (configuration?.mode === 'DARK' ? {'background-color': '#111827'} : {'background-color': '#f9fafb'})">
 
     @if (configuration?.headerNeeded === false) {
         <div class="d-flex justify-content-between align-items-center px-3 py-2">
@@ -26,10 +34,10 @@
                 <div></div>
             }
             <div class="d-flex align-items-center gap-2">
-                <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleExpand()" [style.color]="configuration?.textColor || 'white'" [title]="isExpanded ? 'Minimize' : 'Maximize'">
+                <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleExpand()" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')" [title]="isExpanded ? 'Minimize' : 'Maximize'">
                     <i [class]="isExpanded ? 'pi pi-arrow-down-left-and-arrow-up-right-to-center' : 'pi pi-arrow-up-right-and-arrow-down-left-from-center'" style="font-size: 1.1rem;"></i>
                 </button>
-                <button class="close-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleChat()" [style.color]="configuration?.textColor || 'white'">
+                <button class="close-button bg-transparent border-0 p-1 rounded" type="button" (click)="toggleChat()" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')">
                     <i class="pi pi-times" style="font-size: 1.2rem;"></i>
                 </button>
             </div>
@@ -47,7 +55,7 @@
 <!--                        </h1>-->
                       <img src="assets/images/company_name_logo.svg" width="183" height ="56" class = "mb-2">
                     }
-                    <h4 class="fw-normal" [style.color]="configuration?.textColor || 'white'">
+                    <h4 class="fw-normal" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')">
                         {{configuration?.greetingMessage || 'How can I assist you?'}}
                     </h4>
                 </div>
@@ -69,18 +77,24 @@
         @for(message of currentChatMessages; track message.id){
             @if (message.isUser) {
                 <div class="d-flex gap-1 mb-1 justify-content-end">
-                  <p-avatar label="U" shape="circle" class ="user-avatar text-white d-flex align-items-center justify-content-center" [ngStyle]="getBackgroundStyle(configuration?.buttonColor)"></p-avatar>
-                    <div class="px-3 py-3 rounded-3 user-bubble shadow-sm position-relative" [ngStyle]="getBackgroundStyle(configuration?.userMessageColour || configuration.headerColor)" [style.color]="configuration?.textColor || 'white'">
+                  <p-avatar label="U" shape="circle" class ="user-avatar text-white d-flex align-items-center justify-content-center"
+                            [ngStyle]="configuration?.mode === 'AUTO' ? getBackgroundStyle(configuration?.buttonColor) : (configuration?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"></p-avatar>
+                    <div class="px-3 py-3 rounded-3 user-bubble shadow-sm position-relative"
+                         [ngStyle]="configuration?.mode === 'AUTO' ? getBackgroundStyle(configuration?.userMessageColour || configuration.headerColor) : (configuration?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"
+                         [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : 'white'">
                         <div class="m-0 fw-medium">{{message.text}}</div>
                     </div>
                 </div>
             }
             @else {
                 <div class="d-flex gap-1 mb-4">
-                    <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white" [ngStyle]="getBackgroundStyle(configuration?.buttonColor)">
+                    <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white"
+                         [ngStyle]="configuration?.mode === 'AUTO' ? getBackgroundStyle(configuration?.buttonColor) : (configuration?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})">
                         <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant" style="filter: brightness(0) invert(1);" />
                     </div>
-                    <div class="px-3 py-2 rounded bot-bubble" [ngStyle]="configuration?.botMessageColour ? getBackgroundStyle(configuration.botMessageColour) : (configuration?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})" [style.color]="configuration?.textColor || 'white'">
+                    <div class="px-3 py-2 rounded bot-bubble"
+                         [ngStyle]="configuration?.mode === 'AUTO' ? (configuration?.botMessageColour ? getBackgroundStyle(configuration.botMessageColour) : (configuration?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})) : (configuration?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})"
+                         [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')">
                         @if(!message.isUser && message.isThoughtProcess && message.text) {
                             <div class="rounded-3 px-3 py-3 mb-3 position-relative"
                                  [ngStyle]="configuration?.botMessageColour ? getBackgroundStyle(configuration.botMessageColour) : (configuration?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})"
@@ -186,14 +200,17 @@
         <div class="d-flex align-items-center justify-content-center rounded-circle me-2" style="width: 50px; height: 50px; background-color: rgba(255,255,255,0.2);">
           <img src="assets/images/company_icon_logo.svg" width="24" height="24" alt="Company Logo" />
         </div>
-        <div class="d-flex align-items-center gap-2 rounded-pill px-3 py-2 w-75" [style.background-color]="configuration?.textAreaColour || 'rgba(255, 255, 255, 0.1)'" [style.border]="configuration?.borderColour ? '2px solid ' + configuration.borderColour : '1px solid rgba(255, 255, 255, 0.2)'" [style.backdrop-filter]="'blur(10px)'">
+        <div class="d-flex align-items-center gap-2 rounded-pill px-3 py-2 w-75"
+             [style.background-color]="configuration?.mode === 'AUTO' ? (configuration?.textAreaColour || 'rgba(255, 255, 255, 0.1)') : (configuration?.mode === 'DARK' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)')"
+             [style.border]="configuration?.mode === 'AUTO' && configuration?.borderColour ? '2px solid ' + configuration.borderColour : (configuration?.mode === 'DARK' ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)')"
+             [style.backdrop-filter]="'blur(10px)'">
           <div class="flex-grow-1 position-relative">
             <textarea
                 [placeholder]="configuration?.inputPlaceholder || 'Ask a question...'"
                 rows="1"
                 [(ngModel)]="currentMessage"
                 class="chat-input w-100 border-0 resize-none bg-transparent"
-                [style.color]="configuration?.textColor || 'white'"
+                [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')"
                 (keydown.enter)="onEnterPress($event)"
                 [disabled]="isSendingMessage"
                 tabindex="0"
@@ -201,7 +218,7 @@
             ></textarea>
           </div>
 
-          <button class="refresh-button border-0 bg-transparent d-flex align-items-center justify-content-center" [style.color]="configuration?.textColor || 'white'"
+          <button class="refresh-button border-0 bg-transparent d-flex align-items-center justify-content-center" [style.color]="configuration?.mode === 'AUTO' ? (configuration?.textColor || 'white') : (configuration?.mode === 'DARK' ? 'white' : '#374151')"
                   (click)="createNewChat()"
                   [disabled]="isSendingMessage"
                   title="New Chat">
@@ -209,11 +226,11 @@
           </button>
 
           <button
-            class="send-button btn border-0 rounded-circle d-flex align-items-center justify-content-center" [style.color]="configuration?.textColor || 'white'"
+            class="send-button btn border-0 rounded-circle d-flex align-items-center justify-content-center" [style.color]="'white'"
             type="button"
             (click)="sendMessage()"
             [disabled]="isSendingMessage || !currentMessage?.trim()"
-            [ngStyle]="getBackgroundStyle(configuration?.buttonColor)"
+            [ngStyle]="configuration?.mode === 'AUTO' ? getBackgroundStyle(configuration?.buttonColor) : (configuration?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"
             title="Send Message"
           >
             <i class="pi pi-send" style="font-size: 16px;"></i>

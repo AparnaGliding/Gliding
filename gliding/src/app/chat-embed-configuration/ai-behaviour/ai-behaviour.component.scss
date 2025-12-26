@@ -1,0 +1,237 @@
+.ai-behaviour-container {
+  padding: 0;
+  max-width: 100%;
+}
+
+// Section styling
+.section-container {
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 8px 0;
+  }
+  
+  .section-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.optional-label {
+  font-size: 14px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+// Options grid layout
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+// Option card styling
+.option-card {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 120px;
+  
+  &:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  &.selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    box-shadow: 0 0 0 1px #3b82f6;
+    
+    .option-title {
+      color: #1e40af;
+    }
+    
+    .option-description {
+      color: #3730a3;
+    }
+    
+    .option-icon i {
+      color: #3b82f6;
+    }
+  }
+  
+  .option-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    
+    i {
+      font-size: 18px;
+      color: #6b7280;
+    }
+  }
+  
+  .option-content {
+    flex: 1;
+    
+    .option-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      margin: 0 0 4px 0;
+    }
+    
+    .option-description {
+      font-size: 14px;
+      color: #6b7280;
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+  
+  .selected-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    i {
+      color: white;
+      font-size: 12px;
+    }
+  }
+}
+
+// Custom instructions styling
+.custom-instructions-container {
+  .custom-instructions-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #111827;
+    background: #ffffff;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px #3b82f6;
+    }
+    
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+  
+  .textarea-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    
+    .character-count {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .instruction-note {
+      font-size: 12px;
+      color: #3b82f6;
+    }
+  }
+}
+
+// Action buttons styling
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+  
+  .save-btn {
+    background: #3b82f6;
+    border: none;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    
+    &:hover {
+      background: #2563eb;
+    }
+  }
+  
+  .discard-btn {
+    border: 1px solid #d1d5db;
+    color: #374151;
+    background: white;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    
+    &:hover {
+      background: #f9fafb;
+      border-color: #9ca3af;
+    }
+  }
+  
+  .reset-btn {
+    color: #3b82f6;
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    &:hover {
+      color: #2563eb;
+      background: #eff6ff;
+      border-radius: 6px;
+    }
+    
+    i {
+      font-size: 14px;
+    }
+  }
+}

@@ -16,9 +16,18 @@ export class ChatEmbedConfigurationService {
   }
 
   loadWidgetConfiguration(widgetId: number): Observable< WidgetConfiguration> {
-    return this.http.get<any>(`/widget/${widgetId}`).pipe(
+    return this.http.get<any>(`/widget/config/${widgetId}`).pipe(
       catchError(error => {
         console.error(error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  saveWidgetConfiguration(widgetId: number, widgetConfig: WidgetConfiguration): Observable<any> {
+    return this.http.post<any>(`/widget/${widgetId}`, widgetConfig).pipe(
+      catchError(error => {
+        console.error('Error saving widget configuration:', error);
         return throwError(() => error);
       })
     );

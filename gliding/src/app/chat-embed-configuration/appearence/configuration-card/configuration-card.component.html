@@ -1,5 +1,5 @@
 <div class="main-card-container">
-  <p-card class = "mb-2">
+  <p-card class = "mb-1">
 
     <ng-template #header>
       {{ section.title }}
@@ -104,35 +104,38 @@
         </div>
       }
         @if(field.type  == 'radio'){
-            <div class="d-flex gap-4 mb-2">
-            @for (option of field.options; track option) {
-                <div>
-                @if(field.label){
-                    <div class="field-label mb-2">
-                        {{ field.label }}
+            @if(field.label){
+                <div class="field-label mb-3">
+                    {{ field.label }}
+                </div>
+            }
+            <div class="d-flex gap-4 mb-4">
+                @for (option of field.options; track option) {
+                    <div class="d-flex align-items-center gap-2 radio-button-configuration">
+                        <p-radio-button
+                                [name]="'radio_' + field.id"
+                                [value]="option"
+                                [(ngModel)]= "widgetConfig[field.id]"
+                        >
+                        </p-radio-button>
+                        <span>{{ option }}</span>
                     </div>
                 }
-                <div class="d-flex align-items-center gap-2 radio-button-configuration">
-                    <p-radio-button
-                            name="colorPicker"
-                            [value]="option"
-                            [(ngModel)]= "widgetConfig[field.id]"
-                    >
-                    </p-radio-button>
-                    <span>{{ option }}</span>
-                </div>
-                </div>
-
-
-            }
             </div>
             @if(field.id == 'mode'){
-                <p-card>
-                    Mode Configuration Notice
-                    The color configurations you set above are specific to the light mode. These colors will be used when the chat is displayed in light mode.
-                </p-card>
+                <div class="mode-notice-card">
+                    <div class="notice-content">
+                        <i class="pi pi-info-circle notice-icon"></i>
+                        <div class="notice-text">
+                            <div class="notice-title">Mode Configuration Notice</div>
+                            <div class="notice-description">
+                                The color configurations you set above are specific to the <strong>light mode</strong>.
+                                These colors will be used when the chat is displayed in light mode.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-
         }
         @if(field.type === 'branding'){
                 <div class="d-flex gap-4 mb-2">
@@ -173,14 +176,33 @@
                             </div>
                     }
 
-            @if (widgetConfig[field.id] === 'image') {
+            @if (widgetConfig[field.id] === 'Image URL') {
                 <div class="mb-3">
-                    <textarea
-                            class="form-control"
-                            pInputTextarea
-                            placeholder="Enter description"
-                            rows="4"
-                    ></textarea>
+                    @if (!widgetConfig[field.id + 'File']) {
+                        <p-fileUpload
+                            mode="basic"
+                            name="imageFile"
+                            accept="image/*"
+                            [maxFileSize]="1000000"
+                            (onSelect)="onFileUpload($event, field.id)"
+                            chooseLabel="Upload Image"
+                            [auto]="false"
+                            chooseIcon="pi pi-upload">
+                        </p-fileUpload>
+                    }
+                    @if (widgetConfig[field.id + 'File']) {
+                        <div class="d-flex align-items-center gap-2 p-2 border rounded">
+                            <i class="pi pi-file text-muted"></i>
+                            <span class="flex-grow-1">{{ widgetConfig[field.id + 'File'].name }}</span>
+                            <button 
+                                type="button" 
+                                class="btn btn-sm btn-outline-danger"
+                                (click)="removeFile(field.id)"
+                                title="Remove file">
+                                <i class="pi pi-times"></i>
+                            </button>
+                        </div>
+                    }
                 </div>
             }
 
@@ -244,14 +266,14 @@
         <button
                 type="button"
                 class="btn btn-outline-secondary px-4"
-
+                (click)="onDiscardChanges()"
         >
             Discard Changes
         </button>
         <button
                 type="button"
                 class="btn btn-primary px-4"
-
+                (click)="onSaveChanges()"
         >
             Save Changes
         </button>

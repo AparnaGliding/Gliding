@@ -20,11 +20,34 @@
   min-height: 40px;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
-
+  position: relative;
 
   p-color-picker{
     width: 40px;
     height: 40px;
+  }
+}
+
+// Fix PrimeNG color picker overlay positioning and z-index issues
+:host ::ng-deep {
+  .p-colorpicker-panel {
+    z-index: 1060 !important;
+    position: absolute !important;
+    transform: translateX(-50%) !important;
+    margin-top: 5px !important;
+  }
+  
+  .p-colorpicker-overlay {
+    z-index: 1060 !important;
+    position: relative !important;
+  }
+  
+  .p-component-overlay {
+    z-index: 1060 !important;
+  }
+  
+  .p-colorpicker {
+    position: relative !important;
   }
 }
 
@@ -36,6 +59,58 @@
   &.fixed-bottom {
     position: fixed;
     bottom: 0;
+  }
+}
+
+// Mode Configuration Notice Styling
+.mode-notice-card {
+  background-color: #dbeafe;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+  
+  .notice-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .notice-icon {
+    color: #3b82f6;
+    font-size: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  
+  .notice-text {
+    flex: 1;
+    
+    .notice-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+    
+    .notice-description {
+      font-size: 14px;
+      color: #1e40af;
+      line-height: 1.5;
+      
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Radio button styling improvements
+.radio-button-configuration {
+  span {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
   }
 }
 

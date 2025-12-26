@@ -39,6 +39,7 @@
 .close-button {
   cursor: pointer;
   transition: background-color 0.2s;
+  z-index: 10000;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
@@ -84,16 +85,16 @@
 }
 .chat-input-area-centered {
   margin-bottom: 300px;
-  
+
   .w-75 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
-    
+
     &:focus-within {
       transform: translateY(-1px);
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -538,7 +539,7 @@
   &:active {
     transform: translateX(1px);
   }
-  
+
   span {
     color: inherit !important;
   }
@@ -558,7 +559,7 @@
   &:active {
     transform: translateX(1px);
   }
-  
+
   span {
     color: inherit !important;
   }

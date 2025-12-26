@@ -1,20 +1,40 @@
-<div class = "appearance-container d-flex">
- <div class = "nav-container me-5">
-   <ul class = "nav-list">
-     @for(item of items ; track item){
-       <li [class.active-blue-color]="item === activeItem"  [class.nav-item-active]="item === activeItem"  class = "p-2"(click)="setActive(item)">
-     {{ item }} </li>
-   }
-   </ul>
- </div>
+<div class="appearance-layout">
+  <div class="content-grid">
+    <div class="sidebar-nav">
+      <nav class="nav-menu">
+        @for(item of items; track item) {
+          <button
+            class="nav-menu-item"
+            [class.active]="item === activeItem"
+            (click)="setActive(item)">
+            {{ item }}
+          </button>
+        }
+      </nav>
+    </div>
 
-  <div class = "configuration-container me-3">
-    <p-card>
-    @for(section of section; track section){
-    <app-configuration-card
-    [widgetConfig]="widgetConfig" [section] = section></app-configuration-card>}
-    </p-card>
+    <!-- Middle Scrollable Content -->
+    <div class="content-area">
+      <div class="scrollable-content">
+        @for(section of section; track section) {
+          <app-configuration-card
+            [widgetConfig]="widgetConfig"
+            [section]="section"
+            (saveChanges)="onSaveChanges($event)"
+            (discardChanges)="onDiscardChanges()">
+          </app-configuration-card>
+        }
+      </div>
+    </div>
+
+    <!-- Right Preview Panel -->
+    <div class="preview-panel">
+      <div class="preview-header">
+        <h6 class="preview-title">Preview</h6>
+      </div>
+      <div class="preview-content">
+        <app-chat-embed-preview [widgetConfig]="widgetConfig"></app-chat-embed-preview>
+      </div>
+    </div>
   </div>
-  <div class = "preview-container">test3</div>
-
 </div>

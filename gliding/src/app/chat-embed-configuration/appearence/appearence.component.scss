@@ -1,30 +1,219 @@
-.nav-container {
-  width: 160px !important;
-}
-.configuration-container {
-  width: 726px !important;
-}
-.preview-container {
-  width: 350px !important;
+.appearance-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-
-.nav-item {
-  width: 136px !important;
-  height: 20px;
-  padding: 8px 12px;
-  font-size: 14px;
+// Main Content Grid - Three Column Layout
+.content-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr 400px;
+  height: 100%;
+  overflow: hidden;
 }
 
-.nav-item-active {
-  background-color: oklch(0.97 0.014 284.604);
-  transition: color 0.25s ease, background-color 0.25s ease;
+// Left Sidebar Navigation
+.sidebar-nav {
+  background: transparent;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 0;
+  
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 24px;
+  }
+  
+  .nav-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: #374151;
+    }
+    
+    &.active {
+      color: #2563eb;
+      font-weight: 500;
+    }
+  }
 }
-.nav-list {
-  list-style: none;
+
+// Middle Scrollable Content Area
+.content-area {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  .scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    
+    // Custom scrollbar
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+      
+      &:hover {
+        background: #94a3b8;
+      }
+    }
+  }
 }
-.field-container{
 
+// Right Preview Panel
+.preview-panel {
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  
+  .preview-header {
+    padding: 20px 24px 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    background: transparent;
+    flex-shrink: 0;
+    
+    .preview-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+    }
+  }
+  
+  .preview-content {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: auto;
+    
+    // Ensure the preview component is properly centered
+    app-chat-embed-preview {
+      display: block;
+      width: 100%;
+      max-width: 350px;
+    }
+    
+    // Ensure proper text wrapping
+    .chat-widget-preview .user-bubble,
+    .chat-widget-preview .bot-bubble {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+  }
 }
 
+// Global color picker overlay fixes - ensure it stays within content area
+:host ::ng-deep {
+  .content-area {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .scrollable-content {
+    overflow-y: auto;
+    overflow-x: visible;
+  }
+  
+  .p-colorpicker-panel {
+    z-index: 1060 !important;
+    position: absolute !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+    transform: translateX(-50%) !important;
+    margin-top: 5px !important;
+  }
+  
+  .p-colorpicker-overlay {
+    z-index: 1060 !important;
+    position: relative !important;
+  }
+  
+  .p-component-overlay {
+    z-index: 1060 !important;
+  }
+  
+  .p-colorpicker {
+    position: relative !important;
+    
+    .p-colorpicker-preview {
+      cursor: pointer;
+    }
+  }
+  
+  // Ensure preview panel has lower z-index
+  .preview-panel {
+    z-index: 1000;
+  }
+}
 
+// Responsive Design
+@media (max-width: 1200px) {
+  .content-grid {
+    grid-template-columns: 180px 1fr 350px;
+  }
+}
+
+@media (max-width: 992px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  .sidebar-nav {
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    
+    .nav-menu {
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 0 16px;
+      gap: 8px;
+    }
+    
+    .nav-menu-item {
+      white-space: nowrap;
+      min-width: max-content;
+    }
+  }
+  
+  .preview-panel {
+    display: none; // Hide preview on mobile
+  }
+}
+
+@media (max-width: 768px) {
+  .appearance-layout {
+    height: auto;
+  }
+  
+  .content-area .scrollable-content {
+    padding: 16px 20px;
+  }
+}

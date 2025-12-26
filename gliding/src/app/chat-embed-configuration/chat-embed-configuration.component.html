@@ -28,7 +28,11 @@
 
       <p-tabpanels class = "table-content">
         <p-tabpanel value="0">
-            <app-appearance [widgetConfig]  = widgetConfig ></app-appearance>
+            <app-appearance 
+              [widgetConfig]="widgetConfig"
+              (saveConfiguration)="onSaveConfiguration($event)"
+              (discardConfiguration)="onDiscardConfiguration()">
+            </app-appearance>
         </p-tabpanel>
 
         <p-tabpanel value="1">

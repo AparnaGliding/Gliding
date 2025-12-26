@@ -18,6 +18,7 @@ export interface WidgetConfiguration {
   backgroundColor: ColorPickerField;
   buttonColor: ColorPickerField;
   textColor: ColorPickerField;
+  textAreaColour: ColorPickerField;
 
   userMessageColour: ColorPickerField;
   botMessageColour: ColorPickerField;

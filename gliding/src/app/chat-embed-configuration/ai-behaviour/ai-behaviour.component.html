@@ -1,1 +1,182 @@
-<p>ai-behaviour works!</p>
+<div class="ai-behaviour-container">
+  <!-- Conversation Tone Section -->
+  <div class="section-container mb-5">
+    <div class="section-header mb-4">
+      <h3 class="section-title">Conversation Tone</h3>
+      <p class="section-description">Define how the AI communicates with your users</p>
+    </div>
+    
+    <div class="options-grid">
+      <div class="option-card" 
+           [class.selected]="selectedTone === 'friendly'"
+           (click)="selectTone('friendly')">
+        <div class="option-icon">
+          <i class="pi pi-heart"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Friendly</h4>
+          <p class="option-description">Warm and welcoming</p>
+        </div>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="selectedTone === 'casual'"
+           (click)="selectTone('casual')">
+        <div class="option-icon">
+          <i class="pi pi-comments"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Casual</h4>
+          <p class="option-description">Relaxed and conversational</p>
+        </div>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="selectedTone === 'technical'"
+           (click)="selectTone('technical')">
+        <div class="option-icon">
+          <i class="pi pi-code"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Technical</h4>
+          <p class="option-description">Precise and detailed</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Response Length Section -->
+  <div class="section-container mb-5">
+    <div class="section-header mb-4">
+      <h3 class="section-title">Response Length</h3>
+      <p class="section-description">Control the depth and detail of AI responses</p>
+    </div>
+    
+    <div class="options-grid">
+      <div class="option-card" 
+           [class.selected]="selectedLength === 'brief'"
+           (click)="selectLength('brief')">
+        <div class="option-icon">
+          <i class="pi pi-minus"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Brief</h4>
+          <p class="option-description">Quick, concise answers</p>
+        </div>
+      </div>
+      
+      <div class="option-card selected" 
+           [class.selected]="selectedLength === 'moderate'"
+           (click)="selectLength('moderate')">
+        <div class="option-icon">
+          <i class="pi pi-bars"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Moderate</h4>
+          <p class="option-description">Balanced responses</p>
+        </div>
+        <div class="selected-indicator">
+          <i class="pi pi-check"></i>
+        </div>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="selectedLength === 'detailed'"
+           (click)="selectLength('detailed')">
+        <div class="option-icon">
+          <i class="pi pi-list"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Detailed</h4>
+          <p class="option-description">Comprehensive explanations</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formality Level Section -->
+  <div class="section-container mb-5">
+    <div class="section-header mb-4">
+      <h3 class="section-title">Formality Level</h3>
+      <p class="section-description">Set the professional tone of conversations</p>
+    </div>
+    
+    <div class="options-grid">
+      <div class="option-card" 
+           [class.selected]="selectedFormality === 'formal'"
+           (click)="selectFormality('formal')">
+        <div class="option-icon">
+          <i class="pi pi-briefcase"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Formal</h4>
+          <p class="option-description">Professional language</p>
+        </div>
+      </div>
+      
+      <div class="option-card selected" 
+           [class.selected]="selectedFormality === 'balanced'"
+           (click)="selectFormality('balanced')">
+        <div class="option-icon">
+          <i class="pi pi-balance-scale"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Balanced</h4>
+          <p class="option-description">Mix of formal & casual</p>
+        </div>
+        <div class="selected-indicator">
+          <i class="pi pi-check"></i>
+        </div>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="selectedFormality === 'informal'"
+           (click)="selectFormality('informal')">
+        <div class="option-icon">
+          <i class="pi pi-users"></i>
+        </div>
+        <div class="option-content">
+          <h4 class="option-title">Informal</h4>
+          <p class="option-description">Casual and friendly</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Instructions Section -->
+  <div class="section-container mb-5">
+    <div class="section-header mb-4">
+      <h3 class="section-title">Custom Instructions <span class="optional-label">(Optional)</span></h3>
+      <p class="section-description">Provide specific guidelines for AI responses</p>
+    </div>
+    
+    <div class="custom-instructions-container">
+      <textarea 
+        class="custom-instructions-textarea"
+        [(ngModel)]="customInstructions"
+        placeholder="Example: Always maintain a helpful tone, ask clarifying questions when needed, and provide actionable solutions. Avoid technical jargon unless specifically requested."
+        rows="6"
+        maxlength="1000"
+        (input)="updateCharacterCount()">
+      </textarea>
+      <div class="textarea-footer">
+        <span class="character-count">{{characterCount}} characters</span>
+        <span class="instruction-note">These instructions will be applied to all AI responses</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button type="button" class="btn btn-primary save-btn" (click)="saveChanges()">
+      Save Changes
+    </button>
+    <button type="button" class="btn btn-outline-secondary discard-btn" (click)="discardChanges()">
+      Discard Changes
+    </button>
+    <button type="button" class="btn btn-link reset-btn" (click)="resetToDefault()">
+      <i class="pi pi-refresh"></i>
+      Reset to Default
+    </button>
+  </div>
+</div>

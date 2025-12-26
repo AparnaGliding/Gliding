@@ -29,9 +29,8 @@ import { AvatarModule } from 'primeng/avatar';
 })
 export class ChatEmbedComponent implements OnInit, OnDestroy {
     @ViewChild('chatMessages') chatMessages!: ElementRef;
-    @Output() chatToggle = new EventEmitter<boolean>();
-
     isExpanded: boolean = false;
+
     constructor(private chatEmbedService: ChatEmbedService,
                 private cdr: ChangeDetectorRef,
     ) {}
