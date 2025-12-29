@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { WidgetConfiguration, ColorPickerField } from '../../appearance-cofig.model';
@@ -10,7 +10,8 @@ import { WidgetConfiguration, ColorPickerField } from '../../appearance-cofig.mo
   imports: [
     CommonModule,
     FormsModule,
-    AvatarModule
+    AvatarModule,
+    NgOptimizedImage
   ],
   templateUrl: './chat-embed-preview.component.html',
   styleUrl: './chat-embed-preview.component.scss'
@@ -129,5 +130,34 @@ export class ChatEmbedPreviewComponent implements OnChanges {
         return colorField.value || '';
       }
     }
+  }
+
+  getTextStyle(colorField: ColorPickerField | string): any {
+    if (!colorField) { return {}; }
+
+    let color: string;
+    if (typeof colorField === 'string') {
+      color = colorField;
+    } else {
+      if (colorField.type === 'gradient' && colorField.from && colorField.to) {
+        color = `${colorField.from} to ${colorField.to}`;
+      } else if (colorField.type === 'css' && colorField.css) {
+        color = colorField.css;
+      } else {
+        color = colorField.value || '';
+      }
+    }
+
+    if (!color) { return {}; }
+
+    if (this.isGradientColor(color)) {
+      return {
+        'background': this.getGradientStyle(color),
+        '-webkit-background-clip': 'text',
+        '-webkit-text-fill-color': 'transparent',
+        'background-clip': 'text'
+      };
+    }
+    return { 'color': color };
   }
 }

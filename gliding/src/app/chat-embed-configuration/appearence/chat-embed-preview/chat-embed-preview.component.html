@@ -1,93 +1,94 @@
-<div class="chat-widget-preview d-flex flex-column h-100 w-100" 
+<div class="chat-widget-preview d-flex flex-column h-100 w-100"
      [class.dark-mode]="widgetConfig?.mode === 'DARK'">
-
-  <!-- Widget Header -->
-  <div *ngIf="widgetConfig?.headerNeeded !== false" 
-       class="d-flex fixed-top gradient-border justify-content-between px-4 py-3 chat-header"  
-       [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.headerColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#1f2937'} : {'background-color': '#3b82f6'})" 
-       [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : 'white'" 
+  <div *ngIf="widgetConfig?.headerNeeded !== false"
+       class="d-flex fixed-top gradient-border justify-content-between px-4 py-3 chat-header"
+       [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.headerColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#1f2937'} : {'background-color': '#3b82f6'})"
+       [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : 'white'"
        [style.border-bottom]="widgetConfig?.mode === 'AUTO' && getColorValue(widgetConfig?.borderColour) ? '2px solid ' + getColorValue(widgetConfig.borderColour) : 'none'">
     <div class="d-flex align-items-center gap-3">
-      <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">
+      @if(widgetConfig.companyType === 'TEXT'){
+        <h2 class="header-title" [ngStyle]="getTextStyle(widgetConfig?.headerTextColour)">{{widgetConfig.companyUrl}}</h2>
+      } @else {
+      <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">}
     </div>
     <div class="d-flex align-items-center gap-2">
-      <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" 
+      <button class="expand-button bg-transparent border-0 p-1 rounded" type="button"
               [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : 'white'">
         <i class="pi pi-arrow-up-right-and-arrow-down-left-from-center" style="font-size: 1.1rem;"></i>
       </button>
-      <button class="close-button bg-transparent border-0 p-1 rounded" type="button" 
+      <button class="close-button bg-transparent border-0 p-1 rounded" type="button"
               [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : 'white'">
         <i class="pi pi-times" style="font-size: 1.2rem;"></i>
       </button>
     </div>
   </div>
 
-  <!-- Chat Body Container -->
-  <div class="chat-body-container flex-grow-1 d-flex flex-column" 
-       style="min-height: 0;" 
-       [style.margin-top]="widgetConfig?.headerNeeded === false ? '0' : ''" 
+  <div class="chat-body-container flex-grow-1 d-flex flex-column"
+       style="min-height: 0;"
+       [style.margin-top]="widgetConfig?.headerNeeded === false ? '0' : ''"
        [ngStyle]="widgetConfig?.mode === 'AUTO' ? (widgetConfig?.backgroundColor ? getBackgroundStyle(widgetConfig.backgroundColor) : {'background-color': 'white'}) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#111827'} : {'background-color': '#f9fafb'})">
 
     <!-- Header when headerNeeded is false -->
     <div *ngIf="widgetConfig?.headerNeeded === false" class="d-flex justify-content-between align-items-center px-3 py-2">
-      <img src="assets/images/company_name_logo.svg" width="100" height="30" alt="Company Logo">
-      <div class="d-flex align-items-center gap-2">
-        <button class="expand-button bg-transparent border-0 p-1 rounded" type="button" 
+      @if(widgetConfig.companyType === 'TEXT'){
+        <h2 class="header-title" [ngStyle]="getTextStyle(widgetConfig?.headerTextColour)">{{widgetConfig.companyUrl}}</h2>
+      } @else {
+        <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">}      <div class="d-flex align-items-center gap-2">
+        <button class="expand-button bg-transparent border-0 p-1 rounded" type="button"
                 [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')">
           <i class="pi pi-arrow-up-right-and-arrow-down-left-from-center" style="font-size: 1.1rem;"></i>
         </button>
-        <button class="close-button bg-transparent border-0 p-1 rounded" type="button" 
+        <button class="close-button bg-transparent border-0 p-1 rounded" type="button"
                 [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')">
           <i class="pi pi-times" style="font-size: 1.2rem;"></i>
         </button>
       </div>
     </div>
 
-    <!-- Messages Area -->
-    <div class="flex-grow-1 px-3 pb-2 chat-messages d-flex flex-column gap-4 overflow-auto" 
-         style="min-height: 0;" 
-         [class.mt-5]="widgetConfig?.headerNeeded !== false" 
+    <div class="flex-grow-1 px-3 pb-2 chat-messages d-flex flex-column gap-4 overflow-auto"
+         style="min-height: 0;"
+         [class.mt-5]="widgetConfig?.headerNeeded !== false"
          [class.pt-3]="widgetConfig?.headerNeeded === false">
 
       <!-- Welcome Message when no messages -->
       <div *ngIf="sampleMessages.length === 0" class="d-flex flex-column align-items-center welcome-message h-100 text-center">
         <div class="mb-4">
-          <img src="assets/images/company_name_logo.svg" width="183" height="56" class="mb-2">
-          <h4 class="fw-normal" [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')">
+          @if(widgetConfig.companyType === 'TEXT'){
+            <h2 class="header-title" [ngStyle]="getTextStyle(widgetConfig?.headerTextColour)">{{widgetConfig.companyUrl}}</h2>
+          } @else {
+            <img src="assets/images/company_name_logo.svg" width="120" height="36" alt="Company Logo">}          <h4 class="fw-normal" [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')">
             {{widgetConfig?.greetingMessage || 'How can I assist you?'}}
           </h4>
         </div>
       </div>
 
-      <!-- Sample Messages -->
       <div *ngFor="let message of sampleMessages; trackBy: trackByIndex">
         <!-- User Message -->
         <div *ngIf="message.isUser" class="d-flex gap-1 mb-1 justify-content-end">
-          <p-avatar label="U" shape="circle" 
-                    class="user-avatar text-white d-flex align-items-center justify-content-center" 
+          <p-avatar label="U" shape="circle"
+                    class="user-avatar text-white d-flex align-items-center justify-content-center"
                     [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.buttonColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"></p-avatar>
-          <div class="px-3 py-3 rounded-3 user-bubble shadow-sm position-relative" 
-               [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.userMessageColour || widgetConfig?.headerColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})" 
+          <div class="px-3 py-3 rounded-3 user-bubble shadow-sm position-relative"
+               [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.userMessageColour || widgetConfig?.headerColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"
                [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : 'white'">
             <div class="m-0 fw-medium">{{message.text}}</div>
           </div>
         </div>
 
-        <!-- Bot Message -->
         <div *ngIf="!message.isUser" class="d-flex gap-1 mb-4">
-          <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white" 
+          <div class="bot-avatar d-flex align-items-center justify-content-center rounded-circle text-white"
                [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.buttonColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})">
-            <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant" 
+            <img src="assets/images/ai-icon.svg" width="20" height="20" alt="AI Assistant"
                  style="filter: brightness(0) invert(1);" />
           </div>
-          <div class="px-3 py-2 rounded bot-bubble" 
-               [ngStyle]="widgetConfig?.mode === 'AUTO' ? (widgetConfig?.botMessageColour ? getBackgroundStyle(widgetConfig.botMessageColour) : (widgetConfig?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})) : (widgetConfig?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})" 
+          <div class="px-3 py-2 rounded bot-bubble"
+               [ngStyle]="widgetConfig?.mode === 'AUTO' ? (widgetConfig?.botMessageColour ? getBackgroundStyle(widgetConfig.botMessageColour) : (widgetConfig?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})) : (widgetConfig?.mode === 'DARK' ? {'background-color': 'rgba(255,255,255,0.1)'} : {'background-color': 'rgba(0,0,0,0.05)'})"
                [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')">
-            
+
             <div *ngIf="message.isVerificationStep && message.textChunks?.length">
               <div *ngFor="let chunk of message.textChunks; trackBy: trackByIndex" class="mb-2" [innerHTML]="chunk.text"></div>
             </div>
-            
+
             <div *ngIf="!message.isVerificationStep">
               <div [innerHTML]="message.text"></div>
             </div>
@@ -95,15 +96,17 @@
         </div>
       </div>
     </div>
-
-    <!-- Input Area - Matching original chat-embed structure -->
     <div class="px-3 py-2 flex-shrink-0 chat-input-area-centered d-flex justify-content-center align-items-center z-50 mb-1">
-      <div class="d-flex align-items-center justify-content-center rounded-circle me-2" style="width: 50px; height: 50px; background-color: rgba(255,255,255,0.2);">
-        <img src="assets/images/company_icon_logo.svg" width="24" height="24" alt="Company Logo" />
+      <div class="d-flex align-items-center justify-content-center me-1">
+        @if(widgetConfig.logoType === 'IMAGE'){
+          <img [src]="widgetConfig.logoUrl"width="24" height="24" alt="Company Logo" class = "rounded-circle" />
+        }
+        @else{
+        <img src="assets/images/company_icon_logo.svg" width="24" height="24" alt="Company Logo" />}
       </div>
-      <div class="d-flex align-items-center gap-2 rounded-pill px-3 py-2 w-75" 
-           [style.background-color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textAreaColour) || 'rgba(255, 255, 255, 0.1)') : (widgetConfig?.mode === 'DARK' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)')" 
-           [style.border]="widgetConfig?.mode === 'AUTO' && getColorValue(widgetConfig?.borderColour) ? '2px solid ' + getColorValue(widgetConfig.borderColour) : (widgetConfig?.mode === 'DARK' ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)')" 
+      <div class="d-flex align-items-center gap-2 rounded-pill px-3 py-2 w-75"
+           [style.background-color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textAreaColour) || 'rgba(255, 255, 255, 0.1)') : (widgetConfig?.mode === 'DARK' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)')"
+           [style.border]="widgetConfig?.mode === 'AUTO' && getColorValue(widgetConfig?.borderColour) ? '2px solid ' + getColorValue(widgetConfig.borderColour) : (widgetConfig?.mode === 'DARK' ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid rgba(0, 0, 0, 0.1)')"
            [style.backdrop-filter]="'blur(10px)'">
         <div class="flex-grow-1 position-relative">
           <textarea
@@ -117,15 +120,14 @@
           ></textarea>
         </div>
 
-        <button class="refresh-button border-0 bg-transparent d-flex align-items-center justify-content-center" 
+        <button class="refresh-button border-0 bg-transparent d-flex align-items-center justify-content-center"
                 [style.color]="widgetConfig?.mode === 'AUTO' ? (getColorValue(widgetConfig?.textColor) || 'white') : (widgetConfig?.mode === 'DARK' ? 'white' : '#374151')"
                 title="New Chat">
           <i class="pi pi-refresh" style="font-size: 18px;"></i>
         </button>
 
         <button
-          class="send-button btn border-0 rounded-circle d-flex align-items-center justify-content-center" 
-          [style.color]="'white'"
+          class="send-button btn border-0 rounded-circle d-flex align-items-center justify-content-center"
           type="button"
           [ngStyle]="widgetConfig?.mode === 'AUTO' ? getBackgroundStyle(widgetConfig?.buttonColor) : (widgetConfig?.mode === 'DARK' ? {'background-color': '#3b82f6'} : {'background-color': '#2563eb'})"
           title="Send Message"

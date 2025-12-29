@@ -154,13 +154,14 @@
                 </div>
 
 
-                        @if(widgetConfig[field.id] === 'text'){
+                        @if(widgetConfig[field.id] === 'TEXT'){
                             <div class="mb-3">
                                 <input
                                         type="text"
                                         class="form-control"
                                         pInputText
                                         placeholder="Enter text"
+                                        [(ngModel)]="widgetConfig[field.optionId]"
                                 />
                             </div>
                         }
@@ -176,33 +177,30 @@
                             </div>
                     }
 
-            @if (widgetConfig[field.id] === 'Image URL') {
+            @if (widgetConfig[field.id] === 'IMAGE') {
                 <div class="mb-3">
-                    @if (!widgetConfig[field.id + 'File']) {
-                        <p-fileUpload
-                            mode="basic"
-                            name="imageFile"
-                            accept="image/*"
-                            [maxFileSize]="1000000"
-                            (onSelect)="onFileUpload($event, field.id)"
-                            chooseLabel="Upload Image"
-                            [auto]="false"
-                            chooseIcon="pi pi-upload">
-                        </p-fileUpload>
-                    }
-                    @if (widgetConfig[field.id + 'File']) {
-                        <div class="d-flex align-items-center gap-2 p-2 border rounded">
-                            <i class="pi pi-file text-muted"></i>
-                            <span class="flex-grow-1">{{ widgetConfig[field.id + 'File'].name }}</span>
-                            <button 
-                                type="button" 
-                                class="btn btn-sm btn-outline-danger"
-                                (click)="removeFile(field.id)"
-                                title="Remove file">
-                                <i class="pi pi-times"></i>
-                            </button>
-                        </div>
-                    }
+                  @if (widgetConfig[field.optionId]) {
+                    <div class="d-flex align-items-center justify-content-between p-3 border rounded bg-light">
+                      <div class="d-flex align-items-center gap-2">
+                        <i class="pi pi-file text-muted"></i>
+                        <span class="text-truncate">{{ getFileName(widgetConfig[field.optionId]) }}</span>
+                      </div>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-danger"
+                        (click)="removeFile(field.optionId)"
+                        title="Remove file">
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+                  } @else {
+                    <p-fileUpload
+                      #uploader
+                      name="file"
+                      [customUpload]="true"
+                      (uploadHandler)="uploadHandler($event, field.id)">
+                    </p-fileUpload>
+                  }
                 </div>
             }
 

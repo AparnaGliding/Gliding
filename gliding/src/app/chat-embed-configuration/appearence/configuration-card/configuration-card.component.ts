@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ChangeDetectorRef, OnInit} from '@angular/core';
 import {Card} from 'primeng/card';
 import {CardSection, WidgetConfiguration} from '../../appearance-cofig.model';
 import {RadioButton} from 'primeng/radiobutton';
@@ -9,7 +9,7 @@ import {ColorPicker} from 'primeng/colorpicker';
 import {InputText} from 'primeng/inputtext';
 import {FileUpload} from 'primeng/fileupload';
 import {Button} from 'primeng/button';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 
 @Component({
   selector: 'app-configuration-card',
@@ -27,30 +27,28 @@ import {HttpClient} from '@angular/common/http';
   templateUrl: './configuration-card.component.html',
   styleUrl: './configuration-card.component.scss'
 })
-export class ConfigurationCardComponent {
+export class ConfigurationCardComponent implements OnInit {
 
   @Input() widgetConfig: WidgetConfiguration;
   @Input() section: CardSection;
   @Output() saveChanges = new EventEmitter<WidgetConfiguration>();
   @Output() discardChanges = new EventEmitter<void>();
-  
+
   temp: string;
   uploadedFiles: { [key: string]: File } = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+              private cdr: ChangeDetectorRef,
+  ) {}
+
 
   onDiscardChanges() {
     this.discardChanges.emit();
   }
 
   onFileUpload(event: any, fieldId: string) {
-    console.log('onFileUpload called for fieldId:', fieldId);
-    console.log('Event:', event);
-    
     const file = event.files[0];
     if (file) {
-      console.log('File selected:', file.name, 'Size:', file.size);
-      // Store the file for later upload
       this.uploadedFiles[fieldId] = file;
       this.widgetConfig[fieldId + 'File'] = file;
       console.log('File stored in uploadedFiles and widgetConfig');
@@ -59,22 +57,26 @@ export class ConfigurationCardComponent {
     }
   }
 
-  removeFile(fieldId: string) {
-    delete this.uploadedFiles[fieldId];
-    delete this.widgetConfig[fieldId + 'File'];
+  removeFile(optionId: string) {
+    this.widgetConfig[optionId] = null;
+    this.cdr.detectChanges();
+  }
+
+  getFileName(filePath: string): string {
+    if (!filePath) return '';
+    return filePath.split('/').pop() || filePath.split('\\').pop() || filePath;
   }
 
   onSaveChanges() {
     console.log('onSaveChanges called');
     console.log('uploadedFiles:', this.uploadedFiles);
-    
+
     // Upload any new files before saving
     this.uploadBrandFiles().then(() => {
       console.log('Files uploaded successfully, emitting save event');
       this.saveChanges.emit(this.widgetConfig);
     }).catch(error => {
       console.error('Error uploading files:', error);
-      // Still emit save event even if upload fails for now
       this.saveChanges.emit(this.widgetConfig);
     });
   }
@@ -82,30 +84,30 @@ export class ConfigurationCardComponent {
   private async uploadBrandFiles(): Promise<void> {
     console.log('uploadBrandFiles called, checking files to upload...');
     const uploadPromises: Promise<any>[] = [];
-    
+
     for (const [fieldId, file] of Object.entries(this.uploadedFiles)) {
       console.log(`Preparing to upload file for field: ${fieldId}`, file);
-      
+
       const formData = new FormData();
       formData.append('file', file);
-      
+
       const fileUploadModel = {
         widgetId: this.widgetConfig.id.toString()
       };
-      
+
       console.log('FileUploadModel:', fileUploadModel);
       formData.append('fileUploadModel', JSON.stringify(fileUploadModel));
-      
+
       console.log('Making POST request to /upload/brand');
       const uploadPromise = this.http.post('/upload/brand', formData).toPromise();
       uploadPromises.push(uploadPromise);
     }
-    
+
     if (uploadPromises.length === 0) {
       console.log('No files to upload, skipping API call');
       return;
     }
-    
+
     try {
       console.log(`Uploading ${uploadPromises.length} file(s)...`);
       await Promise.all(uploadPromises);
@@ -117,4 +119,34 @@ export class ConfigurationCardComponent {
       throw error;
     }
   }
+
+  uploadHandler(event: any, fieldId?: string) {
+    const files: File[] = event.files;
+    if (files && files.length && fieldId) {
+      const file = files[0];
+      // Store the file path in widgetConfig for display
+      this.widgetConfig[fieldId + '_file'] = file.name;
+
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const widgetId = 1;
+      const params = new HttpParams()
+        .set('widgetId', widgetId);
+      this.http.post(`/widget/${widgetId}/upload/brand`, formData, {
+        reportProgress: true,
+        observe: 'events'
+      }).subscribe({
+        next: (e) => {
+          console.log('Upload event:', e);
+        },
+        error: (err) => {
+          console.error('Upload failed:', err);
+        }
+      });
+    }}
+
+  ngOnInit() {
+    console.log('this.widgetConfig', this.widgetConfig);
+  }
+
 }

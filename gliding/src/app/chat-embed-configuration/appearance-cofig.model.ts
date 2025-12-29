@@ -19,12 +19,15 @@ export interface WidgetConfiguration {
   buttonColor: ColorPickerField;
   textColor: ColorPickerField;
   textAreaColour: ColorPickerField;
-
+  logoType: string;
+  logoUrl: string;
+  companyType: string;
+  companyUrl: string;
+  headerTextColour: ColorPickerField;
   userMessageColour: ColorPickerField;
   botMessageColour: ColorPickerField;
   inputAreaColour: ColorPickerField;
   borderColour: ColorPickerField;
-
   greetingMessage: string;
   inputPlaceholder: string;
 
@@ -53,6 +56,7 @@ export interface FormField {
   rows?: number;
   options?: string[];
   colorPicker?: ColorPickerField;
+  optionId?: string;
 
 }
 

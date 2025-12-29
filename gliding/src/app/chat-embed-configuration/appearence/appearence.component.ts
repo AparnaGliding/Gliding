@@ -66,9 +66,9 @@ export class AppearenceComponent {
           options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
-          id: 'inputAreaColour',
+          id: 'buttonColor',
           type: 'color-picker',
-          label: 'Text Area Color',
+          label: 'Button Color',
           options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
@@ -84,9 +84,9 @@ export class AppearenceComponent {
           options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
-          id: 'borderColour',
+          id: 'headerTextColour',
           type: 'color-picker',
-          label: 'Border Color',
+          label: 'headerTextColour',
           options: ['solid', 'gradient', 'Custom(CSS)']
         },
         {
@@ -118,7 +118,8 @@ export class AppearenceComponent {
           id: 'logoType',
           type: 'branding',
           label: '',
-          options: ['none' , 'svg' , 'Image URL']
+          optionId: 'logoUrl',
+          options: ['none' , 'svg' , 'IMAGE']
         }
       ]
     },
@@ -128,10 +129,11 @@ export class AppearenceComponent {
       collapsed: false,
       fields: [
         {
-          id: 'companyNameType',
+          id: 'companyType',
           type: 'branding',
           label: '',
-          options: ['text' , 'svg']
+          optionId: 'companyUrl',
+          options: ['TEXT' , 'svg']
         }
       ]
     },

@@ -25,7 +25,7 @@ import {WidgetConfiguration} from "./appearance-cofig.model";
 })
 export class ChatEmbedConfigurationComponent implements OnInit {
   activeTab = '0';
-  widgetId = 3;
+  widgetId = 1;
   widgetConfig: WidgetConfiguration;
 
   constructor(private chatEmbedConfigurationService: ChatEmbedConfigurationService ) { }
