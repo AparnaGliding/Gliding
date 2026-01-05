@@ -137,15 +137,28 @@
 
       <div class="header-actions">
         <!-- Article buttons - show when we have article content -->
-        <button class="btn btn-success btn-sm me-2" (click)="onPublishArticle()"
-                [disabled]="!isPdfFile && currentArticle?.status === 'Published'">
-          <i class="bi bi-upload me-1"></i>
-          Publish
-        </button>
-        <button class="btn btn-primary btn-sm me-2" (click)="onEditArticle()">
-          <i class="bi bi-pencil me-1"></i>
-          Edit
-        </button>
+        <ng-container *ngIf="!isEditing; else editModeActions">
+          <button class="btn btn-success btn-sm me-2" (click)="onPublishArticle()"
+                  [disabled]="!isPdfFile && currentArticle?.status === 'Published'">
+            <i class="bi bi-upload me-1"></i>
+            Publish
+          </button>
+          <button class="btn btn-primary btn-sm me-2" (click)="onEditArticle()">
+            <i class="bi bi-pencil me-1"></i>
+            Edit
+          </button>
+        </ng-container>
+
+        <ng-template #editModeActions>
+          <button class="btn btn-success btn-sm me-2" (click)="onSaveEdit()">
+            <i class="bi bi-check2 me-1"></i>
+            Save
+          </button>
+          <button class="btn btn-outline-secondary btn-sm me-2" (click)="onCancelEdit()">
+            <i class="bi bi-x-lg me-1"></i>
+            Cancel
+          </button>
+        </ng-template>
 
         <!-- PDF buttons - show when we have PDF content -->
         <button class="btn btn-outline-secondary btn-sm me-2" (click)="downloadPdf()" *ngIf="showPdfPreview">
@@ -203,6 +216,7 @@
     <!-- OnlyOffice Editor for documents -->
     <div class="onlyoffice-section" *ngIf="showOnlyOffice && selectedItem">
       <app-only-office
+        #onlyOfficeEditor
         [fileName]="selectedItem.name"
         [readOnly]="!isEditing"
         [documentType]="getDocumentType(selectedItem.name)">

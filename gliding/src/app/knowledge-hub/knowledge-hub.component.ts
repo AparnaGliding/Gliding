@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -23,6 +24,7 @@ import {OnlyOfficeComponent} from '../only-office/only-office.component';
   styleUrl: './knowledge-hub.component.scss'
 })
 export class KnowledgeHubComponent implements OnInit {
+  @ViewChild('onlyOfficeEditor') onlyOfficeEditor?: OnlyOfficeComponent;
   activeTab: ReferencableType = ReferencableType.ARTICLE;
   treeNodes: TreeNode[] = [];
   loading = false;
@@ -70,7 +72,8 @@ export class KnowledgeHubComponent implements OnInit {
 
   constructor(
     private knowledgeHubService: KnowledgeHubService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -378,6 +381,46 @@ export class KnowledgeHubComponent implements OnInit {
     this.isPdfFile = false;
     this.showOnlyOffice = false;
     this.isEditing = false;
+  }
+
+  // Edit mode actions
+  onSaveEdit(): void {
+    if (this.showOnlyOffice) {
+      this.onlyOfficeEditor?.saveDocument();
+    }
+    const name = this.selectedItem?.name || '';
+    if (name) {
+      const encoded = encodeURIComponent(name);
+      const url = `http://localhost:8080/api/aq/documents/config/${encoded}?mode=view`;
+      this.http.get(url).subscribe({
+        next: () => {
+          // Exiting edit mode triggers OnlyOffice to switch to readOnly and re-init
+          this.isEditing = false;
+        },
+        error: (err) => {
+          console.error('Refresh config after save failed:', err);
+          // Even on error, exit edit mode to avoid being stuck
+          this.isEditing = false;
+        }
+      });
+    } else {
+      this.isEditing = false;
+    }
+  }
+
+  onCancelEdit(): void {
+    this.isEditing = false;
+  }
+
+  // Keyboard shortcut: Ctrl+S / Cmd+S triggers save while editing
+  @HostListener('window:keydown', ['$event'])
+  handleGlobalKeydown(event: KeyboardEvent): void {
+    if (!this.isEditing) return;
+    const isSaveCombo = (event.ctrlKey || event.metaKey) && (event.key === 's' || event.key === 'S');
+    if (isSaveCombo) {
+      event.preventDefault();
+      this.onSaveEdit();
+    }
   }
 
   getDocumentType(name: string): 'word' | 'cell' | 'slide' {
