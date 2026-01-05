@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { WidgetConfiguration, ColorPickerField } from '../../appearance-cofig.model';
 
 @Component({
@@ -19,7 +20,8 @@ import { WidgetConfiguration, ColorPickerField } from '../../appearance-cofig.mo
 export class ChatEmbedPreviewComponent implements OnChanges {
   @Input() widgetConfig: WidgetConfiguration;
 
-  // Sample messages for preview
+  constructor(private sanitizer: DomSanitizer) { }
+
   sampleMessages = [
     {
       text: 'Hello! How can I get started?',
@@ -43,7 +45,6 @@ export class ChatEmbedPreviewComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['widgetConfig']) {
-      // React to configuration changes
       console.log('Widget config updated in preview:', this.widgetConfig);
     }
   }
@@ -74,10 +75,9 @@ export class ChatEmbedPreviewComponent implements OnChanges {
     if (typeof colorField === 'string') {
       color = colorField;
     } else {
-      // Handle ColorPickerField object
       if (colorField.type === 'gradient' && colorField.from && colorField.to) {
         color = `${colorField.from} to ${colorField.to}`;
-      } else if (colorField.type === 'css' && colorField.css) {
+      } else if (colorField.type === 'Custom(CSS)' && colorField.css) {
         color = colorField.css;
       } else {
         color = colorField.value || '';
@@ -121,7 +121,6 @@ export class ChatEmbedPreviewComponent implements OnChanges {
     if (typeof colorField === 'string') {
       return colorField;
     } else {
-      // Handle ColorPickerField object
       if (colorField.type === 'gradient' && colorField.from && colorField.to) {
         return `${colorField.from} to ${colorField.to}`;
       } else if (colorField.type === 'custom' && colorField.css) {
@@ -134,7 +133,6 @@ export class ChatEmbedPreviewComponent implements OnChanges {
 
   getTextStyle(colorField: ColorPickerField | string): any {
     if (!colorField) { return {}; }
-
     let color: string;
     if (typeof colorField === 'string') {
       color = colorField;
@@ -159,5 +157,14 @@ export class ChatEmbedPreviewComponent implements OnChanges {
       };
     }
     return { 'color': color };
+  }
+
+  getSanitizedSvg(svgContent: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(svgContent);
+  }
+
+
+  getLogoUrl(filename: string): string {
+    return `assets/image/${filename}`;
   }
 }

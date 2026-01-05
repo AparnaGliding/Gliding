@@ -96,7 +96,7 @@
                 type="text"
                 class="form-control"
                 pInputText
-                [(ngModel)]="widgetConfig[field.id].custom"
+                [(ngModel)]="widgetConfig[field.id].css"
                 placeholder="Enter custom CSS"
               />
             </div>
@@ -166,13 +166,14 @@
                             </div>
                         }
 
-                        @if (widgetConfig[field.id] === 'svg') {
+                        @if (widgetConfig[field.id] === 'SVG') {
                             <div class="mb-3">
                     <textarea
                             class="form-control"
                             pInputTextarea
                             placeholder="Enter description"
                             rows="4"
+                            [(ngModel)]="widgetConfig[field.optionId]"
                     ></textarea>
                             </div>
                     }

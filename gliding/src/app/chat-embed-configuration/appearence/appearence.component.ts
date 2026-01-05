@@ -119,7 +119,7 @@ export class AppearenceComponent {
           type: 'branding',
           label: '',
           optionId: 'logoUrl',
-          options: ['none' , 'svg' , 'IMAGE']
+          options: ['none' , 'SVG' , 'IMAGE']
         }
       ]
     },
@@ -133,7 +133,7 @@ export class AppearenceComponent {
           type: 'branding',
           label: '',
           optionId: 'companyUrl',
-          options: ['TEXT' , 'svg']
+          options: ['TEXT' , 'SVG']
         }
       ]
     },

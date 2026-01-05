@@ -21,6 +21,7 @@ export interface WidgetConfiguration {
   textAreaColour: ColorPickerField;
   logoType: string;
   logoUrl: string;
+  logoFileName: string;
   companyType: string;
   companyUrl: string;
   headerTextColour: ColorPickerField;

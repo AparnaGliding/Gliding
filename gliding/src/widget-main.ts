@@ -1,6 +1,7 @@
 import {BrowserModule, createApplication} from '@angular/platform-browser';
 import { createCustomElement } from '@angular/elements';
 import { ChatEmbedComponent } from './app/chat-embed/chat-embed.component';
+import { ChatIconComponent } from './app/chat-embed/chat-icon/chat-icon.component';
 
 import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {ErrorHandler, importProvidersFrom} from '@angular/core';
@@ -44,5 +45,10 @@ import {ToastrModule} from 'ngx-toastr';
     injector: app.injector
   });
 
+  const chatIconElement = createCustomElement(ChatIconComponent, {
+    injector: app.injector
+  });
+
   customElements.define('my-chat-widget', chatElement);
+  customElements.define('my-chat-icon', chatIconElement);
 })();

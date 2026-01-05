@@ -1,0 +1,22 @@
+.assistq-chat-icon {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1055;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #007bff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.assistq-chat-icon:hover {
+  transform: scale(1.08);
+}
+
+.assistq-chat-icon:active {
+  transform: scale(0.95);
+}
