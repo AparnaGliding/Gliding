@@ -10,7 +10,7 @@ import {environment} from '../../environments/environment';
 
 export class ChatService {
   private chatIdCounter = 0;
-  private baseUrl = `http://localhost:8080/api/aq/chat`;
+  private baseUrl = `/chat`;
   constructor(private http: HttpClient) {
   }
 
@@ -77,6 +77,45 @@ export class ChatService {
     );
   }
 
+  // streamChat(req: ChatRequest, token?: string): Observable<string> {
+  //   return new Observable<string>((observer) => {
+  //     console.log('Chat id', req.chatId);
+  //     const params = new URLSearchParams({
+  //       question: req.question,
+  //       domain: req.domain,
+  //       applicationId: req.accountId,
+  //       userId: req.userId,
+  //       chatId: req.chatId,
+  //       applicationModuleId: req.applicationModuleId.toString() || '0',
+  //       saveInHistory: 'true'
+  //     }).toString();
+  //     const url = `${this.baseUrl}?${params}`;
+  //     const es = new EventSource(url, { withCredentials: false });
+  //     es.onmessage = (e: MessageEvent) => {
+  //       try {
+  //         const data = JSON.parse(e.data);
+  //         if (data.isLast === true) {
+  //           observer.complete();
+  //           es.close();
+  //           return;
+  //         }
+  //         observer.next(e.data);
+  //       } catch (e) {
+  //         if (e.data === '[DONE]') {
+  //           observer.complete();
+  //           es.close();
+  //           return;
+  //         }
+  //         observer.next(e.data);
+  //       }
+  //     };
+  //     es.onerror = (err) => {
+  //       observer.error(err);
+  //       es.close();
+  //     };
+  //     return () => es.close();
+  //   });
+  // }
 
   streamChat(req: ChatRequest, token?: string): Observable<string> {
     return new Observable<string>((observer) => {
@@ -90,31 +129,63 @@ export class ChatService {
         applicationModuleId: req.applicationModuleId.toString() || '0',
         saveInHistory: 'true'
       }).toString();
-      const url = `${this.baseUrl}?${params}`;
-      const es = new EventSource(url, { withCredentials: false });
-      es.onmessage = (e: MessageEvent) => {
-        try {
-          const data = JSON.parse(e.data);
-          if (data.isLast === true) {
-            observer.complete();
-            es.close();
-            return;
-          }
-          observer.next(e.data);
-        } catch (e) {
-          if (e.data === '[DONE]') {
-            observer.complete();
-            es.close();
-            return;
-          }
-          observer.next(e.data);
+      const host = `${window.location.protocol}//${window.location.hostname}${environment.backend_path}`;
+      const url = `${host}/api/aq/agent/chat?${params}`;
+      
+      let abortController = new AbortController();
+      
+      fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        signal: abortController.signal,
+        headers: {
+          'Accept': 'text/event-stream'
         }
-      };
-      es.onerror = (err) => {
-        observer.error(err);
-        es.close();
-      };
-      return () => es.close();
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        
+        function read() {
+          reader?.read().then(({ done, value }) => {
+            if (done) {
+              observer.complete();
+              return;
+            }
+            
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.substring(6);
+                try {
+                  const parsed = JSON.parse(data);
+                  if (parsed.isLast === true) {
+                    observer.complete();
+                    return;
+                  }
+                  observer.next(data);
+                } catch (e) {
+                  if (data === '[DONE]') {
+                    observer.complete();
+                    return;
+                  }
+                  observer.next(data);
+                }
+              }
+            }
+            read();
+          }).catch(err => observer.error(err));
+        }
+        read();
+      })
+      .catch(err => observer.error(err));
+      
+      return () => abortController.abort();
     });
   }
 
